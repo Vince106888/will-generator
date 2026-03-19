@@ -1,0 +1,29 @@
+{
+  "version": "2.9",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Test1",
+      "name": "Test",
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 300,
+      "fill": "#FFFFFF",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 24,
+      "children": [
+        {
+          "type": "text",
+          "id": "Text1",
+          "content": "Test",
+          "fill": "#000000",
+          "fontFamily": "Sora",
+          "fontSize": 16,
+          "fontWeight": "600"
+        }
+      ]
+    }
+  ]
+}

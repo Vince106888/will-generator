@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Sora:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --paper: #f7f4ef;
+  --card: #fffbf6;
+  --border: #e6ded4;
+  --ink: #1f2429;
+  --muted: #5e666d;
+  --primary: #20354a;
+  --secondary: #efe7dd;
+  --accent: #c48a5a;
+  --info: #2b5d7b;
+  --warning: #b15b2a;
+  --success: #1f7a5b;
+  --error: #9d2b2b;
+  --info-soft: #eef6fb;
+  --warning-soft: #fff6ed;
+  --success-soft: #f7f4ef;
+  --error-soft: #fff1f1;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  font-family: "Sora", ui-sans-serif, system-ui;
+  color: var(--ink);
+  background: var(--paper);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
+}
