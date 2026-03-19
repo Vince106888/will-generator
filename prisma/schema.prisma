@@ -1,0 +1,72 @@
+// file: prisma/schema.prisma
+// Prisma schema for Esheria Wills
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WillComplexityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model WillProfile {
+  id           String   @id @default(uuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  personal     Json
+  family       Json
+  assets       Json
+  distribution Json
+  roles        Json
+  instructions Json
+  complexity   Json
+  validity     Json
+  draft        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  leads        Lead[]
+  analytics    AnalyticsEvent[]
+
+  @@index([createdAt])
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  email     String
+  willId    String?
+  will      WillProfile? @relation(fields: [willId], references: [id])
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wills     WillProfile[]
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  event     String
+  payload   Json?
+  willId    String?
+  will      WillProfile? @relation(fields: [willId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([event])
+  @@index([createdAt])
+}
