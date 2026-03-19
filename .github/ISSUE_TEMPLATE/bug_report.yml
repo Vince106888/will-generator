@@ -1,0 +1,28 @@
+﻿name: Bug Report
+description: Report a defect in Esheria Wills
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened and what you expected.
+      placeholder: Concise description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Provide minimal steps to reproduce the bug.
+      placeholder: 1. Go to ...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Environment, screenshots, logs, or other context.
+    validations:
+      required: false
