@@ -1,7 +1,7 @@
 # Redesign Implementation Plan (Pencil-First)
 
 Date: 2026-03-25
-Scope: Planning only. No code or Pencil changes executed yet.
+Scope: Implementation-ready plan after Pencil final pass.
 
 ## Phase A: Documentation (Complete)
 - Build brief and UX architecture documented in `docs/product`.
@@ -22,7 +22,7 @@ Expected reuse:
 - Drafting shell component (to be reworked)
 - UI atoms (Button, Card, Input, Select, Textarea, Callout)
 
-Rewrites/new additions:
+Rewrites/new additions (completed in parity pages):
 - New Entry Choice page
 - Existing Will Gate (split from Eligibility)
 - AI Drafting Workspace + AI Summary
@@ -79,8 +79,8 @@ Needs refactor or extension:
 - Witness requirements and signing instructions
 - Cross-border disclaimer
 
-## Phase C: Pencil-First Execution Plan
-We will update `design/pencil-new.pen` in controlled batches.
+## Phase C: Pencil-First Execution Plan (Complete)
+`design/pencil-new.pen` finalized and ready for implementation.
 
 Batch 1
 - Landing updates
@@ -106,9 +106,14 @@ Batch 5
 - Mobile support
 - Error states
 
-## Phase D: Implementation Readiness Gate
-After Pencil edits and review:
-1. Confirm flows against legal guidance
-2. Map final routes/components in frontend
-3. Lock backend contracts
-4. Begin implementation
+## Phase D: Implementation Readiness Gate (Now)
+1. Confirm flows against legal guidance (see `docs/product/redesign-legal-open-questions.md`)
+2. Map final routes/components in frontend (parity pages created under `apps/web/src/pages`)
+3. Lock backend contracts (see “Backend Impact” above)
+4. Begin implementation in `apps/web` and `apps/api`
+
+## Phase E: Build Start Checklist
+- Review `design/pencil-new.pen` against parity pages
+- Confirm routing map and page ownership
+- Agree on API contracts for AI drafting + codicil flow
+- Run `pnpm lint`, `pnpm test`, `pnpm build` (see `docs/product/implementation-readiness.md`)
