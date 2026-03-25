@@ -14,6 +14,47 @@ export const willGenerateSchema = z.object({
       funeralWishes: z.string().optional()
     })
     .optional(),
+  metadata: z
+    .object({
+      assetAllocations: z
+        .array(
+          z.object({
+            assetLabel: z.string(),
+            allocations: z.array(
+              z.object({
+                beneficiary: z.string(),
+                share: z.string(),
+                notes: z.string()
+              })
+            )
+          })
+        )
+        .optional(),
+      exportPreferences: z
+        .object({
+          format: z.string(),
+          includeChecklist: z.boolean(),
+          advocateReview: z.boolean(),
+          storage: z.string()
+        })
+        .optional(),
+      existingWill: z
+        .object({
+          hasExisting: z.boolean(),
+          type: z.enum(["will", "codicil", "unsure"]),
+          notes: z.string()
+        })
+        .optional(),
+      aiDraftSession: z
+        .object({
+          summary: z.string(),
+          updatedAt: z.string(),
+          confidence: z.string()
+        })
+        .optional(),
+      remainderClause: z.string().optional()
+    })
+    .optional(),
   leadEmail: z.string().email().optional()
 });
 

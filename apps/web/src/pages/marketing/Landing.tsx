@@ -21,7 +21,7 @@ export default function Landing() {
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="md" onClick={() => navigate("/pre-start")}>
+                <Button variant="primary" size="md" onClick={() => navigate("/entry-choice")}>
                   Start drafting
                 </Button>
                 <a
@@ -220,7 +220,7 @@ export default function Landing() {
                 <div className="flex flex-wrap items-center gap-3 pt-2">
                   <button
                     className="rounded-full bg-paper px-5 py-2.5 text-[13px] font-semibold text-primary"
-                    onClick={() => navigate("/pre-start")}
+                    onClick={() => navigate("/entry-choice")}
                   >
                     Start drafting
                   </button>

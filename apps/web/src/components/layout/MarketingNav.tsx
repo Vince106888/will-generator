@@ -19,7 +19,7 @@ export function MarketingNav() {
         </nav>
         <div className="flex items-center gap-3">
           <button className="text-[13px] font-semibold text-ink">Sign in</button>
-          <Button variant="primary" size="sm" onClick={() => navigate("/pre-start")}>
+          <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
             Start drafting
           </Button>
         </div>

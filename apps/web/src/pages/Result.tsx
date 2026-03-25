@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api";
 import { navigate } from "../lib/navigation";
 import { STORAGE_KEYS } from "../lib/storage";
 import { Container } from "../components/layout/Container";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
+import { Badge } from "../components/ui/Badge";
+import { Callout } from "../components/ui/Callout";
+import { useDraftingData } from "../lib/drafting";
 
 type Complexity = {
   score: number;
@@ -17,9 +20,11 @@ type WillResult = {
   draft: string;
   complexity: Complexity;
   validity: string[];
+  metadata?: Record<string, unknown>;
 };
 
 export default function Result() {
+  const { data: draftingData } = useDraftingData();
   const [data, setData] = useState<WillResult | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +43,8 @@ export default function Result() {
                 id: response.data.id ?? parsed.id,
                 draft: response.data.draft ?? parsed.draft,
                 complexity: response.data.complexity ?? parsed.complexity,
-                validity: response.data.validity ?? parsed.validity
+                validity: response.data.validity ?? parsed.validity,
+                metadata: response.data.metadata ?? parsed.metadata
               } as WillResult;
               setData(merged);
               localStorage.setItem(STORAGE_KEYS.willResult, JSON.stringify(merged));
@@ -51,6 +57,8 @@ export default function Result() {
       }
     }
   }, []);
+
+  const flags = useMemo(() => data?.complexity?.flags ?? [], [data]);
 
   if (!data) {
     return (
@@ -70,50 +78,97 @@ export default function Result() {
 
   return (
     <div className="pb-24 pt-12">
-      <Container>
+      <Container className="max-w-[1440px]">
         <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Your draft is ready</p>
-          <p className="text-[15px] text-muted">
-            Review your draft and follow the signing steps to make it legally valid.
+          <p className="font-display text-3xl text-ink">Review + result</p>
+          <p className="max-w-[900px] text-[15px] text-muted">
+            We generated a full draft. Review the summary below, address any warnings, and proceed to signing when you
+            are ready.
           </p>
           {loading && <p className="text-xs text-muted">Refreshing your draft...</p>}
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <Card size="lg" className="space-y-3">
-            <p className="text-xs font-semibold text-muted">Draft preview</p>
-            <div className="flex h-[260px] items-center justify-center rounded-xl border border-border bg-card p-6 text-xs text-muted">
-              Draft preview
-            </div>
-          </Card>
+        <Card size="lg" variant="success" className="mt-6 space-y-2">
+          <Badge tone="success">Draft ready for review</Badge>
+          <p className="text-sm font-semibold text-ink">Your draft is complete and ready for review.</p>
+          <p className="text-sm text-muted">
+            You can export a copy, request advocate review, or proceed to signing instructions.
+          </p>
+        </Card>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="space-y-5">
+            <Card size="lg" className="space-y-3">
+              <p className="text-sm font-semibold text-ink">Draft preview</p>
+              <div className="flex h-[280px] items-center justify-center rounded-xl border border-border bg-card p-6 text-xs text-muted">
+                Draft preview
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/export-options")}>
+                  Export options
+                </Button>
+                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/signing-guide")}>
+                  Go to signing
+                </Button>
+              </div>
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="text-sm font-semibold text-ink">Review checklist</p>
+              <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
+                <li>
+                  Executors: {draftingData.executors.filter((executor) => executor.name).length > 0 ? "Added" : "Missing"}
+                </li>
+                <li>
+                  Guardians:{" "}
+                  {draftingData.hasMinors
+                    ? draftingData.guardians.filter((guardian) => guardian.name).length > 0
+                      ? "Added"
+                      : "Missing"
+                    : "Not required"}
+                </li>
+                <li>
+                  Assets: {draftingData.assets.some((asset) => asset.location || asset.notes) ? "Listed" : "Missing"}
+                </li>
+                <li>
+                  Beneficiaries:{" "}
+                  {draftingData.beneficiaries.some((beneficiary) => beneficiary.name) ? "Listed" : "Missing"}
+                </li>
+              </ul>
+              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review")}>
+                Return to checklist
+              </Button>
+            </Card>
+          </div>
 
           <div className="space-y-4">
             <Card size="md" className="space-y-2">
-              <p className="text-sm font-semibold text-ink">Next steps</p>
-              <p className="text-xs text-muted">
-                • Print the draft
-                <br />
-                • Sign with two eligible witnesses
-                <br />
-                • Store the signed copy safely
-                <br />
-                • Inform your executor
-              </p>
+              <p className="text-xs font-semibold text-ink">Complexity check</p>
+              <p className="text-sm font-semibold text-ink">{data.complexity.level} complexity</p>
+              <p className="text-xs text-muted">Score: {data.complexity.score}</p>
+              {flags.length > 0 ? (
+                <ul className="list-disc space-y-2 pl-5 text-xs text-muted">
+                  {flags.map((flag) => (
+                    <li key={flag}>{flag}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-xs text-muted">No issues flagged based on the information provided.</p>
+              )}
             </Card>
+
             <Card size="md" variant="secondary" className="space-y-2">
-              <p className="text-sm font-semibold text-ink">Need advocate review?</p>
+              <p className="text-xs font-semibold text-ink">Validity guidance</p>
               <p className="text-xs text-muted">
-                For complex estates, request a professional review before signing.
+                A will is only legally valid after signing in front of two eligible witnesses. We will walk you through
+                the signing steps next.
               </p>
             </Card>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review")}>
-                Back
-              </Button>
-              <Button variant="primary" size="sm" onClick={() => navigate("/drafting/signing-guide")}>
-                Go to signing guide
-              </Button>
-            </div>
+
+            <Callout tone="warning">
+              If anything feels incomplete, pause and revise. Signing a draft that does not reflect your full wishes can
+              create disputes.
+            </Callout>
           </div>
         </div>
       </Container>

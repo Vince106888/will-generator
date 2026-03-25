@@ -1,4 +1,4 @@
-export function MarketingFooter() {
+﻿export function MarketingFooter() {
   return (
     <footer className="py-12">
       <div className="mx-auto max-w-[1200px] rounded-2xl border border-border bg-card px-6 py-8 lg:px-10">
@@ -25,10 +25,11 @@ export function MarketingFooter() {
         </div>
         <div className="my-6 h-px w-full bg-border" />
         <div className="flex flex-col gap-2 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Esheria Wills</span>
+          <span>(c) 2026 Esheria Wills</span>
           <span>Kenya-first digital will drafting.</span>
         </div>
       </div>
     </footer>
   );
 }
+

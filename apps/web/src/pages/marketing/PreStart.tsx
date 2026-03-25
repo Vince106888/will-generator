@@ -112,7 +112,7 @@ export default function PreStart() {
             When you are ready, you can begin drafting or preview how the process works.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary" size="sm" onClick={() => navigate("/eligibility")}>
+            <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
               Start drafting
             </Button>
             <Button variant="secondary" size="sm" onClick={() => navigate("/")}>

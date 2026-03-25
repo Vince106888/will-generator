@@ -96,7 +96,7 @@ export default function Review() {
             <Card size="md" className="space-y-2">
               <p className="text-sm font-semibold text-ink">Personal details</p>
               <p className="text-xs text-muted">
-                {data.legalName || "Name pending"} • {data.idType || "ID"} {data.idNumber || ""}
+                {data.legalName || "Name pending"} - {data.idType || "ID"} {data.idNumber || ""}
               </p>
             </Card>
             <Card size="md" className="space-y-2">

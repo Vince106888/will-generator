@@ -22,7 +22,8 @@ export class WillService {
       data: {
         personal: {
           name: input.name,
-          country: input.country ?? "Kenya"
+          country: input.country ?? "Kenya",
+          existingWill: input.metadata?.existingWill ?? null
         },
         family: {
           beneficiaries: input.beneficiaries,
@@ -30,17 +31,21 @@ export class WillService {
           multipleHouseholds: input.multipleHouseholds
         },
         assets: {
-          list: input.assets
+          list: input.assets,
+          allocations: input.metadata?.assetAllocations ?? []
         },
         distribution: {
-          beneficiaries: input.beneficiaries
+          beneficiaries: input.beneficiaries,
+          remainderClause: input.metadata?.remainderClause ?? null
         },
         roles: {
-          executor: input.executor
+          executor: input.executor,
+          advocateReviewRequested: input.metadata?.exportPreferences?.advocateReview ?? false
         },
         instructions: {
           notes: input.instructions?.notes ?? null,
-          funeralWishes: input.instructions?.funeralWishes ?? null
+          funeralWishes: input.instructions?.funeralWishes ?? null,
+          metadata: input.metadata ?? null
         },
         complexity,
         validity,
@@ -63,7 +68,8 @@ export class WillService {
       id: will.id,
       draft,
       complexity,
-      validity
+      validity,
+      metadata: input.metadata ?? null
     };
   }
 
