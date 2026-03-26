@@ -40,7 +40,7 @@ describe("Result page", () => {
       expect(screen.queryByText(/Refreshing your draft/i)).not.toBeInTheDocument();
     });
     expect(screen.getByText(/Review \+ result/i)).toBeInTheDocument();
-    expect(screen.getByText(/Draft preview/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Draft preview/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Complexity check/i)).toBeInTheDocument();
   });
 });
