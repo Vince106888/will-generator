@@ -1,8 +1,10 @@
-﻿import { Container } from "../../components/layout/Container";
-import { MarketingNav } from "../../components/layout/MarketingNav";
-import { MarketingFooter } from "../../components/layout/MarketingFooter";
+// Frame: FAQ Page (puMDs)
+import { Container } from "../../components/layout/Container";
+import { MarketingShell } from "../../components/layout/MarketingShell";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 
 const faqs = [
@@ -16,7 +18,7 @@ const faqs = [
   },
   {
     q: "What if I already have a will?",
-    a: "We can help you draft a codicil (an amendment) so your documents stay consistent."
+    a: "We can help you draft a codicil (an amendment) or replace it with a new will. We explain both paths clearly."
   },
   {
     q: "Can I update my will later?",
@@ -27,22 +29,32 @@ const faqs = [
     a: "Witnesses must be adults and cannot be beneficiaries. They should be present together when you sign."
   },
   {
+    q: "What is an executor?",
+    a: "An executor carries out your wishes: they locate the signed will, settle debts, and distribute assets."
+  },
+  {
     q: "How is my data protected?",
     a: "Your information is encrypted and stored only to support your draft. You remain in control of what you share."
+  },
+  {
+    q: "Can I name guardians for minors?",
+    a: "Yes. If you have minor children, you can name a guardian and a backup guardian."
+  },
+  {
+    q: "What if my estate is complex?",
+    a: "If you have trusts, multiple households, or large business interests, request an advocate review for extra support."
   }
 ];
 
 export default function FaqPage() {
   return (
-    <div className="bg-paper">
-      <MarketingNav />
-      <Container className="pb-24 pt-12 max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Frequently asked questions</p>
-          <p className="max-w-[880px] text-[15px] text-muted">
-            Clear answers to common questions about drafting, signing, and keeping your will up to date.
-          </p>
-        </div>
+    <MarketingShell>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Support"
+          title="Frequently asked questions"
+          description="Clear answers to common questions about drafting, signing, and keeping your will up to date."
+        />
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-4">
@@ -53,22 +65,31 @@ export default function FaqPage() {
               </Card>
             ))}
           </div>
-          <Card size="lg" className="space-y-3">
-            <p className="text-sm font-semibold text-ink">Need more help?</p>
-            <p className="text-xs text-muted">
-              If you have specific questions, you can request advocate review or start drafting to see guidance tailored
-              to your situation.
-            </p>
-            <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
-              Start drafting
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/advocate-review")}>
-              Request advocate review
-            </Button>
-          </Card>
+          <div className="space-y-4">
+            <Card size="lg" className="space-y-3">
+              <p className="text-sm font-semibold text-ink">Need more help?</p>
+              <p className="text-xs text-muted">
+                If you have specific questions, you can request advocate review or start drafting to see guidance tailored
+                to your situation.
+              </p>
+              <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
+                Start drafting
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/advocate-review")}>
+                Request advocate review
+              </Button>
+            </Card>
+            <TrustPanel
+              title="We explain every step"
+              items={[
+                "Legal terms are defined in plain English.",
+                "You can pause and return later without losing progress.",
+                "We guide you through signing and witnessing."
+              ]}
+            />
+          </div>
         </div>
       </Container>
-      <MarketingFooter />
-    </div>
+    </MarketingShell>
   );
 }

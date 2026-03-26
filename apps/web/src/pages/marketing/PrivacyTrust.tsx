@@ -1,8 +1,10 @@
-﻿import { Container } from "../../components/layout/Container";
-import { MarketingNav } from "../../components/layout/MarketingNav";
-import { MarketingFooter } from "../../components/layout/MarketingFooter";
+// Frame: Privacy + Trust (Scsqx)
+import { Container } from "../../components/layout/Container";
+import { MarketingShell } from "../../components/layout/MarketingShell";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 
 const principles = [
   {
@@ -32,16 +34,13 @@ const safeguards = [
 
 export default function PrivacyTrust() {
   return (
-    <div className="bg-paper">
-      <MarketingNav />
-      <Container className="pb-24 pt-12 max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Privacy + trust</p>
-          <p className="max-w-[880px] text-[15px] text-muted">
-            We treat will information with care and explain how it is used. You stay in control, and you can request
-            deletion whenever you want.
-          </p>
-        </div>
+    <MarketingShell>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Trust"
+          title="Privacy + trust"
+          description="We treat will information with care and explain how it is used. You stay in control, and you can request deletion whenever you want."
+        />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-4">
@@ -51,6 +50,14 @@ export default function PrivacyTrust() {
                 <p className="text-xs text-muted">{item.body}</p>
               </Card>
             ))}
+            <TrustPanel
+              title="Your control"
+              items={[
+                "Export only when you are ready.",
+                "Share drafts only with people you choose.",
+                "Delete your data whenever you want."
+              ]}
+            />
           </div>
           <div className="space-y-4">
             <Card size="lg" className="space-y-3">
@@ -67,7 +74,6 @@ export default function PrivacyTrust() {
           </div>
         </div>
       </Container>
-      <MarketingFooter />
-    </div>
+    </MarketingShell>
   );
 }
