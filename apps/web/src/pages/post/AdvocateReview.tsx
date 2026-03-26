@@ -1,15 +1,19 @@
-﻿import { Container } from "../../components/layout/Container";
+// Frame: Advocate Review (K02wp)
+import { useMemo, useState } from "react";
+import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
+import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
-import { useMemo, useState } from "react";
 
 const reviewOptions = [
   {
@@ -87,15 +91,13 @@ export default function AdvocateReview() {
   };
 
   return (
-    <div className="pb-24 pt-12">
-      <Container className="max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Advocate review</p>
-          <p className="max-w-[880px] text-[15px] text-muted">
-            If you want professional support, request a review. We will connect you with a Kenyan advocate who can help
-            you finalize the draft confidently.
-          </p>
-        </div>
+    <WorkspaceShell>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Support"
+          title="Advocate review"
+          description="If you want professional support, request a review. We will connect you with a Kenyan advocate who can help you finalize the draft confidently."
+        />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
@@ -171,6 +173,14 @@ export default function AdvocateReview() {
                 Advocate fees vary by complexity. We confirm pricing before any work begins.
               </p>
             </Card>
+            <TrustPanel
+              title="Privacy and confidentiality"
+              items={[
+                "We share only the information you approve.",
+                "Your draft stays encrypted in your account.",
+                "You can proceed without advocate review if you prefer."
+              ]}
+            />
             <Callout tone="info">
               You can still sign without an advocate review. This service is optional and designed for peace of mind.
             </Callout>
@@ -180,6 +190,6 @@ export default function AdvocateReview() {
           </div>
         </div>
       </Container>
-    </div>
+    </WorkspaceShell>
   );
 }

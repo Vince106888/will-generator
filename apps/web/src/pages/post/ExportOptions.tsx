@@ -1,13 +1,17 @@
-﻿import { Container } from "../../components/layout/Container";
+// Frame: Export Options (xUIiv)
+import { useMemo, useState } from "react";
+import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
+import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Badge } from "../../components/ui/Badge";
 import { Callout } from "../../components/ui/Callout";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
-import { useMemo, useState } from "react";
 
 const exportOptions = [
   {
@@ -50,7 +54,7 @@ export default function ExportOptions() {
       }
     });
     if (!willId) {
-      navigate("/drafting/review");
+      navigate("/drafting/review-result");
       return;
     }
     if (format === "pdf") {
@@ -68,20 +72,18 @@ export default function ExportOptions() {
         setStatus("We could not submit the export request. Please try again.");
       }
     } else {
-      setStatus("Add your email in Personal Details so we can deliver this export.");
+      setStatus("Add your email in your details so we can deliver this export.");
     }
   };
 
   return (
-    <div className="pb-24 pt-12">
-      <Container className="max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Export options</p>
-          <p className="max-w-[900px] text-[15px] text-muted">
-            Choose how you want to save or share your draft. Each format includes the latest updates and a signing
-            checklist.
-          </p>
-        </div>
+    <WorkspaceShell>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Export"
+          title="Export options"
+          description="Choose how you want to save or share your draft. Each format includes the latest updates and a signing checklist."
+        />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           {exportOptions.map((option) => (
@@ -122,11 +124,21 @@ export default function ExportOptions() {
             </div>
           </Card>
 
-          <Callout tone="warning">
-            If you make changes after exporting, re-download the latest version before signing.
-          </Callout>
+          <div className="space-y-4">
+            <TrustPanel
+              title="Your draft stays secure"
+              items={[
+                "Exports are generated on request and never emailed without consent.",
+                "Your latest version stays encrypted in your account.",
+                "You can delete exported drafts if you change your mind."
+              ]}
+            />
+            <Callout tone="warning">
+              If you make changes after exporting, re-download the latest version before signing.
+            </Callout>
+          </div>
         </div>
       </Container>
-    </div>
+    </WorkspaceShell>
   );
 }
