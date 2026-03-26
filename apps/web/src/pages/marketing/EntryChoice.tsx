@@ -1,10 +1,12 @@
 // Frame: Entry Choice (V6ysS)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
 import { Callout } from "../../components/ui/Callout";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 
@@ -29,13 +31,10 @@ export default function EntryChoice() {
   return (
     <MarketingShell>
       <Container className="pb-24 pt-12">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">How would you like to begin?</p>
-          <p className="max-w-[780px] text-[15px] leading-7 text-muted">
-            Both paths create the same legally grounded will. Choose the style that feels most comfortable today -
-            you can switch later without losing progress.
-          </p>
-        </div>
+        <PageHeader
+          title="How would you like to begin?"
+          description="Both paths create the same legally grounded will. Choose the style that feels most comfortable today - you can switch later without losing progress."
+        />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Card size="lg" className="space-y-4">
@@ -97,19 +96,29 @@ export default function EntryChoice() {
           </Callout>
         </div>
 
-        <div className="mt-10 space-y-4">
-          <div>
-            <p className="font-display text-2xl text-ink">Before you start</p>
-            <p className="text-sm text-muted">You do not need everything perfect. A rough list is enough to begin.</p>
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="space-y-4">
+            <div>
+              <p className="font-display text-2xl text-ink">Before you start</p>
+              <p className="text-sm text-muted">You do not need everything perfect. A rough list is enough to begin.</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {prepItems.map((item) => (
+                <Card key={item.title} size="lg" className="space-y-2">
+                  <p className="text-sm font-semibold text-ink">{item.title}</p>
+                  <p className="text-sm leading-6 text-muted">{item.copy}</p>
+                </Card>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {prepItems.map((item) => (
-              <Card key={item.title} size="lg" className="space-y-2">
-                <p className="text-sm font-semibold text-ink">{item.title}</p>
-                <p className="text-sm leading-6 text-muted">{item.copy}</p>
-              </Card>
-            ))}
-          </div>
+          <TrustPanel
+            title="Privacy and calm guidance"
+            items={[
+              "We only ask for what is needed to draft the will.",
+              "Sensitive family details are encrypted and never sold.",
+              "Every legal term is explained in plain English."
+            ]}
+          />
         </div>
 
         <Card
@@ -130,7 +139,7 @@ export default function EntryChoice() {
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-sm text-ink">
-            We will confirm eligibility and explain legal signing before you finish.
+            We confirm Kenyan signing and witness requirements before anything becomes legally valid.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="primary" size="sm" onClick={() => navigate("/existing-will")}>

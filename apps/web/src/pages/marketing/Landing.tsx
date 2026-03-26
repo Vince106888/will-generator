@@ -1,3 +1,4 @@
+// Frame: Landing Page v2 (DhkvM)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
@@ -239,3 +240,4 @@ export default function Landing() {
     </MarketingShell>
   );
 }
+

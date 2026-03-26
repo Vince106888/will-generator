@@ -1,10 +1,12 @@
 // Frame: Existing Will Gate (Fd207)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { Input } from "../../components/ui/Input";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 
@@ -24,13 +26,10 @@ export default function ExistingWillGate() {
   return (
     <MarketingShell>
       <Container className="pb-24 pt-12">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Do you already have a will?</p>
-          <p className="max-w-[820px] text-[15px] leading-7 text-muted">
-            This helps us guide you correctly. If you already have a will, you can either replace it or create a
-            formal amendment (codicil). We explain both in plain language below.
-          </p>
-        </div>
+        <PageHeader
+          title="Do you already have a will?"
+          description="This helps us guide you correctly. If you already have a will, you can either replace it or create a formal amendment (codicil). We explain both in plain language below."
+        />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Card size="lg" className="space-y-4">
@@ -152,6 +151,14 @@ export default function ExistingWillGate() {
               If you create a new will, it will revoke previous wills. Make sure the new draft reflects your full
               intentions before signing.
             </Callout>
+            <TrustPanel
+              title="We handle existing documents carefully"
+              items={[
+                "Uploads are encrypted and used only for codicil drafting.",
+                "You can redact sensitive sections before sharing.",
+                "We never change your will without your confirmation."
+              ]}
+            />
             <Card size="lg" className="space-y-2">
               <p className="text-sm font-semibold text-ink">Need help deciding?</p>
               <p className="text-sm text-muted">
