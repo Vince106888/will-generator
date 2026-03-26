@@ -1,11 +1,14 @@
-﻿import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
+// Frame: Guardianship (aSEwT)
+import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 
@@ -27,16 +30,14 @@ export default function StructuredGuardianship() {
 
   return (
     <WorkspaceShell>
-      <Container className="pb-24 pt-12 max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Guardianship</p>
-          <p className="max-w-[900px] text-[15px] leading-7 text-muted">
-            If you have minor children, appoint a guardian who will care for them if you are no longer able to. This is
-            optional if you have no minors, but we still ask in case circumstances change.
-          </p>
-        </div>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Structured flow"
+          title="Guardianship"
+          description="If you have minor children, appoint a guardian who will care for them if you are no longer able to. This is optional if you have no minors, but we still ask in case circumstances change."
+        />
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="space-y-5">
             <Card size="lg" className="space-y-4">
               <p className="text-sm font-semibold text-ink">Primary guardian</p>
@@ -139,6 +140,14 @@ export default function StructuredGuardianship() {
                 Guardians can be different from executors. Some families prefer separate roles for care and legal tasks.
               </p>
             </Card>
+            <TrustPanel
+              title="Children-first clarity"
+              items={[
+                "We only include guardianship when minors are involved.",
+                "You can add notes about schooling or routines.",
+                "We recommend discussing this decision with your chosen guardian."
+              ]}
+            />
           </div>
         </div>
 

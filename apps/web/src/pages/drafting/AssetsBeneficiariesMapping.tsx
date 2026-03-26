@@ -1,10 +1,13 @@
-﻿import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
+// Frame: Assets + Beneficiaries Mapping (nFFsn)
+import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 
@@ -51,13 +54,28 @@ export default function AssetsBeneficiariesMapping() {
 
   return (
     <WorkspaceShell>
-      <Container className="pb-24 pt-12 max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Assets + beneficiaries mapping</p>
-          <p className="max-w-[900px] text-[15px] leading-7 text-muted">
-            Assign each asset to the people you want to receive it. You can split assets, set percentages, or add
-            notes for clarity.
-          </p>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Structured flow"
+          title="Assets + beneficiaries mapping"
+          description="Assign each asset to the people you want to receive it. You can split assets, set percentages, or add notes for clarity."
+        />
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <Card size="lg" className="space-y-3">
+            <p className="text-sm font-semibold text-ink">The core model</p>
+            <p className="text-sm text-muted">
+              The will is built around two questions: <strong>what do you have</strong> and <strong>who should receive it</strong>.
+              This step links those two lists clearly so there is no confusion later.
+            </p>
+          </Card>
+          <Card size="lg" variant="secondary" className="space-y-3">
+            <p className="text-sm font-semibold text-ink">Example mapping</p>
+            <p className="text-sm text-muted">
+              House in Kiambu ? Spouse (60%), Children (40%).
+            </p>
+            <p className="text-xs text-muted">Use percentages or plain instructions if that feels easier.</p>
+          </Card>
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -125,11 +143,7 @@ export default function AssetsBeneficiariesMapping() {
                               </div>
                             </div>
                           ))}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => addAllocationRow(asset.label)}
-                          >
+                          <Button variant="ghost" size="sm" onClick={() => addAllocationRow(asset.label)}>
                             Add another beneficiary
                           </Button>
                         </div>
@@ -143,9 +157,7 @@ export default function AssetsBeneficiariesMapping() {
                   );
                 })}
               </div>
-              <Button variant="secondary" size="sm">
-                Add another asset
-              </Button>
+              <Button variant="secondary" size="sm">Add another asset</Button>
             </Card>
 
             <Card size="lg" className="space-y-4">
@@ -159,16 +171,13 @@ export default function AssetsBeneficiariesMapping() {
                   </div>
                 ))}
               </div>
-              <Button variant="secondary" size="sm">
-                Add beneficiary
-              </Button>
+              <Button variant="secondary" size="sm">Add beneficiary</Button>
             </Card>
           </div>
 
           <div className="space-y-4">
             <Card size="md" className="space-y-3">
-              <p className="text-xs font-semibold text-ink">Allocation detail</p>
-              <p className="text-sm font-semibold text-ink">Set remainder clause</p>
+              <p className="text-xs font-semibold text-ink">Remainder clause</p>
               <p className="text-xs text-muted">
                 Assets not listed above should still go somewhere. Use the remainder clause to cover everything else.
               </p>
@@ -179,9 +188,7 @@ export default function AssetsBeneficiariesMapping() {
                   onChange={(event) => update({ remainderClause: event.target.value })}
                 />
               </FieldGroup>
-              <Button variant="primary" size="sm">
-                Save remainder clause
-              </Button>
+              <Button variant="primary" size="sm">Save remainder clause</Button>
             </Card>
 
             <Card size="md" variant="secondary" className="space-y-2">
@@ -190,6 +197,15 @@ export default function AssetsBeneficiariesMapping() {
                 If minors inherit assets, make sure a guardian or trustee is named in the next step.
               </p>
             </Card>
+
+            <TrustPanel
+              title="Clarity prevents disputes"
+              items={[
+                "Clear shares reduce confusion for executors and family.",
+                "You can split assets or set full ownership transfers.",
+                "We will review this mapping with you before export."
+              ]}
+            />
 
             <Callout tone="warning">
               You can return to this mapping step before finalizing. Clear allocations reduce disputes.

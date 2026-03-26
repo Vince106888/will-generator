@@ -1,10 +1,13 @@
-﻿import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
+// Frame: Executors (yb4Yk)
+import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 
@@ -22,16 +25,14 @@ export default function StructuredExecutors() {
 
   return (
     <WorkspaceShell>
-      <Container className="pb-24 pt-12 max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Executors</p>
-          <p className="max-w-[880px] text-[15px] leading-7 text-muted">
-            An executor is the trusted person who carries out your wishes. Choose someone responsible and willing. You
-            can name a backup executor in case the first person cannot serve.
-          </p>
-        </div>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="Structured flow"
+          title="Executors"
+          description="An executor is the trusted person who carries out your wishes. Choose someone responsible and willing. You can name a backup executor in case the first person cannot serve."
+        />
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="space-y-5">
             <Card size="lg" className="space-y-4">
               <p className="text-sm font-semibold text-ink">Primary executor</p>
@@ -123,13 +124,19 @@ export default function StructuredExecutors() {
                 advocate if you use one.
               </p>
             </Card>
+            <TrustPanel
+              title="We keep executors informed"
+              items={[
+                "You can share a draft summary with them later.",
+                "We include clear instructions for accessing the final will.",
+                "You remain in control of what is shared."
+              ]}
+            />
           </div>
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-          <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/mapping")}>
-            Back
-          </Button>
+          <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/mapping")}>Back</Button>
           <Button variant="primary" size="sm" onClick={() => navigate("/drafting/guardianship")}>
             Continue to guardianship
           </Button>
