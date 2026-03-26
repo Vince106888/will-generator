@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api";
 import { navigate } from "../lib/navigation";
 import { STORAGE_KEYS } from "../lib/storage";
@@ -68,7 +68,7 @@ export default function Result() {
           <p className="mt-2 text-sm text-muted">
             Start your will to generate a new draft and checklist.
           </p>
-          <Button onClick={() => navigate("/drafting/personal-details")} className="mt-6">
+          <Button onClick={() => navigate("/entry-choice")} className="mt-6">
             Start drafting
           </Button>
         </Container>
@@ -135,7 +135,7 @@ export default function Result() {
                   {draftingData.beneficiaries.some((beneficiary) => beneficiary.name) ? "Listed" : "Missing"}
                 </li>
               </ul>
-              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review")}>
+              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review-result")}>
                 Return to checklist
               </Button>
             </Card>
@@ -175,3 +175,4 @@ export default function Result() {
     </div>
   );
 }
+

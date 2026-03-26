@@ -21,7 +21,7 @@ describe("Result page", () => {
     getMock.mockReset();
     postMock.mockReset();
     localStorage.clear();
-    window.history.replaceState({}, "", "/wills/result");
+    window.history.replaceState({}, "", "/drafting/review-result");
   });
 
   it("renders draft and checklist content", async () => {
@@ -39,8 +39,8 @@ describe("Result page", () => {
     await waitFor(() => {
       expect(screen.queryByText(/Refreshing your draft/i)).not.toBeInTheDocument();
     });
-    expect(screen.getByText(/Review your will draft/i)).toBeInTheDocument();
-    expect(screen.getByText(/LAST WILL AND TESTAMENT/i)).toBeInTheDocument();
-    expect(screen.getByText(/Kenya validity checklist/i)).toBeInTheDocument();
+    expect(screen.getByText(/Review \+ result/i)).toBeInTheDocument();
+    expect(screen.getByText(/Draft preview/i)).toBeInTheDocument();
+    expect(screen.getByText(/Complexity check/i)).toBeInTheDocument();
   });
 });

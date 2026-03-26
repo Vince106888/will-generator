@@ -20,7 +20,7 @@ describe("Review drafting flow", () => {
   beforeEach(() => {
     postMock.mockReset();
     localStorage.clear();
-    window.history.replaceState({}, "", "/drafting/review");
+    window.history.replaceState({}, "", "/drafting/review-result");
   });
 
   it("submits payload from review", async () => {
@@ -81,6 +81,6 @@ describe("Review drafting flow", () => {
     expect(payload.instructions.notes).toContain("Keep it simple");
 
     expect(localStorage.getItem("willResult")).not.toBeNull();
-    expect(window.location.pathname).toBe("/drafting/generated");
+    expect(window.location.pathname).toBe("/drafting/review-result");
   });
 });
