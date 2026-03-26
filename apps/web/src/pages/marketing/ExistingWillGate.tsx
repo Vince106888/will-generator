@@ -1,3 +1,4 @@
+// Frame: Existing Will Gate (Fd207)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
@@ -15,6 +16,10 @@ const codicilSteps = [
 
 export default function ExistingWillGate() {
   const { data, update } = useDraftingData();
+  const nextPath =
+    data.draftingMode === "structured"
+      ? "/drafting/structured-flow"
+      : "/drafting/ai-workspace";
 
   return (
     <MarketingShell>
@@ -46,7 +51,7 @@ export default function ExistingWillGate() {
                     notes: ""
                   }
                 });
-                navigate("/entry-choice");
+                navigate(nextPath);
               }}
             >
               Continue
@@ -72,7 +77,7 @@ export default function ExistingWillGate() {
                     notes: data.existingWill.notes || ""
                   }
                 });
-                navigate("/entry-choice");
+                navigate(nextPath);
               }}
             >
               Start a replacement will
@@ -105,12 +110,12 @@ export default function ExistingWillGate() {
                     notes: data.existingWill.notes || ""
                   }
                 });
-                navigate("/entry-choice");
+                navigate(nextPath);
               }}
             >
               Start codicil drafting
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/entry-choice")}>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/advocate-review")}>
               Talk to an advocate first
             </Button>
           </div>
@@ -152,7 +157,7 @@ export default function ExistingWillGate() {
               <p className="text-sm text-muted">
                 We can connect you to an advocate for a quick review of your situation and the right path forward.
               </p>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/advocate-review")}>
                 Request advocate support
               </Button>
             </Card>
@@ -174,7 +179,7 @@ export default function ExistingWillGate() {
                     hasExisting: data.existingWill.type !== "unsure"
                   }
                 });
-                navigate("/entry-choice");
+                navigate(nextPath);
               }}
             >
               Continue

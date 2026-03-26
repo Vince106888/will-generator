@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";`r`nimport { STORAGE_KEYS } from "./storage";
+import { useEffect, useState } from "react";
+import { STORAGE_KEYS } from "./storage";
 
 export type DraftingData = {
   legalName: string;
@@ -49,6 +50,7 @@ export type DraftingData = {
     type: "will" | "codicil" | "unsure";
     notes: string;
   };
+  draftingMode: "ai" | "structured";
 };
 
 export const defaultDraftingData: DraftingData = {
@@ -109,7 +111,8 @@ export const defaultDraftingData: DraftingData = {
     hasExisting: false,
     type: "unsure",
     notes: ""
-  }
+  },
+  draftingMode: "ai"
 };
 
 const STORAGE_KEY = STORAGE_KEYS.draftingData;
@@ -158,6 +161,9 @@ export function loadDraftingData(): DraftingData {
     }
     if (!parsed.existingWill) {
       parsed.existingWill = defaultDraftingData.existingWill;
+    }
+    if (!parsed.draftingMode) {
+      parsed.draftingMode = defaultDraftingData.draftingMode;
     }
     return parsed;
   } catch {
@@ -229,5 +235,3 @@ export function buildGeneratePayload(data: DraftingData) {
     }
   };
 }
-
-

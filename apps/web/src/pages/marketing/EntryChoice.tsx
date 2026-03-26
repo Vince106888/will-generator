@@ -1,3 +1,4 @@
+// Frame: Entry Choice (V6ysS)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
@@ -5,6 +6,7 @@ import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
+import { useDraftingData } from "../../lib/drafting";
 
 const prepItems = [
   {
@@ -22,6 +24,8 @@ const prepItems = [
 ];
 
 export default function EntryChoice() {
+  const { update } = useDraftingData();
+
   return (
     <MarketingShell>
       <Container className="pb-24 pt-12">
@@ -48,7 +52,14 @@ export default function EntryChoice() {
               <li>We translate your words into legal structure</li>
               <li>Ideal when you are not sure what details matter yet</li>
             </ul>
-            <Button variant="primary" size="sm" onClick={() => navigate("/eligibility")}>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                update({ draftingMode: "ai" });
+                navigate("/existing-will");
+              }}
+            >
               Start with AI
             </Button>
           </Card>
@@ -66,7 +77,14 @@ export default function EntryChoice() {
               <li>Helpful if you like certainty and clear steps</li>
               <li>Review everything before a draft is created</li>
             </ul>
-            <Button variant="secondary" size="sm" onClick={() => navigate("/eligibility")}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                update({ draftingMode: "structured" });
+                navigate("/existing-will");
+              }}
+            >
               Start with guided form
             </Button>
           </Card>
@@ -94,7 +112,11 @@ export default function EntryChoice() {
           </div>
         </div>
 
-        <Card size="lg" variant="warning" className="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <Card
+          size="lg"
+          variant="warning"
+          className="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+        >
           <div className="space-y-1">
             <p className="text-sm font-semibold text-ink">Already have a will?</p>
             <p className="text-sm text-muted">
@@ -111,7 +133,7 @@ export default function EntryChoice() {
             We will confirm eligibility and explain legal signing before you finish.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary" size="sm" onClick={() => navigate("/eligibility")}>
+            <Button variant="primary" size="sm" onClick={() => navigate("/existing-will")}>
               Continue
             </Button>
             <Button variant="secondary" size="sm" onClick={() => navigate("/")}>
