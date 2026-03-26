@@ -1,9 +1,12 @@
+// Frame: AI Extraction Summary (9MjGI)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
+import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 
@@ -20,15 +23,18 @@ export default function AiExtractionSummary() {
   const extractionCards = [
     {
       title: "Assets found",
-      items: assets.length > 0 ? assets : ["No assets captured yet"]
+      items: assets.length > 0 ? assets : ["No assets captured yet"],
+      cta: { label: "Review assets", path: "/drafting/mapping" }
     },
     {
       title: "Beneficiaries found",
-      items: beneficiaries.length > 0 ? beneficiaries : ["No beneficiaries captured yet"]
+      items: beneficiaries.length > 0 ? beneficiaries : ["No beneficiaries captured yet"],
+      cta: { label: "Review beneficiaries", path: "/drafting/mapping" }
     },
     {
       title: "Executor status",
-      items: executorStatus
+      items: executorStatus,
+      cta: { label: "Review executors", path: "/drafting/structured-executors" }
     }
   ];
 
@@ -39,15 +45,18 @@ export default function AiExtractionSummary() {
     data.hasMinors && !data.guardians[0]?.name && "Guardian for minors"
   ].filter(Boolean) as string[];
 
+  const mappingPreview = data.assetAllocations.length
+    ? data.assetAllocations
+    : [];
+
   return (
     <WorkspaceShell>
-      <Container className="pb-24 pt-12 max-w-[1440px]">
-        <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">AI extraction summary</p>
-          <p className="max-w-[860px] text-[15px] leading-7 text-muted">
-            We extracted the details below. Please confirm missing items and adjust anything that feels incomplete.
-          </p>
-        </div>
+      <Container size="wide" className="pb-24 pt-12">
+        <PageHeader
+          eyebrow="AI Drafting"
+          title="AI extraction summary"
+          description="We extracted the details below. Please confirm missing items and adjust anything that feels incomplete before we structure the full will."
+        />
 
         <Card size="lg" variant="success" className="mt-6 space-y-2">
           <Badge tone="success">Draft summary ready</Badge>
@@ -68,8 +77,8 @@ export default function AiExtractionSummary() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <Button variant="secondary" size="sm">
-                Review details
+              <Button variant="secondary" size="sm" onClick={() => navigate(card.cta.path)}>
+                {card.cta.label}
               </Button>
             </Card>
           ))}
@@ -92,6 +101,44 @@ export default function AiExtractionSummary() {
               Add missing details
             </Button>
           </Card>
+        </div>
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <Card size="lg" className="space-y-3">
+            <p className="text-sm font-semibold text-ink">Assets to beneficiaries mapping</p>
+            {mappingPreview.length > 0 ? (
+              <div className="space-y-3">
+                {mappingPreview.map((allocation) => (
+                  <div key={allocation.assetLabel} className="rounded-xl border border-border bg-secondary p-4">
+                    <p className="text-sm font-semibold text-ink">{allocation.assetLabel}</p>
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">
+                      {allocation.allocations.map((item, index) => (
+                        <li key={`${allocation.assetLabel}-${index}`}>
+                          {item.beneficiary} - {item.share || "Share to confirm"}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted">
+                No asset allocations yet. The next step helps you link each asset to the people who should receive it.
+              </p>
+            )}
+            <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/mapping")}>
+              Review mapping
+            </Button>
+          </Card>
+
+          <TrustPanel
+            title="Review before we draft"
+            items={[
+              "We never finalize a will without your explicit confirmation.",
+              "You can edit every section before exporting or signing.",
+              "Advocate review is available for complex estates."
+            ]}
+          />
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
