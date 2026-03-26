@@ -7,6 +7,11 @@ Source of truth: `design/pencil-new.pen`
 - Final Pencil canvas with AI drafting, structured flow, review/output, support/trust, and mobile
 - Implementation parity pages created under `apps/web/src/pages`
 - Product docs updated in `docs/product`
+ - Design governance docs in `docs/design`
+
+## Design Governance (Must Follow)
+- `docs/design/design-source-of-truth.md`
+- `docs/design/page-inventory.md`
 
 ## Required Validation (Before Coding)
 1. Legal review

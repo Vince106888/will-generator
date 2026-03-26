@@ -1,38 +1,36 @@
-﻿# Current Product State
+# Current Product State
 
-Date: 2026-03-19
+Date: 2026-03-26  
+Design source of truth: `docs/design/design-source-of-truth.md`
 
-## Completed Areas
+## Current Direction (Approved)
+- Dual-path drafting: AI-first primary, structured form secondary.
+- Existing will / codicil gate before drafting.
+- Assets and beneficiaries are captured and linked as a core step.
+- Trust, privacy, and plain-English legal guidance are front-and-center.
+- Mobile is first-class, not a resized desktop.
 
-- Marketing landing, pre-start, and eligibility pages.
-- Drafting flow pages for personal details, family, executors, beneficiaries, assets, distribution, guardians, special wishes, review, and result.
+## What Exists in Repo
+- Active Pencil source (`design/pencil-new.pen`) with a clear implementation index.
+- Parity pages in `apps/web/src/pages` for all major flows.
 - API endpoints for will draft generation, retrieval, PDF download, and lead capture.
 - Baseline draft, complexity, and validity engines.
-- PDF generation with branded header.
 
-## In-Progress Areas
+## Implementation Status
+- Most active pages exist but are **partial** and need alignment to the active Pencil frames.
+- AI Drafting Workspace and mobile views require deeper layout and content work.
+- Review/Result is still split across `Review.tsx` and `Result.tsx`.
 
-- End-to-end persistence between UI and API (UI state is local; API is ready for integration).
-- Complexity/validity engines need expanded rules and legal guardrails.
-- Signing guidance, save/continue, and error states need more wiring to actual backend state.
+## Known Gaps
+- End-to-end persistence between UI and API (UI state is local; API integration not wired).
+- Complexity/validity engines need expanded Kenya-specific guardrails.
+- Legal copy requires expert review (guardianship, witnesses, codicils).
+- Mobile coverage is missing for AI summary, export, and signing flows.
 
-## Polish Gaps
+## Immediate Priorities (Implementation Readiness)
+1. Lock design governance to active frames only.
+2. Update page copy for depth, reassurance, and “why this matters.”
+3. Fix AI Drafting Workspace layout (wider conversation, better balance).
+4. Build mobile-specific layouts for entry, AI drafting, mapping, review.
+5. Clarify routing + component ownership before implementation.
 
-- Robust routing and deep linking in the web app.
-- Accessibility and input validation across the drafting flow.
-- PDF output formatting and legal wording review.
-- Consistent error handling and loading states.
-
-## Known Product / Engineering Debt
-
-- No authentication or user accounts.
-- No migration history or seed data in Prisma.
-- No deployment automation.
-- No shared design system or component library extracted yet.
-
-## Immediate Priorities (Next Build)
-
-- Wire the drafting flow to the API end-to-end.
-- Expand complexity/validity rules for Kenyan legal requirements.
-- Add save/resume and lead capture flows in the UI.
-- Establish staging environment to validate PDF output and data integrity.
