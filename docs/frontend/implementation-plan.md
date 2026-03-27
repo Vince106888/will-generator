@@ -1,7 +1,8 @@
 # Frontend Implementation Plan
 
-Date: 2026-03-26  
-Design source of truth: `docs/design/design-source-of-truth.md`
+Date: 2026-03-27  
+Design source of truth: `docs/design/design-source-of-truth.md`  
+Route map: `docs/frontend/route-map.md`
 
 ## Goals
 - Implement only the active frames listed in `00 Canvas Index`.
@@ -111,7 +112,7 @@ Existing UI atoms to standardize:
 - Mobile layouts verified to maintain hierarchy and trust content.
 
 ## Validation
-- `pnpm.cmd -C apps/web test` (pass)
+- `pnpm.cmd -C apps/web test` (pass on 2026-03-26)
 
 ## Immediate Engineering Tasks (Pre-Batch 1)
 1. Lock routing map in `apps/web/src/App.tsx` to active-only routes. (done)

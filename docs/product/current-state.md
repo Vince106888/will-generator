@@ -1,6 +1,6 @@
-# Current Product State
+﻿# Current Product State
 
-Date: 2026-03-26  
+Date: 2026-03-27  
 Design source of truth: `docs/design/design-source-of-truth.md`
 
 ## Current Direction (Approved)
@@ -11,26 +11,24 @@ Design source of truth: `docs/design/design-source-of-truth.md`
 - Mobile is first-class, not a resized desktop.
 
 ## What Exists in Repo
-- Active Pencil source (`design/pencil-new.pen`) with a clear implementation index.
-- Parity pages in `apps/web/src/pages` for all major flows.
+- Active Pencil source (`design/pencil-implementation.pen`) with a clean implementation index.
+- Parity pages in `apps/web/src/pages` for all major flows and routes.
 - API endpoints for will draft generation, retrieval, PDF download, and lead capture.
 - Baseline draft, complexity, and validity engines.
 
 ## Implementation Status
-- Most active pages exist but are **partial** and need alignment to the active Pencil frames.
-- AI Drafting Workspace and mobile views require deeper layout and content work.
-- Review/Result is still split across `Review.tsx` and `Result.tsx`.
+- Active pages and routes align with the clean Pencil source.
+- AI Drafting Workspace widened and enriched with trust and guidance.
+- Review/Result consolidated under `apps/web/src/pages/drafting/Review.tsx`.
 
 ## Known Gaps
 - End-to-end persistence between UI and API (UI state is local; API integration not wired).
 - Complexity/validity engines need expanded Kenya-specific guardrails.
 - Legal copy requires expert review (guardianship, witnesses, codicils).
-- Mobile coverage is missing for AI summary, export, and signing flows.
+- Mobile coverage for AI summary, export, and signing flows must be validated in production QA.
 
 ## Immediate Priorities (Implementation Readiness)
-1. Lock design governance to active frames only.
-2. Update page copy for depth, reassurance, and “why this matters.”
-3. Fix AI Drafting Workspace layout (wider conversation, better balance).
-4. Build mobile-specific layouts for entry, AI drafting, mapping, review.
-5. Clarify routing + component ownership before implementation.
+1. Validate copy and legal guidance with counsel.
+2. Wire persistence to API contracts.
+3. QA mobile behaviors for AI summary, export, and signing.
 
