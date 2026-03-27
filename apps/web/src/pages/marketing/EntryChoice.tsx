@@ -1,29 +1,12 @@
 // Frame: Entry Choice (V6ysS)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
-import { PageHeader } from "../../components/layout/PageHeader";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
-import { Badge } from "../../components/ui/Badge";
 import { Callout } from "../../components/ui/Callout";
 import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
-
-const prepItems = [
-  {
-    title: "Identification",
-    copy: "National ID or passport details help ensure the will is clearly linked to you."
-  },
-  {
-    title: "Family and dependants",
-    copy: "Names of your spouse, children, and anyone who depends on you financially."
-  },
-  {
-    title: "Assets overview",
-    copy: "Land, home, bank or SACCO accounts, M-Pesa, vehicles, and business interests."
-  }
-];
 
 export default function EntryChoice() {
   const { update } = useDraftingData();
@@ -31,85 +14,118 @@ export default function EntryChoice() {
   return (
     <MarketingShell>
       <Container className="pb-24 pt-12">
-        <PageHeader
-          title="How would you like to begin?"
-          description="Both paths create the same legally grounded will. Choose the style that feels most comfortable today - you can switch later without losing progress."
-        />
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <h1 className="font-display text-3xl text-ink sm:text-4xl">
+              How would you like to begin?
+            </h1>
+            <p className="max-w-[760px] text-[15px] leading-7 text-muted">
+              Both paths create the same legally grounded will. Choose the style that feels most
+              comfortable today — you can switch later without losing progress.
+            </p>
+          </div>
+          <p className="max-w-[760px] text-sm leading-6 text-muted">
+            We explain executor, beneficiary, guardian, and codicil as you go, so you never have to
+            guess legal terms.
+          </p>
+        </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Card size="lg" className="space-y-4">
             <div className="space-y-2">
-              <Badge tone="info">Recommended for storytelling</Badge>
               <p className="text-lg font-semibold text-ink">Draft with AI</p>
               <p className="text-sm text-muted">
-                Describe your wishes in your own words. We organize them, ask follow-ups, and build a structured
-                draft you can review.
+                Describe your wishes in your own words. We will ask gentle follow-ups and
+                summarize what we capture.
               </p>
             </div>
-            <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-              <li>Best if you want to talk things through naturally</li>
-              <li>We translate your words into legal structure</li>
-              <li>Ideal when you are not sure what details matter yet</li>
-            </ul>
+            <div className="space-y-3 text-sm text-muted">
+              <p className="text-sm italic text-muted">
+                Example: "I have a home in Kiambu, my wife gets the house, my son gets the car."
+              </p>
+              <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
+                <li>Voice input and document upload supported</li>
+                <li>We ask follow-ups only where needed</li>
+                <li>Review extracted assets and beneficiaries before you confirm</li>
+              </ul>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
             <Button
               variant="primary"
               size="sm"
               onClick={() => {
-                update({ draftingMode: "ai" });
+                update({ draftingMode: "ai", draftingModeConfirmed: true });
                 navigate("/existing-will");
               }}
             >
-              Start with AI
+              Start with AI drafting
             </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
+                See a sample conversation
+              </Button>
+            </div>
           </Card>
 
           <Card size="lg" className="space-y-4">
             <div className="space-y-2">
-              <Badge tone="neutral">Recommended for checklists</Badge>
               <p className="text-lg font-semibold text-ink">Use guided form</p>
               <p className="text-sm text-muted">
-                A calm, step-by-step checklist with clear explanations and examples for each section.
+                Answer a step-by-step checklist with explanations and examples.
               </p>
             </div>
             <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-              <li>Structured prompts for each part of your will</li>
-              <li>Helpful if you like certainty and clear steps</li>
-              <li>Review everything before a draft is created</li>
+              <li>Clear required vs optional labels</li>
+              <li>Asset-to-beneficiary mapping built in</li>
+              <li>Progress bar with ability to return later</li>
             </ul>
+            <div className="flex flex-wrap items-center gap-3">
             <Button
               variant="secondary"
               size="sm"
               onClick={() => {
-                update({ draftingMode: "structured" });
+                update({ draftingMode: "structured", draftingModeConfirmed: true });
                 navigate("/existing-will");
               }}
             >
-              Start with guided form
+              Start guided form
             </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
+                Preview the steps
+              </Button>
+            </div>
           </Card>
         </div>
 
         <div className="mt-6">
           <Callout tone="info">
-            You can switch paths later. Start with AI, then move to the checklist - or vice versa - without losing
-            your information.
+            Start with AI or the checklist, then switch any time without losing progress. Your
+            draft stays synced.
           </Callout>
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-4">
-            <div>
+            <div className="space-y-2">
               <p className="font-display text-2xl text-ink">Before you start</p>
-              <p className="text-sm text-muted">You do not need everything perfect. A rough list is enough to begin.</p>
+              <p className="text-sm text-muted">
+                You do not need everything perfect. A rough list of assets and family is enough
+                to begin — we will help you refine details.
+              </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {prepItems.map((item) => (
-                <Card key={item.title} size="lg" className="space-y-2">
-                  <p className="text-sm font-semibold text-ink">{item.title}</p>
-                  <p className="text-sm leading-6 text-muted">{item.copy}</p>
-                </Card>
-              ))}
-            </div>
+            <Card size="lg" className="space-y-3">
+              <div>
+                <p className="text-sm font-semibold text-ink">Helpful to have</p>
+                <p className="text-sm text-muted">
+                  These details make drafting faster, but they are not required to start.
+                </p>
+              </div>
+              <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
+                <li>National ID or passport details</li>
+                <li>A list of assets and rough values</li>
+                <li>Names of beneficiaries and executors</li>
+                <li>Guardianship preferences if you have minors</li>
+              </ul>
+            </Card>
           </div>
           <TrustPanel
             title="Privacy and calm guidance"
@@ -129,27 +145,14 @@ export default function EntryChoice() {
           <div className="space-y-1">
             <p className="text-sm font-semibold text-ink">Already have a will?</p>
             <p className="text-sm text-muted">
-              You can replace an older will or create a codicil (formal amendment). We will guide you through both.
+              If you already have a will, we help you draft a codicil (a formal amendment) or
+              replace it with a new will. We explain the legal effect before you choose.
             </p>
           </div>
           <Button variant="secondary" size="sm" onClick={() => navigate("/existing-will")}>
             Review your options
           </Button>
         </Card>
-
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-          <p className="text-sm text-ink">
-            We confirm Kenyan signing and witness requirements before anything becomes legally valid.
-          </p>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary" size="sm" onClick={() => navigate("/existing-will")}>
-              Continue
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => navigate("/")}>
-              Back to landing
-            </Button>
-          </div>
-        </div>
       </Container>
     </MarketingShell>
   );
