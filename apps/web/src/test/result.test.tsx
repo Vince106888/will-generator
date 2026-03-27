@@ -39,7 +39,7 @@ describe("Result page", () => {
     await waitFor(() => {
       expect(screen.queryByText(/Refreshing your draft/i)).not.toBeInTheDocument();
     });
-    expect(screen.getByText(/Review \+ result/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Review \+ result/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Draft preview/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Complexity check/i)).toBeInTheDocument();
   });
