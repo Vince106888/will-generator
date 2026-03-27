@@ -12,7 +12,7 @@ Status meanings:
 
 | Page | Frame ID | Route | File | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Landing Page v2 | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | Active landing v2 surface |
+| Landing Page v2 | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | ACTIVE 01 copy + CTA wiring restored |
 | Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Emphasizes AI-first path |
 | Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Codicil framing included |
 | AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting workspace |

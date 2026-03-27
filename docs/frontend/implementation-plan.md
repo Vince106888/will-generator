@@ -114,6 +114,7 @@ Existing UI atoms to standardize:
 
 ## Validation
 - `pnpm.cmd -C apps/web test` (pass on 2026-03-26)
+ - Landing v2 CTA routing checked on 2026-03-27 (manual navigation sanity).
 
 ## Immediate Engineering Tasks (Pre-Batch 1)
 1. Lock routing map in `apps/web/src/App.tsx` to active-only routes. (done)

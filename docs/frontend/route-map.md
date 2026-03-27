@@ -4,10 +4,11 @@ Date: 2026-03-27
 Design source: `design/pencil-implementation.pen`
 
 This map is the authoritative route list for implementation. Legacy pages are not mapped.
+Entry sequence: `/` -> `/entry-choice` -> `/existing-will` -> drafting paths.
 
 | Route | Page | Frame ID | File | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `/` | Landing Page v2 | `DhkvM` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | Marketing entry |
+| `/` | Landing Page v2 | `DhkvM` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | CTA sets drafting mode, routes to `/entry-choice` |
 | `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | AI-first path primary |
 | `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Codicil and replacement |
 | `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting layout |
