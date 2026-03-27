@@ -4872,6 +4872,7 @@
                         {
                           "type": "frame",
                           "id": "xHl0A",
+                          "width": "fill_container",
                           "fill": "$--secondary",
                           "cornerRadius": "$--radius-m",
                           "stroke": {
@@ -4909,6 +4910,7 @@
                         {
                           "type": "frame",
                           "id": "goZyp",
+                          "width": "fill_container",
                           "fill": "$--card",
                           "cornerRadius": "$--radius-m",
                           "stroke": {
@@ -4946,6 +4948,7 @@
                         {
                           "type": "frame",
                           "id": "N1TWb",
+                          "width": "fill_container",
                           "fill": "$--secondary",
                           "cornerRadius": "$--radius-m",
                           "stroke": {
