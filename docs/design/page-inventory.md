@@ -13,8 +13,8 @@ Status meanings:
 | Page | Frame ID | Route | File | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Landing Page v2 | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | ACTIVE 01 copy + CTA wiring restored |
-| Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Emphasizes AI-first path |
-| Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Codicil framing included |
+| Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Matches ACTIVE 02 copy + CTA structure |
+| Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Matches ACTIVE 03 with codicil upload + warnings |
 | AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting workspace |
 | AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | UI strengthened; design still needs final pass |
 | Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | implemented | Primary structured entry |
@@ -29,8 +29,8 @@ Status meanings:
 | Privacy + Trust | `Scsqx` | `/privacy` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | implemented | Security and retention detail |
 | Error + Empty States | `IRKLg` | `/drafting/error` | `apps/web/src/pages/post/ErrorStates.tsx` | implemented | Recovery guidance |
 | Mobile Landing v2 | `tNapD` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | Mobile layout handled in page |
-| Mobile Entry Choice | `ny4DT` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Mobile layout handled in page |
-| Mobile Existing Will Gate | `boVDU` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Mobile layout handled in page |
+| Mobile Entry Choice | `ny4DT` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Mobile layout aligned to ACTIVE M2 |
+| Mobile Existing Will Gate | `boVDU` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Mobile layout aligned to ACTIVE M3 |
 | Mobile AI Drafting | `jdj6J` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Mobile stack in workspace |
 | Mobile Assets Mapping | `ui2iU` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | implemented | Mobile mapping layout |
 | Mobile Review | `qSIY6` | `/drafting/review-result` | `apps/web/src/pages/drafting/Review.tsx` | implemented | Mobile review summary |

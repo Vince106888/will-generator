@@ -111,6 +111,8 @@ Existing UI atoms to standardize:
 - Guardianship phrased conditionally for minors.
 - Trust and privacy messaging reinforced on entry, AI workspace, and export/signing.
 - Mobile layouts verified to maintain hierarchy and trust content.
+- Entry flow now explicitly confirms drafting mode on `/entry-choice` before `/existing-will` continues.
+- Existing-will selection persists `existingWill` intent and routes using confirmed drafting mode.
 
 ## Validation
 - `pnpm.cmd -C apps/web test` (pass on 2026-03-26)

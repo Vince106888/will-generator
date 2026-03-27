@@ -5,12 +5,13 @@ Design source: `design/pencil-implementation.pen`
 
 This map is the authoritative route list for implementation. Legacy pages are not mapped.
 Entry sequence: `/` -> `/entry-choice` -> `/existing-will` -> drafting paths.
+Drafting mode is explicitly confirmed on `/entry-choice` before `/existing-will` continues.
 
 | Route | Page | Frame ID | File | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
 | `/` | Landing Page v2 | `DhkvM` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | CTA sets drafting mode, routes to `/entry-choice` |
-| `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | AI-first path primary |
-| `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Codicil and replacement |
+| `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | AI-first path primary, explicit drafting mode confirmation |
+| `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Requires confirmed drafting mode; selection persists existing-will intent |
 | `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting layout |
 | `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | UI strengthened; design still needs final pass |
 | `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | implemented | Structured entry |
