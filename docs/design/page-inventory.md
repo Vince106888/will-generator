@@ -16,7 +16,7 @@ Status meanings:
 | Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Emphasizes AI-first path |
 | Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Codicil framing included |
 | AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting workspace |
-| AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Mapping UI should be deepened |
+| AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | UI strengthened; design still needs final pass |
 | Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | implemented | Primary structured entry |
 | Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | implemented | Asset-beneficiary linkage |
 | Executors | `yb4Yk` | `/drafting/structured-executors` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | implemented | Executor guidance included |

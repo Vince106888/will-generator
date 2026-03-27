@@ -11,7 +11,7 @@ This map is the authoritative route list for implementation. Legacy pages are no
 | `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | AI-first path primary |
 | `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Codicil and replacement |
 | `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting layout |
-| `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Mapping depth needed |
+| `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | UI strengthened; design still needs final pass |
 | `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | implemented | Structured entry |
 | `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | implemented | Core asset linking |
 | `/drafting/structured-executors` | Executors | `yb4Yk` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | implemented | Executor guidance |
@@ -23,4 +23,3 @@ This map is the authoritative route list for implementation. Legacy pages are no
 | `/drafting/error` | Error + Empty States | `IRKLg` | `apps/web/src/pages/post/ErrorStates.tsx` | implemented | Recovery path |
 | `/faq` | FAQ | `puMDs` | `apps/web/src/pages/marketing/FaqPage.tsx` | implemented | Kenya-specific FAQ |
 | `/privacy` | Privacy + Trust | `Scsqx` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | implemented | Security and retention |
-

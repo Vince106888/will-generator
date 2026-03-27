@@ -1,4 +1,4 @@
-// Frame: AI Extraction Summary (9MjGI)
+﻿// Frame: AI Extraction Summary (9MjGI)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { PageHeader } from "../../components/layout/PageHeader";
@@ -16,6 +16,7 @@ export default function AiExtractionSummary() {
   const beneficiaries = data.beneficiaries
     .filter((beneficiary) => beneficiary.name)
     .map((beneficiary) => `${beneficiary.name}${beneficiary.relationship ? ` (${beneficiary.relationship})` : ""}`);
+  const confidence = data.aiDraftSession?.confidence ?? "medium";
   const executorStatus = [
     data.executors[0]?.name ? "Primary executor added" : "Primary executor not yet added",
     data.executors[1]?.name ? "Backup executor added" : "Backup executor not yet added"
@@ -45,9 +46,7 @@ export default function AiExtractionSummary() {
     data.hasMinors && !data.guardians[0]?.name && "Guardian for minors"
   ].filter(Boolean) as string[];
 
-  const mappingPreview = data.assetAllocations.length
-    ? data.assetAllocations
-    : [];
+  const mappingPreview = data.assetAllocations.length ? data.assetAllocations : [];
 
   return (
     <WorkspaceShell>
@@ -58,15 +57,37 @@ export default function AiExtractionSummary() {
           description="We extracted the details below. Please confirm missing items and adjust anything that feels incomplete before we structure the full will."
         />
 
-        <Card size="lg" variant="success" className="mt-6 space-y-2">
-          <Badge tone="success">Draft summary ready</Badge>
-          <p className="text-sm font-semibold text-ink">
-            We extracted {Math.max(assets.length, 0)} assets and {Math.max(beneficiaries.length, 0)} beneficiaries.
-          </p>
-          <p className="text-sm text-muted">
-            Please confirm missing items before you finalize. You stay in control of every section.
-          </p>
-        </Card>
+        <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <Card size="lg" variant="success" className="space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Badge tone="success">Draft summary ready</Badge>
+              <Badge tone="info">Confidence: {confidence}</Badge>
+            </div>
+            <p className="text-sm font-semibold text-ink">
+              We extracted {Math.max(assets.length, 0)} assets and {Math.max(beneficiaries.length, 0)} beneficiaries.
+            </p>
+            <p className="text-sm text-muted">
+              Please confirm missing items before you finalize. You stay in control of every section.
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/ai-workspace")}>
+                Add more notes
+              </Button>
+              <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured-flow")}>
+                Continue to structured flow
+              </Button>
+            </div>
+          </Card>
+          <Card size="lg" className="space-y-2">
+            <p className="text-sm font-semibold text-ink">What happens next</p>
+            <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
+              <li>Review assets and beneficiaries for completeness.</li>
+              <li>Match each asset to the people who should receive it.</li>
+              <li>Confirm executors and guardianship if relevant.</li>
+            </ul>
+            <p className="text-xs text-muted">You can edit everything before exporting or signing.</p>
+          </Card>
+        </div>
 
         <div className="mt-6 grid gap-5 lg:grid-cols-3">
           {extractionCards.map((card) => (
@@ -77,9 +98,14 @@ export default function AiExtractionSummary() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <Button variant="secondary" size="sm" onClick={() => navigate(card.cta.path)}>
-                {card.cta.label}
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button variant="secondary" size="sm" onClick={() => navigate(card.cta.path)}>
+                  {card.cta.label}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai-workspace")}>
+                  Edit in conversation
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
@@ -110,7 +136,12 @@ export default function AiExtractionSummary() {
               <div className="space-y-3">
                 {mappingPreview.map((allocation) => (
                   <div key={allocation.assetLabel} className="rounded-xl border border-border bg-secondary p-4">
-                    <p className="text-sm font-semibold text-ink">{allocation.assetLabel}</p>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-sm font-semibold text-ink">{allocation.assetLabel}</p>
+                      <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
+                        Edit allocation
+                      </Button>
+                    </div>
                     <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">
                       {allocation.allocations.map((item, index) => (
                         <li key={`${allocation.assetLabel}-${index}`}>
