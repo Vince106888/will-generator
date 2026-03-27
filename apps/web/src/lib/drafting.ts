@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { STORAGE_KEYS } from "./storage";
 
 export type DraftingData = {
   legalName: string;
@@ -21,11 +22,36 @@ export type DraftingData = {
   assets: Array<{ label: string; location: string; notes: string }>;
   distributionNotes: string;
   residuaryWishes: string;
-  guardians: Array<{ name: string; relationship: string; notes: string }>;
+  guardians: Array<{ name: string; relationship: string; phone: string; location: string; notes: string }>;
   specialWishes: string;
   funeralWishes: string;
   digitalWishes: string;
   charitableIntentions: string;
+  assetAllocations: Array<{
+    assetLabel: string;
+    allocations: Array<{ beneficiary: string; share: string; notes: string }>;
+  }>;
+  remainderClause: string;
+  executorNotes: string;
+  guardianNotes: string;
+  aiDraftSession: {
+    summary: string;
+    updatedAt: string;
+    confidence: string;
+  };
+  exportPreferences: {
+    format: string;
+    includeChecklist: boolean;
+    advocateReview: boolean;
+    storage: string;
+  };
+  existingWill: {
+    hasExisting: boolean;
+    type: "will" | "codicil" | "none" | "unsure";
+    notes: string;
+  };
+  draftingMode: "ai" | "structured";
+  draftingModeConfirmed: boolean;
 };
 
 export const defaultDraftingData: DraftingData = {
@@ -60,16 +86,38 @@ export const defaultDraftingData: DraftingData = {
   distributionNotes: "",
   residuaryWishes: "",
   guardians: [
-    { name: "", relationship: "", notes: "" },
-    { name: "", relationship: "", notes: "" }
+    { name: "", relationship: "", phone: "", location: "", notes: "" },
+    { name: "", relationship: "", phone: "", location: "", notes: "" }
   ],
   specialWishes: "",
   funeralWishes: "",
   digitalWishes: "",
-  charitableIntentions: ""
+  charitableIntentions: "",
+  assetAllocations: [],
+  remainderClause: "",
+  executorNotes: "",
+  guardianNotes: "",
+  aiDraftSession: {
+    summary: "",
+    updatedAt: "",
+    confidence: "medium"
+  },
+  exportPreferences: {
+    format: "pdf",
+    includeChecklist: true,
+    advocateReview: false,
+    storage: "secure-vault"
+  },
+  existingWill: {
+    hasExisting: false,
+    type: "unsure",
+    notes: ""
+  },
+  draftingMode: "ai",
+  draftingModeConfirmed: false
 };
 
-const STORAGE_KEY = "esheriaDraftingData";
+const STORAGE_KEY = STORAGE_KEYS.draftingData;
 
 export function loadDraftingData(): DraftingData {
   if (typeof window === "undefined") return defaultDraftingData;
@@ -98,11 +146,29 @@ export function loadDraftingData(): DraftingData {
     if (parsed.guardians.length < 2) {
       parsed.guardians = [
         ...parsed.guardians,
-        { name: "", relationship: "", notes: "" }
+        { name: "", relationship: "", phone: "", location: "", notes: "" }
       ];
     }
     if (!Array.isArray(parsed.dependants) || parsed.dependants.length === 0) {
       parsed.dependants = defaultDraftingData.dependants;
+    }
+    if (!Array.isArray(parsed.assetAllocations)) {
+      parsed.assetAllocations = defaultDraftingData.assetAllocations;
+    }
+    if (!parsed.aiDraftSession) {
+      parsed.aiDraftSession = defaultDraftingData.aiDraftSession;
+    }
+    if (!parsed.exportPreferences) {
+      parsed.exportPreferences = defaultDraftingData.exportPreferences;
+    }
+    if (!parsed.existingWill) {
+      parsed.existingWill = defaultDraftingData.existingWill;
+    }
+    if (!parsed.draftingMode) {
+      parsed.draftingMode = defaultDraftingData.draftingMode;
+    }
+    if (typeof parsed.draftingModeConfirmed !== "boolean") {
+      parsed.draftingModeConfirmed = defaultDraftingData.draftingModeConfirmed;
     }
     return parsed;
   } catch {
@@ -155,12 +221,22 @@ export function buildGeneratePayload(data: DraftingData) {
         data.residuaryWishes,
         data.specialWishes,
         data.digitalWishes,
-        data.charitableIntentions
+        data.charitableIntentions,
+        data.executorNotes,
+        data.guardianNotes,
+        data.remainderClause
       ]
         .map((item) => item.trim())
         .filter(Boolean)
         .join("\n\n") || undefined,
       funeralWishes: data.funeralWishes.trim() || undefined
+    },
+    metadata: {
+      assetAllocations: data.assetAllocations,
+      exportPreferences: data.exportPreferences,
+      existingWill: data.existingWill,
+      aiDraftSession: data.aiDraftSession,
+      remainderClause: data.remainderClause
     }
   };
 }

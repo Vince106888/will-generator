@@ -11,10 +11,9 @@ export default function PreStart() {
       <Container className="pb-24 pt-12">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="space-y-4">
-            <p className="font-display text-3xl text-ink">Before you begin</p>
+            <p className="font-display text-3xl text-ink">Before you begin (Legacy)</p>
             <p className="text-[15px] leading-7 text-muted">
-              You are about to start a guided process to prepare your will. We explain each step in plain language,
-              and you can pause whenever you need.
+              Legacy page retained for archive reference. Use Entry Choice and Existing Will Gate to begin.
             </p>
             <p className="text-sm leading-6 text-muted">
               Most people finish in about 20-30 minutes, but taking your time is perfectly fine.
@@ -112,8 +111,8 @@ export default function PreStart() {
             When you are ready, you can begin drafting or preview how the process works.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary" size="sm" onClick={() => navigate("/eligibility")}>
-              Start drafting
+            <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
+              Go to entry choice
             </Button>
             <Button variant="secondary" size="sm" onClick={() => navigate("/")}>
               See how it works

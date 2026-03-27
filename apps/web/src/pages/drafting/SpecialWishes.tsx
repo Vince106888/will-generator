@@ -9,8 +9,8 @@ export default function SpecialWishes() {
   return (
     <DraftingShell
       stepId="special-wishes"
-      title="Special wishes"
-      description="Optional notes to help your family honor your wishes clearly."
+      title="Special wishes (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/special-wishes" />}
     >
       <div className="space-y-4">

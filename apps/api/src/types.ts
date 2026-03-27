@@ -4,6 +4,30 @@ export type WillInstructions = {
   funeralWishes?: string;
 };
 
+export type WillMetadata = {
+  assetAllocations?: Array<{
+    assetLabel: string;
+    allocations: Array<{ beneficiary: string; share: string; notes: string }>;
+  }>;
+  exportPreferences?: {
+    format: string;
+    includeChecklist: boolean;
+    advocateReview: boolean;
+    storage: string;
+  };
+  existingWill?: {
+    hasExisting: boolean;
+    type: "will" | "codicil" | "unsure";
+    notes: string;
+  };
+  aiDraftSession?: {
+    summary: string;
+    updatedAt: string;
+    confidence: string;
+  };
+  remainderClause?: string;
+};
+
 export type WillInput = {
   name: string;
   executor: string;
@@ -12,6 +36,7 @@ export type WillInput = {
   hasMinors: boolean;
   multipleHouseholds: boolean;
   instructions?: WillInstructions;
+  metadata?: WillMetadata;
   country?: string;
 };
 

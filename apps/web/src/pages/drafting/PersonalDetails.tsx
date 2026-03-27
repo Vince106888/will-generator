@@ -12,8 +12,8 @@ export default function PersonalDetails() {
   return (
     <DraftingShell
       stepId="personal-details"
-      title="Personal details"
-      description="This information identifies you clearly in the will and helps your family and executor act without confusion."
+      title="Personal details (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/personal-details" />}
       aside={
         <Card size="md" variant="secondary" className="space-y-2">

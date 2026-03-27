@@ -1,8 +1,25 @@
-﻿import { HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 import { cn } from "../../lib/cn";
 
-export function Container({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+type ContainerProps = HTMLAttributes<HTMLDivElement> & {
+  size?: "narrow" | "default" | "wide";
+};
+
+const sizeStyles: Record<NonNullable<ContainerProps["size"]>, string> = {
+  narrow: "max-w-[980px]",
+  default: "max-w-[1200px]",
+  wide: "max-w-[1440px]"
+};
+
+export function Container({
+  className,
+  size = "default",
+  ...props
+}: ContainerProps) {
   return (
-    <div className={cn("mx-auto w-full max-w-[1200px] px-6 lg:px-16", className)} {...props} />
+    <div
+      className={cn("mx-auto w-full px-6 lg:px-16", sizeStyles[size], className)}
+      {...props}
+    />
   );
 }

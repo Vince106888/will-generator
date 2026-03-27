@@ -14,8 +14,10 @@ export default function Distribution() {
           <div className="flex h-[62px] items-center justify-center text-sm text-ink">9:41</div>
           <div className="space-y-4 px-5 pb-6">
             <div className="space-y-2">
-              <p className="font-display text-2xl text-ink">Distribution</p>
-              <p className="text-xs text-muted">Assign assets to beneficiaries.</p>
+              <p className="font-display text-2xl text-ink">Distribution (Legacy)</p>
+              <p className="text-xs text-muted">
+                Legacy stepper flow retained for archive reference. Use the active structured or AI flow.
+              </p>
             </div>
             <Card size="md" className="space-y-2">
               <p className="text-xs font-semibold text-ink">Family home — Lavington</p>
@@ -27,8 +29,8 @@ export default function Distribution() {
       <div className="hidden lg:block">
         <DraftingShell
           stepId="distribution"
-          title="Distribution wishes"
-          description="Decide who receives what. You can assign full assets or share percentages."
+          title="Distribution wishes (Legacy)"
+          description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
           footer={<StepActions currentPath="/drafting/distribution" />}
         >
           <div className="space-y-4">

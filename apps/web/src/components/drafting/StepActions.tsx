@@ -11,6 +11,7 @@ export function StepActions({
   primaryLabel?: string;
   onPrimaryClick?: () => void;
 }) {
+  // Legacy: StepActions is used only by archived stepper pages.
   const index = draftingSteps.findIndex((step) => step.path === currentPath);
   const prev = index > 0 ? draftingSteps[index - 1] : null;
   const next = index < draftingSteps.length - 1 ? draftingSteps[index + 1] : null;

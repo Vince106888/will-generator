@@ -19,6 +19,7 @@ export function DraftingShell({
   footer?: ReactNode;
   aside?: ReactNode;
 }) {
+  // Legacy: DraftingShell is used only by archived stepper pages.
   const step = getStepById(stepId);
   const stepIndex = getStepIndex(step.path);
 
