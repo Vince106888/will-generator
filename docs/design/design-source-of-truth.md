@@ -37,6 +37,7 @@ These are the only frames eligible for implementation:
 
 ## Recent Updates
 - 2026-03-27: `ACTIVE 04 AI Drafting Workspace` (id: `iVFMi`) corrected in `design/pencil-implementation.pen` to fix chat bubble width/wrapping and restore the main conversation column. Implementation must use the corrected frame only.
+- 2026-03-27: `ACTIVE M4 Mobile AI Drafting` (id: `jdj6J`) corrected in `design/pencil-implementation.pen` to fix mobile chat bubble width/wrapping. Implementation must use the corrected frame only.
 
 ## Archive / Reference Frames (Do Not Implement)
 Legacy designs remain only in `design/pencil-new.pen` for reference.
