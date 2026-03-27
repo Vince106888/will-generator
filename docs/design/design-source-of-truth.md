@@ -35,6 +35,9 @@ These are the only frames eligible for implementation:
 - Mobile Assets Mapping: `ACTIVE M5 Mobile Assets Mapping` (id: `ui2iU`)
 - Mobile Review: `ACTIVE M6 Mobile Review` (id: `qSIY6`)
 
+## Recent Updates
+- 2026-03-27: `ACTIVE 04 AI Drafting Workspace` (id: `iVFMi`) corrected in `design/pencil-implementation.pen` to fix chat bubble width and wrapping.
+
 ## Archive / Reference Frames (Do Not Implement)
 Legacy designs remain only in `design/pencil-new.pen` for reference.
 
@@ -64,7 +67,6 @@ Proposed routes and current intended files (update during implementation if need
 - Any promotion must update the index frame and this document in the same change.
 
 ## Known Design Risks (Must Be Addressed Before Implementation)
-- AI Drafting Workspace: conversation area too narrow, width balance off, privacy/trust guidance under-emphasized.
 - AI Extraction Summary: needs denser content and clearer edit affordances.
 - Content depth: several pages still feel too short; add more plain-English explanations and “why this matters”.
 - Mobile: mobile frames exist but do not cover AI summary, export, signing. These remain future work.

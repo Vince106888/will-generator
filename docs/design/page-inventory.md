@@ -15,7 +15,7 @@ Status meanings:
 | Landing Page v2 | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | implemented | ACTIVE 01 copy + CTA wiring restored |
 | Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | implemented | Matches ACTIVE 02 copy + CTA structure |
 | Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | implemented | Matches ACTIVE 03 with codicil upload + warnings |
-| AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | Wide drafting workspace |
+| AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | implemented | 2026-03-27: layout corrected in pencil (chat bubble width/wrapping fixed) |
 | AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | UI strengthened; design still needs final pass |
 | Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | implemented | Primary structured entry |
 | Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | implemented | Asset-beneficiary linkage |
