@@ -12,9 +12,9 @@ export default function SaveContinue() {
       <Container>
         <Card size="lg" className="space-y-4">
           <div className="space-y-2">
-            <p className="font-display text-2xl text-ink">Save and continue later?</p>
+            <p className="font-display text-2xl text-ink">Save and continue later? (Legacy)</p>
             <p className="text-sm text-muted">
-              We'll save your progress securely. You'll receive a link to resume where you left off.
+              Legacy page retained for archive reference. Use the active drafting flow for save states.
             </p>
           </div>
           <div className="space-y-2">
@@ -30,8 +30,8 @@ export default function SaveContinue() {
             </Card>
           )}
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review")}>
-              Back
+            <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review-result")}>
+              Back to review
             </Button>
             <Button variant="primary" size="sm" onClick={() => setSaved(true)}>
               Save and send link

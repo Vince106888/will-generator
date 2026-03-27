@@ -17,8 +17,8 @@ export default function Executors() {
   return (
     <DraftingShell
       stepId="executors"
-      title="Executors"
-      description="An executor is the trusted person who carries out your wishes. Choose someone responsible and willing."
+      title="Executors (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/executors" />}
       aside={
         <Card size="md" variant="info" className="space-y-2">

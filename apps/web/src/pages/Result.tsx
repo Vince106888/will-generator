@@ -80,10 +80,9 @@ export default function Result() {
     <div className="pb-24 pt-12">
       <Container className="max-w-[1440px]">
         <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Review + result</p>
+          <p className="font-display text-3xl text-ink">Review + result (Legacy)</p>
           <p className="max-w-[900px] text-[15px] text-muted">
-            We generated a full draft. Review the summary below, address any warnings, and proceed to signing when you
-            are ready.
+            Legacy page retained for archive reference. Use the active Review + Result screen.
           </p>
           {loading && <p className="text-xs text-muted">Refreshing your draft...</p>}
         </div>
@@ -135,9 +134,9 @@ export default function Result() {
                   {draftingData.beneficiaries.some((beneficiary) => beneficiary.name) ? "Listed" : "Missing"}
                 </li>
               </ul>
-              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review-result")}>
-                Return to checklist
-              </Button>
+                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/review-result")}>
+                  Go to active review
+                </Button>
             </Card>
           </div>
 

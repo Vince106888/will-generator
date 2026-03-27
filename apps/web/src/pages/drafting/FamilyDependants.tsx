@@ -13,8 +13,8 @@ export default function FamilyDependants() {
   return (
     <DraftingShell
       stepId="family"
-      title="Family and dependants"
-      description="Tell us about the people who depend on you. This helps ensure they are considered clearly in your will."
+      title="Family and dependants (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/family" />}
       aside={
         <Card size="md" variant="secondary" className="space-y-2">

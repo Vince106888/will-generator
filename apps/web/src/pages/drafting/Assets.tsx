@@ -46,8 +46,10 @@ export default function Assets() {
           <div className="flex h-[62px] items-center justify-center text-sm text-ink">9:41</div>
           <div className="space-y-4 px-5 pb-6">
             <div className="space-y-2">
-              <p className="font-display text-2xl text-ink">Assets</p>
-              <p className="text-xs text-muted">Add assets in clear categories.</p>
+              <p className="font-display text-2xl text-ink">Assets (Legacy)</p>
+              <p className="text-xs text-muted">
+                Legacy stepper flow retained for archive reference. Use the active structured or AI flow.
+              </p>
             </div>
             <Card size="md" className="space-y-2">
               <p className="text-xs font-semibold text-ink">Land & real property</p>
@@ -63,8 +65,8 @@ export default function Assets() {
       <div className="hidden lg:block">
         <DraftingShell
           stepId="assets"
-          title="Assets"
-          description="Add your assets in clear categories. You can update details later."
+          title="Assets (Legacy)"
+          description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
           footer={<StepActions currentPath="/drafting/assets" />}
         >
           <div className="space-y-4">

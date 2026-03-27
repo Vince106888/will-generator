@@ -10,8 +10,8 @@ export default function Beneficiaries() {
   return (
     <DraftingShell
       stepId="beneficiaries"
-      title="Beneficiaries"
-      description="Add the people you want to provide for. We'll ask for relationship and contact details."
+      title="Beneficiaries (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/beneficiaries" />}
     >
       <div className="space-y-4">

@@ -35,9 +35,9 @@ export default function Eligibility() {
     <MarketingShell>
       <Container className="pb-24 pt-12">
         <div className="space-y-3">
-          <p className="font-display text-3xl text-ink">Eligibility check</p>
+          <p className="font-display text-3xl text-ink">Eligibility check (Legacy)</p>
           <p className="text-[15px] text-muted">
-            We ask a few simple questions to ensure this process fits your legal situation in Kenya.
+            Legacy page retained for archive reference. Use Entry Choice and Existing Will Gate for the active flow.
           </p>
         </div>
 
@@ -86,8 +86,8 @@ export default function Eligibility() {
             {hasAnswered && eligible && (
               <Card size="lg" className="space-y-2">
                 <p className="text-xs text-muted">You are eligible to begin drafting.</p>
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/personal-details")}>
-                  Continue
+                <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
+                  Continue to entry choice
                 </Button>
               </Card>
             )}
@@ -99,7 +99,7 @@ export default function Eligibility() {
                   Based on your response, you may need in-person legal guidance. We can connect you to an advocate for
                   advice.
                 </p>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/pre-start")}>
+                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/advocate-review")}>
                   Talk to an advocate
                 </Button>
               </Card>

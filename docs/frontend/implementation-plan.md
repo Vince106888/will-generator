@@ -2,7 +2,8 @@
 
 Date: 2026-03-27  
 Design source of truth: `docs/design/design-source-of-truth.md`  
-Route map: `docs/frontend/route-map.md`
+Route map: `docs/frontend/route-map.md`  
+Route migration plan: `docs/frontend/route-migration-plan.md`
 
 ## Goals
 - Implement only the active frames listed in `00 Canvas Index`.

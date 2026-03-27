@@ -21,8 +21,8 @@ export default function Guardians() {
   return (
     <DraftingShell
       stepId="guardians"
-      title="Guardians for minors"
-      description="If you have minor children, appoint a guardian to care for them. This is one of the most important decisions."
+      title="Guardians for minors (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/guardians" />}
     >
       <div className="space-y-4">

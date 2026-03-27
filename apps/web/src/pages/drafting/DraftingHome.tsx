@@ -21,8 +21,8 @@ export default function DraftingHome() {
   return (
     <DraftingShell
       stepId="personal-details"
-      title="Drafting overview"
-      description="Your will is drafted step by step. Review your progress or continue from where you left off."
+      title="Drafting overview (Legacy)"
+      description="Legacy stepper flow retained for archive reference. Use the active structured or AI flow."
       footer={<StepActions currentPath="/drafting/personal-details" />}
     >
       <div className="space-y-6">
@@ -53,10 +53,10 @@ export default function DraftingHome() {
         </div>
 
         <button
-          onClick={() => navigate("/drafting/personal-details")}
+          onClick={() => navigate("/drafting/structured-flow")}
           className="rounded-full bg-accent px-5 py-2 text-xs font-semibold text-white shadow-soft"
         >
-          Continue drafting
+          Go to structured flow
         </button>
       </div>
     </DraftingShell>

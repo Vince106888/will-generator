@@ -1,4 +1,5 @@
-﻿export type DraftStep = {
+// Legacy: stepper flow used by archived drafting pages. Not part of active route map.
+export type DraftStep = {
   id: string;
   label: string;
   description: string;
