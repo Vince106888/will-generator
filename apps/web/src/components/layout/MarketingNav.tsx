@@ -29,7 +29,7 @@ export function MarketingNav() {
             variant="primary"
             size="sm"
             onClick={() => {
-              update({ draftingMode: "ai" });
+              update({ draftingMode: "ai", draftingModeConfirmed: true });
               navigate("/entry-choice");
             }}
           >

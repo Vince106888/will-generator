@@ -37,7 +37,7 @@ export default function Landing() {
                   variant="primary"
                   size="md"
                   onClick={() => {
-                    update({ draftingMode: "ai" });
+                    update({ draftingMode: "ai", draftingModeConfirmed: true });
                     navigate("/entry-choice");
                   }}
                 >
@@ -47,7 +47,7 @@ export default function Landing() {
                   variant="secondary"
                   size="md"
                   onClick={() => {
-                    update({ draftingMode: "structured" });
+                    update({ draftingMode: "structured", draftingModeConfirmed: true });
                     navigate("/entry-choice");
                   }}
                 >
@@ -95,7 +95,7 @@ export default function Landing() {
                   variant="primary"
                   size="sm"
                   onClick={() => {
-                    update({ draftingMode: "ai" });
+                    update({ draftingMode: "ai", draftingModeConfirmed: true });
                     navigate("/entry-choice");
                   }}
                 >
@@ -113,7 +113,7 @@ export default function Landing() {
                   variant="secondary"
                   size="sm"
                   onClick={() => {
-                    update({ draftingMode: "structured" });
+                    update({ draftingMode: "structured", draftingModeConfirmed: true });
                     navigate("/entry-choice");
                   }}
                 >
@@ -348,7 +348,7 @@ export default function Landing() {
                   <button
                     className="rounded-full bg-paper px-5 py-2.5 text-[13px] font-semibold text-primary"
                     onClick={() => {
-                      update({ draftingMode: "ai" });
+                      update({ draftingMode: "ai", draftingModeConfirmed: true });
                       navigate("/entry-choice");
                     }}
                   >
@@ -357,7 +357,7 @@ export default function Landing() {
                   <button
                     className="rounded-full border border-white/20 bg-[#2c4158] px-5 py-2.5 text-[13px] font-semibold text-paper"
                     onClick={() => {
-                      update({ draftingMode: "structured" });
+                      update({ draftingMode: "structured", draftingModeConfirmed: true });
                       navigate("/entry-choice");
                     }}
                   >

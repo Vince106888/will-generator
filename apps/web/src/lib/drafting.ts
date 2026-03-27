@@ -47,10 +47,11 @@ export type DraftingData = {
   };
   existingWill: {
     hasExisting: boolean;
-    type: "will" | "codicil" | "unsure";
+    type: "will" | "codicil" | "none" | "unsure";
     notes: string;
   };
   draftingMode: "ai" | "structured";
+  draftingModeConfirmed: boolean;
 };
 
 export const defaultDraftingData: DraftingData = {
@@ -112,7 +113,8 @@ export const defaultDraftingData: DraftingData = {
     type: "unsure",
     notes: ""
   },
-  draftingMode: "ai"
+  draftingMode: "ai",
+  draftingModeConfirmed: false
 };
 
 const STORAGE_KEY = STORAGE_KEYS.draftingData;
@@ -164,6 +166,9 @@ export function loadDraftingData(): DraftingData {
     }
     if (!parsed.draftingMode) {
       parsed.draftingMode = defaultDraftingData.draftingMode;
+    }
+    if (typeof parsed.draftingModeConfirmed !== "boolean") {
+      parsed.draftingModeConfirmed = defaultDraftingData.draftingModeConfirmed;
     }
     return parsed;
   } catch {
