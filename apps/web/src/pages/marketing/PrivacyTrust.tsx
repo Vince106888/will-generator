@@ -1,79 +1,51 @@
 // Frame: Privacy + Trust (Scsqx)
+import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
-import { MarketingShell } from "../../components/layout/MarketingShell";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { Card } from "../../components/ui/Card";
-import { Callout } from "../../components/ui/Callout";
-import { TrustPanel } from "../../components/ui/TrustPanel";
-
-const principles = [
-  {
-    title: "Private by default",
-    body: "Your draft belongs to you. We store only what is needed to generate and save your will."
-  },
-  {
-    title: "Clear consent",
-    body: "You decide when to export, share, or request advocate review. We never share data without permission."
-  },
-  {
-    title: "Secure storage",
-    body: "Drafts are encrypted in transit and at rest. You can delete your data at any time."
-  },
-  {
-    title: "Kenya-first compliance",
-    body: "We follow Kenyan legal expectations for drafting and signing guidance."
-  }
-];
-
-const safeguards = [
-  "Role-based access to sensitive draft data",
-  "Audit logging for advocate review requests",
-  "Data retention controls for inactive drafts",
-  "Exported drafts are watermarked as drafts until signed"
-];
+import { FooterBase } from "../../components/layout/FooterBase";
+import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
 
 export default function PrivacyTrust() {
   return (
-    <MarketingShell>
-      <Container size="wide" className="pb-24 pt-12">
-        <PageHeader
-          eyebrow="Trust"
-          title="Privacy + trust"
-          description="We treat will information with care and explain how it is used. You stay in control, and you can request deletion whenever you want."
-        />
+    <WorkspaceShell nav={{ ctaLabel: "Start drafting", ctaPath: "/entry-choice" }}>
+      <Container size="wide" className="py-8">
+        <div className="space-y-6">
+          <div className="space-y-[10px]">
+            <h1 className="font-display text-[34px] font-semibold text-ink">
+              Privacy and trust
+            </h1>
+            <p className="text-[16px] leading-[1.6] text-muted">
+              Your will is deeply personal. We protect your information with
+              strong encryption, minimal data collection, and clear control over
+              deletion.
+            </p>
+          </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-4">
-            {principles.map((item) => (
-              <Card key={item.title} size="lg" className="space-y-2">
-                <p className="text-sm font-semibold text-ink">{item.title}</p>
-                <p className="text-xs text-muted">{item.body}</p>
-              </Card>
-            ))}
-            <TrustPanel
-              title="Your control"
-              items={[
-                "Export only when you are ready.",
-                "Share drafts only with people you choose.",
-                "Delete your data whenever you want."
-              ]}
+          <div className="grid gap-4 lg:grid-cols-3">
+            <HelperCallout
+              title="End-to-end encrypted"
+              body="Your drafting data is encrypted in transit and at rest. Only you can access your draft."
+            />
+            <HelperCallout
+              title="Minimal data collection"
+              body="We only ask for details required to draft your will. Optional fields are clearly marked."
+            />
+            <HelperCallout
+              title="Control and deletion"
+              body="You can delete your draft and data at any time before signing."
             />
           </div>
-          <div className="space-y-4">
-            <Card size="lg" className="space-y-3">
-              <p className="text-sm font-semibold text-ink">Legal safeguards</p>
-              <ul className="list-disc space-y-2 pl-5 text-xs text-muted">
-                {safeguards.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </Card>
-            <Callout tone="info">
-              We will always tell you how your data is used and provide a clear contact for privacy requests.
-            </Callout>
-          </div>
+
+          <SectionCard title="Legal safeguards" subtitle="How we handle confidentiality and access.">
+            <div className="space-y-2 text-[13px] text-ink">
+              <p>• Data is stored in secure Kenyan-compliant infrastructure</p>
+              <p>• Advocate review is opt-in and requires your consent</p>
+              <p>• We never sell or share personal data</p>
+            </div>
+          </SectionCard>
+
+          <FooterBase />
         </div>
       </Container>
-    </MarketingShell>
+    </WorkspaceShell>
   );
 }

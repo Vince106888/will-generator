@@ -9,6 +9,7 @@ export type MarketingNavProps = {
   ctaPath?: string;
   ctaClassName?: string;
   ctaSize?: "sm" | "md" | "lg";
+  ctaOnClick?: () => void;
 };
 
 export function MarketingNav({
@@ -16,7 +17,8 @@ export function MarketingNav({
   ctaMode = null,
   ctaPath = "/entry-choice",
   ctaClassName,
-  ctaSize = "sm"
+  ctaSize = "sm",
+  ctaOnClick
 }: MarketingNavProps) {
   const { update } = useDraftingData();
 
@@ -42,6 +44,10 @@ export function MarketingNav({
             size={ctaSize}
             className={ctaClassName}
             onClick={() => {
+              if (ctaOnClick) {
+                ctaOnClick();
+                return;
+              }
               if (ctaMode) {
                 update({ draftingMode: ctaMode, draftingModeConfirmed: true });
               }

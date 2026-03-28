@@ -253,3 +253,56 @@ export function DocumentPreview({
     </div>
   );
 }
+
+type ErrorBannerProps = {
+  title: string;
+  body: string;
+  className?: string;
+};
+
+export function ErrorBanner({ title, body, className }: ErrorBannerProps) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border border-error bg-error-soft p-4",
+        className
+      )}
+    >
+      <p className="text-[14px] font-semibold text-ink">{title}</p>
+      <p className="mt-2 text-[13px] text-muted">{body}</p>
+    </div>
+  );
+}
+
+type EmptyStateCardProps = {
+  title: string;
+  body: string;
+  className?: string;
+};
+
+export function EmptyStateCard({ title, body, className }: EmptyStateCardProps) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 text-center",
+        className
+      )}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5 text-muted"
+        fill="none"
+      >
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+        <path
+          d="M8.5 12.5h7"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </svg>
+      <p className="text-[13px] font-semibold text-ink">{title}</p>
+      <p className="text-[12px] text-muted">{body}</p>
+    </div>
+  );
+}
