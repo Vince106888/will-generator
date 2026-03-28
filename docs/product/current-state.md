@@ -18,7 +18,7 @@ Design source of truth: `docs/design/design-source-of-truth.md`
 - Phase 3 AI Drafting Workspace + AI Extraction Summary implemented from clean Pencil frames.
 - Structured realm entry shell, assets/beneficiaries mapping, executors, and guardianship implemented from clean Pencil frames.
 - Review/output realm (Review + Result, Export Options, Signing Instructions, Advocate Review) implemented from Pencil.
-- Route map is locked to active routes; support realm pages still need rebuild.
+- Route map is locked to active routes; support realm pages now implemented.
 
 ## Known Gaps
 - Mobile Review frame is missing from the Pencil source (listed as `qSIY6` in docs); mobile review adapts from desktop layout for now.

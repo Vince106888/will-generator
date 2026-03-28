@@ -22,9 +22,9 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before `/existing-
 | `/drafting/export-options` | Export Options | `xUIiv` | `apps/web/src/pages/post/ExportOptions.tsx` | complete | Review/output realm |
 | `/drafting/signing-guide` | Signing Instructions | `JXSDZ` | `apps/web/src/pages/post/SigningGuide.tsx` | complete | Review/output realm |
 | `/drafting/advocate-review` | Advocate Review | `K02wp` | `apps/web/src/pages/post/AdvocateReview.tsx` | complete | Review/output realm |
-| `/drafting/error` | Error + Empty States | `IRKLg` | `apps/web/src/pages/post/ErrorStates.tsx` | pending | Support realm |
-| `/faq` | FAQ | `puMDs` | `apps/web/src/pages/marketing/FaqPage.tsx` | pending | Support realm |
-| `/privacy` | Privacy + Trust | `Scsqx` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | pending | Support realm |
+| `/drafting/error` | Error + Empty States | `IRKLg` | `apps/web/src/pages/post/ErrorStates.tsx` | complete | Support realm |
+| `/faq` | FAQ | `puMDs` | `apps/web/src/pages/marketing/FaqPage.tsx` | complete | Support realm |
+| `/privacy` | Privacy + Trust | `Scsqx` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | complete | Support realm |
 
 ## Realm Continuity Rules
 - AI path stays in AI realm until explicit handoff.

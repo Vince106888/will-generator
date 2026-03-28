@@ -48,6 +48,7 @@ Phase 8  Legacy cleanup / finalization
 - Phase 3: complete (AI Drafting Workspace + AI Extraction Summary)
 - Phase 4: complete (Structured Flow Shell + Assets & Beneficiaries Mapping + Executors + Guardianship)
 - Phase 5: complete (Review + Result, Export Options, Signing Instructions, Advocate Review)
+- Phase 6: complete (FAQ, Privacy + Trust, Error + Empty States)
 
 ## Shared Layout + UI Primitives (Likely Reusable)
 Layout:
@@ -156,3 +157,25 @@ UI:
 - Section mapping: `advHeader` -> title/description block
 - Section mapping: `advGrid` -> three section cards
 - Section mapping: `advForm` -> form card with inputs and CTA
+
+### FAQ
+- Pencil Frame ID: `puMDs`
+- Code Page: `apps/web/src/pages/marketing/FaqPage.tsx`
+- Section mapping: `faqHeader` -> title/description block
+- Section mapping: `faqList` -> list of FAQ cards
+- Section mapping: `faqFooter` -> footer base
+
+### Privacy + Trust
+- Pencil Frame ID: `Scsqx`
+- Code Page: `apps/web/src/pages/marketing/PrivacyTrust.tsx`
+- Section mapping: `privHeader` -> title/description block
+- Section mapping: `privGrid` -> three helper callouts
+- Section mapping: `legalBlock` -> section card + bullet list
+- Section mapping: `privFooter` -> footer base
+
+### Error + Empty States
+- Pencil Frame ID: `IRKLg`
+- Code Page: `apps/web/src/pages/post/ErrorStates.tsx`
+- Section mapping: `errHeader` -> title/description block
+- Section mapping: `stateRow` -> error banner, empty state card, success panel
+- Section mapping: `emptyDetail` -> helper callout
