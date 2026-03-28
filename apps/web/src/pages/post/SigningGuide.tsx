@@ -1,81 +1,97 @@
 // Frame: Signing Instructions (JXSDZ)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { Callout } from "../../components/ui/Callout";
-import { TrustPanel } from "../../components/ui/TrustPanel";
+import { SectionCard, WarningBanner } from "../../components/ui/PencilPanels";
 import { navigate } from "../../lib/navigation";
-
-const steps = [
-  {
-    title: "1. Print the draft",
-    body: "Use a clear printed copy. Do not sign electronically unless advised by an advocate."
-  },
-  {
-    title: "2. Sign in front of two witnesses",
-    body: "Witnesses must be adults, present at the same time, and not beneficiaries."
-  },
-  {
-    title: "3. Witnesses sign and write their details",
-    body: "They should add full names, ID numbers, and contact details clearly."
-  },
-  {
-    title: "4. Store the signed copy safely",
-    body: "Keep it in a secure place and let your executor know where to find it."
-  }
-];
 
 export default function SigningGuide() {
   return (
-    <WorkspaceShell>
-      <Container size="wide" className="pb-24 pt-12">
-        <PageHeader
-          eyebrow="Signing"
-          title="Signing instructions"
-          description="Your draft is not legally valid until it is properly signed and witnessed. Follow these steps carefully and ask for help if anything feels unclear."
-        />
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-4">
-            {steps.map((item) => (
-              <Card key={item.title} size="md" className="space-y-2">
-                <p className="text-sm font-semibold text-ink">{item.title}</p>
-                <p className="text-xs text-muted">{item.body}</p>
-              </Card>
-            ))}
-            <Card size="md" variant="secondary" className="space-y-2">
-              <p className="text-sm font-semibold text-ink">After signing</p>
-              <p className="text-xs text-muted">
-                Keep copies in separate safe locations. If you update your will later, destroy older signed copies.
-              </p>
-            </Card>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: "Finish",
+        ctaPath: "/",
+        ctaClassName: "px-5 py-3 text-[13px]"
+      }}
+    >
+      <Container size="wide" className="py-8">
+        <div className="space-y-6">
+          <div className="space-y-[10px]">
+            <h1 className="font-display text-[34px] font-semibold text-ink">
+              Signing instructions
+            </h1>
+            <p className="text-[16px] leading-[1.6] text-muted">
+              Your will becomes legally effective only after proper signing and
+              witnessing. Follow these steps carefully.
+            </p>
           </div>
-          <div className="space-y-4">
-            <Callout tone="warning">
-              A beneficiary cannot be a witness. If they sign as a witness, they may lose their entitlement.
-            </Callout>
-            <Card size="md" className="space-y-2">
-              <p className="text-sm font-semibold text-ink">Witness eligibility</p>
-              <p className="text-xs text-muted">
-                Witnesses should be adults of sound mind and not beneficiaries or their spouses. If unsure, consult an
-                advocate.
-              </p>
-            </Card>
-            <TrustPanel
-              title="Need support?"
-              items={[
-                "Request an advocate review before signing if anything feels complex.",
-                "We can provide witness guidance and a signing checklist.",
-                "Your executor should know where the signed copy is stored."
-              ]}
-            />
-            <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/advocate-review")}>
-              Request advocate review
+
+          <div className="space-y-3">
+            <SectionCard
+              title="1. Print the will"
+              subtitle="Signatures must be on a physical copy."
+            >
+              <div className="space-y-1.5 text-[13px] text-muted">
+                <p>• Use a clean, readable printout</p>
+                <p>• Keep all pages together</p>
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              title="2. Gather two witnesses"
+              subtitle="Witnesses must be independent adults."
+            >
+              <div className="space-y-1.5 text-[13px]">
+                <p className="text-warning">• A beneficiary cannot be a witness</p>
+                <p className="text-muted">• Witnesses should see you sign</p>
+                <p className="text-muted">• They must sign in your presence</p>
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              title="3. Sign and date"
+              subtitle="Write the date and place clearly."
+            >
+              <div className="space-y-1.5 text-[13px] text-muted">
+                <p>• Use your full legal signature</p>
+                <p>• Record the location (town/county)</p>
+                <p>• Witnesses sign immediately after</p>
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              title="4. Store safely"
+              subtitle="Let your executor know where the will is kept."
+            >
+              <div className="space-y-1.5 text-[13px] text-muted">
+                <p>• Keep a copy in a secure location</p>
+                <p>• Tell your executor how to access it</p>
+                <p>• Consider a certified copy if needed</p>
+              </div>
+            </SectionCard>
+          </div>
+
+          <WarningBanner
+            title="Witness rule reminder"
+            body="A beneficiary cannot be a witness. If they sign as a witness, they may lose their entitlement."
+          />
+
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="px-5 py-3 text-[13px]"
+              onClick={() => navigate("/drafting/export-options")}
+            >
+              Back to export
             </Button>
-            <Button variant="primary" size="sm" onClick={() => navigate("/")}>
-              Finish
+            <Button
+              variant="primary"
+              size="sm"
+              className="px-5 py-3 text-[13px]"
+              onClick={() => navigate("/")}
+            >
+              Finish and save
             </Button>
           </div>
         </div>
