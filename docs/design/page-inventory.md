@@ -16,19 +16,19 @@ Status meanings:
 | Landing Page v2 | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | complete | Implemented from clean Pencil source |
 | Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Implemented from clean Pencil source |
 | Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Implemented from clean Pencil source |
-| AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | complete | Implemented from corrected frame |
-| AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | complete | Implemented from clean Pencil frame |
-| Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | complete | Structured entry shell (Save and exit returns to `/`) |
-| Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | complete | Core asset-beneficiary linkage (Save and return later -> `/drafting/structured-flow`) |
-| Executors | `yb4Yk` | `/drafting/structured-executors` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | complete | Executor guidance (Save and exit -> `/`) |
-| Guardianship | `aSEwT` | `/drafting/guardianship` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | complete | Guardians for minors (Save and return later -> `/drafting/structured-flow`) |
-| Review + Result | `0gbAz` | `/drafting/review-result` | `apps/web/src/pages/drafting/Review.tsx` | complete | Review and result combined (mobile adapts from desktop frame) |
-| Export Options | `xUIiv` | `/drafting/export-options` | `apps/web/src/pages/post/ExportOptions.tsx` | complete | Export CTA |
-| Signing Instructions | `JXSDZ` | `/drafting/signing-guide` | `apps/web/src/pages/post/SigningGuide.tsx` | complete | Witness rules and steps |
-| Advocate Review | `K02wp` | `/drafting/advocate-review` | `apps/web/src/pages/post/AdvocateReview.tsx` | complete | Advocate escalation |
+| AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | refine | Pencil refined 2026-03-28; realign code with new helper and guardrails content |
+| AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Pencil refined 2026-03-28; new review checklist row and guidance callout |
+| Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | refine | Pencil refined 2026-03-28; added start guidance |
+| Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | refine | Pencil refined 2026-03-28; added remainder clause example + valuation note |
+| Executors | `yb4Yk` | `/drafting/structured-executors` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | refine | Pencil refined 2026-03-28; added executor duties + beneficiary note |
+| Guardianship | `aSEwT` | `/drafting/guardianship` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | refine | Pencil refined 2026-03-28; added guardian consent guidance |
+| Review + Result | `0gbAz` | `/drafting/review-result` | `apps/web/src/pages/drafting/Review.tsx` | refine | Pencil refined 2026-03-28; added post-signing guidance card |
+| Export Options | `xUIiv` | `/drafting/export-options` | `apps/web/src/pages/post/ExportOptions.tsx` | refine | Pencil refined 2026-03-28; added tier choice guidance |
+| Signing Instructions | `JXSDZ` | `/drafting/signing-guide` | `apps/web/src/pages/post/SigningGuide.tsx` | refine | Pencil refined 2026-03-28; added special signing guidance |
+| Advocate Review | `K02wp` | `/drafting/advocate-review` | `apps/web/src/pages/post/AdvocateReview.tsx` | refine | Pencil refined 2026-03-28; added post-request guidance |
 | FAQ | `puMDs` | `/faq` | `apps/web/src/pages/marketing/FaqPage.tsx` | complete | Kenya-specific FAQ |
 | Privacy + Trust | `Scsqx` | `/privacy` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | complete | Security and retention |
-| Error + Empty States | `IRKLg` | `/drafting/error` | `apps/web/src/pages/post/ErrorStates.tsx` | complete | Recovery guidance |
+| Error + Empty States | `IRKLg` | `/drafting/error` | `apps/web/src/pages/post/ErrorStates.tsx` | refine | Pencil refined 2026-03-28; recovery row and icon scale corrected |
 | Mobile Landing v2 | `tNapD` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | complete | Mobile layout follows M1 |
 | Mobile Entry Choice | `ny4DT` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Mobile layout follows M2 |
 | Mobile Existing Will Gate | `boVDU` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Mobile layout follows M3 |
