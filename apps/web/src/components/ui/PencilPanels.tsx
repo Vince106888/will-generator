@@ -290,7 +290,7 @@ export function EmptyStateCard({ title, body, className }: EmptyStateCardProps) 
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-5 w-5 text-muted"
+        className="h-4 w-4 text-muted"
         fill="none"
       >
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />

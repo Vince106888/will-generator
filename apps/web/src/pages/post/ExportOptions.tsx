@@ -5,12 +5,12 @@ import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
 import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData } from "../../lib/drafting";
+import { useDraftingMode } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
 
 export default function ExportOptions() {
-  const { data, update } = useDraftingData();
+  const { data, update } = useDraftingMode("structured");
   const willId = useMemo(() => {
     if (typeof window === "undefined") return null;
     const stored = window.localStorage.getItem(STORAGE_KEYS.willResult);
@@ -123,6 +123,11 @@ export default function ExportOptions() {
               </Button>
             </SectionCard>
           </div>
+
+          <HelperCallout
+            title="How to choose a tier"
+            body="All tiers use the same legal content. Choose based on whether you want a clean PDF, Word editing, or witness support."
+          />
 
           <div className="grid gap-4 lg:grid-cols-2">
             <HelperCallout

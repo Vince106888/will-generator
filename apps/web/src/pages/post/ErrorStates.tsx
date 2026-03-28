@@ -2,6 +2,7 @@
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import {
+  SectionCard,
   EmptyStateCard,
   ErrorBanner,
   HelperCallout,
@@ -40,6 +41,20 @@ export default function ErrorStates() {
             <SuccessPanel
               title="Draft generated"
               body="Your will draft is ready. Review it carefully and follow the signing guide to make it legally valid."
+            />
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <SectionCard title="Recovery actions" subtitle="What people typically do next.">
+              <div className="space-y-2 text-[13px] text-ink">
+                <p>• Try saving again in a few seconds</p>
+                <p>• Check your internet connection</p>
+                <p>• Return to the last saved step</p>
+              </div>
+            </SectionCard>
+            <HelperCallout
+              title="If this keeps happening"
+              body="Contact support with the time and step you were on. We can restore the last saved draft."
             />
           </div>
 

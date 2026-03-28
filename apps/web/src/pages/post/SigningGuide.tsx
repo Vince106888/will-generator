@@ -2,10 +2,13 @@
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
-import { SectionCard, WarningBanner } from "../../components/ui/PencilPanels";
+import { HelperCallout, SectionCard, WarningBanner } from "../../components/ui/PencilPanels";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function SigningGuide() {
+  useDraftingMode("structured");
+
   return (
     <WorkspaceShell
       nav={{
@@ -74,6 +77,11 @@ export default function SigningGuide() {
           <WarningBanner
             title="Witness rule reminder"
             body="A beneficiary cannot be a witness. If they sign as a witness, they may lose their entitlement."
+          />
+
+          <HelperCallout
+            title="If you cannot sign personally"
+            body="If you are unable to sign, the law allows a signed mark or assisted signing in front of witnesses. Consider advocate review for guidance."
           />
 
           <div className="flex flex-wrap gap-3">

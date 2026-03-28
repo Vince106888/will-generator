@@ -5,13 +5,13 @@ import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
-import { SectionCard } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
+import { useDraftingMode } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
 
 export default function AdvocateReview() {
-  const { data, update } = useDraftingData();
+  const { data, update } = useDraftingMode("structured");
   const [form, setForm] = useState({
     name: data.legalName || "",
     contact: data.email || data.phone || "",
@@ -122,6 +122,11 @@ export default function AdvocateReview() {
               </div>
             </SectionCard>
           </div>
+
+          <HelperCallout
+            title="What happens after you request"
+            body="We will confirm availability, share pricing, and connect you with a vetted advocate. No work begins without your approval."
+          />
 
           <SectionCard title="Request review" subtitle="Tell us what kind of support you need.">
             <div className="space-y-3">

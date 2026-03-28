@@ -11,11 +11,61 @@ import {
   SummaryCard,
   WarningBanner
 } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { useDraftingMode } from "../../lib/drafting";
+import { api } from "../../lib/api";
+import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
 
 export default function Review() {
-  const { data } = useDraftingData();
+  const { data } = useDraftingMode("structured");
+  const handleGenerateDraft = async () => {
+    try {
+      const response = await api.post("/api/v1/wills/generate", {
+        name: data.legalName?.trim() || "Unknown",
+        executor: data.executors?.[0]?.name?.trim() || "",
+        assets: data.assets
+          .map((asset) => {
+            const label = asset.label?.trim();
+            const details = asset.location?.trim();
+            const notes = asset.notes?.trim();
+            if (!details && !notes) return "";
+            if (label && details) return `${label}: ${details}`;
+            return label || details || notes;
+          })
+          .filter(Boolean),
+        beneficiaries: data.beneficiaries
+          .map((beneficiary) => beneficiary.name?.trim() || "")
+          .filter(Boolean),
+        hasMinors: data.hasMinors,
+        multipleHouseholds: data.multipleHouseholds,
+        instructions: {
+          notes: [
+            data.dependantsNotes,
+            data.distributionNotes,
+            data.residuaryWishes,
+            data.specialWishes,
+            data.digitalWishes,
+            data.charitableIntentions,
+            data.executorNotes,
+            data.guardianNotes,
+            data.remainderClause
+          ]
+            .map((item) => item?.trim() || "")
+            .filter(Boolean)
+            .join("\n\n") || undefined,
+          funeralWishes: data.funeralWishes?.trim() || undefined
+        }
+      });
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          STORAGE_KEYS.willResult,
+          JSON.stringify(response?.data ?? {})
+        );
+      }
+    } finally {
+      navigate("/drafting/review-result");
+    }
+  };
 
   return (
     <WorkspaceShell
@@ -92,9 +142,9 @@ export default function Review() {
                   variant="primary"
                   size="sm"
                   className="px-5 py-3 text-[13px]"
-                  onClick={() => navigate("/drafting/export-options")}
+                  onClick={handleGenerateDraft}
                 >
-                  Go to export options
+                  Generate draft
                 </Button>
                 <Button
                   variant="secondary"
@@ -130,6 +180,16 @@ export default function Review() {
                 ]}
               />
               <DocumentPreview title="Draft preview" placeholder="Preview will draft" />
+              <SectionCard
+                title="After you sign"
+                subtitle="Keep the will accessible and tell the right people."
+              >
+                <div className="space-y-2 text-[13px] text-ink">
+                  <p>• Store the signed copy safely</p>
+                  <p>• Tell your executor where it is kept</p>
+                  <p className="text-muted">• Update this will if your circumstances change</p>
+                </div>
+              </SectionCard>
               <HelperCallout
                 title="Need an advocate?"
                 body="If your estate is complex, has foreign assets, or may be contested, request an advocate review before you sign."
