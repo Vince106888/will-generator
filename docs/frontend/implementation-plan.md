@@ -45,7 +45,9 @@ Phase 8  Legacy cleanup / finalization
 - Phase 0: complete (Pencil arrangement + route/doc updates done)
 - Phase 1: complete (Landing Page v2)
 - Phase 2: complete (Entry Choice + Existing Will Gate)
-- Phase 3+: pending
+- Phase 3: complete (AI Drafting Workspace + AI Extraction Summary)
+- Phase 4: in progress (Structured Flow Shell + Assets & Beneficiaries Mapping done; Executors + Guardianship pending)
+- Phase 5+: pending
 
 ## Shared Layout + UI Primitives (Likely Reusable)
 Layout:
@@ -73,3 +75,34 @@ UI:
 
 ## Validation
 - Pending: tests and route verification will be run per phase.
+
+## Latest Page Mappings (Pencil -> Code)
+### AI Extraction Summary
+- Pencil Frame ID: `9MjGI`
+- Code Page: `apps/web/src/pages/drafting/AiExtractionSummary.tsx`
+- Section mapping: `summaryIntro` -> title/description block
+- Section mapping: `statusBanner` -> success `Card` with summary text
+- Section mapping: `Extraction Cards` -> two `Card` rows (`lg:grid-cols-2`)
+- Section mapping: `missingBanner` -> warning banner with icon + text
+- Section mapping: `Summary Actions` -> action copy + buttons + helper callout
+- Layout mapping: vertical stack uses `space-y-6`
+- Layout mapping: `rowA`/`rowB` use `grid gap-4 lg:grid-cols-2`
+- Layout mapping: banner uses `flex gap-3` with border + background
+
+### Structured Flow Shell
+- Pencil Frame ID: `fF89o`
+- Code Page: `apps/web/src/pages/drafting/StructuredFlowShell.tsx`
+- Section mapping: `flowHeader` -> title/description + progress block
+- Section mapping: `mainCol` -> overview `Card`, required/optional helper, CTA row
+- Section mapping: `sideCol` -> progress list `Card`
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]`
+- Layout mapping: progress bar uses `h-2` wrapper + full-width fill
+
+### Assets + Beneficiaries Mapping
+- Pencil Frame ID: `nFFsn`
+- Code Page: `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx`
+- Section mapping: `mapHeader` -> title/description block
+- Section mapping: `assetsCol` -> assets `Card`, mapping `Card`, asset tips callout
+- Section mapping: `benefCol` -> beneficiaries `Card`, allocation summary callout, missing banner, actions
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+- Layout mapping: `Card` blocks use `space-y-3` vertical flow

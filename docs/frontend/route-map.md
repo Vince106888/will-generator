@@ -13,9 +13,9 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before `/existing-
 | `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Implemented from clean Pencil source |
 | `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Drafting mode confirmed before proceed |
 | `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | complete | AI realm start |
-| `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Awaiting final design pass |
-| `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | pending | Structured realm start |
-| `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | pending | Structured realm |
+| `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | complete | Implemented from clean Pencil frame |
+| `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | complete | Structured realm start; Save and exit returns to `/` |
+| `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | complete | Structured realm; Save and return later routes to `/drafting/structured-flow` |
 | `/drafting/structured-executors` | Executors | `yb4Yk` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | pending | Structured realm |
 | `/drafting/guardianship` | Guardianship | `aSEwT` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | pending | Structured realm |
 | `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | pending | Review/output realm |
