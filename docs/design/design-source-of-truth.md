@@ -1,9 +1,9 @@
 # Design Source of Truth
 
-Date: 2026-03-27  
+Date: 2026-03-28  
 Primary file: `design/pencil-implementation.pen`  
 Archive file: `design/pencil-new.pen` (history only)  
-Active index frame: `IMPLEMENT FROM THESE ONLY - Index` (id: `iUMph`)
+Active index frame: `IMPLEMENT FROM THESE ONLY — Index` (id: `iUMph`)
 
 ## Decision
 The only implementation-approved design source is `design/pencil-implementation.pen`. Any frame not listed in the index frame is **not** approved for implementation.
@@ -36,6 +36,7 @@ These are the only frames eligible for implementation:
 - Mobile Review: `ACTIVE M6 Mobile Review` (id: `qSIY6`) (missing from file)
 
 ## Recent Updates
+- 2026-03-28: Canvas index updated with implementation-order grouping and explicit missing Mobile Review note.
 - 2026-03-27: `ACTIVE 04 AI Drafting Workspace` (id: `iVFMi`) corrected in `design/pencil-implementation.pen` to fix chat bubble width/wrapping and restore the main conversation column. Implementation must use the corrected frame only.
 - 2026-03-27: `ACTIVE M4 Mobile AI Drafting` (id: `jdj6J`) corrected in `design/pencil-implementation.pen` to fix mobile chat bubble width/wrapping. Implementation must use the corrected frame only.
 

@@ -1,100 +1,61 @@
 # Frontend Implementation Plan
 
-Date: 2026-03-27  
+Date: 2026-03-28  
 Design source of truth: `docs/design/design-source-of-truth.md`  
-Route map: `docs/frontend/route-map.md`  
-Route migration plan: `docs/frontend/route-migration-plan.md`
+Route map: `docs/frontend/route-map.md`
 
 ## Goals
-- Implement only the active frames listed in `00 Canvas Index`.
+- Implement only the active frames listed in the Pencil index.
 - Preserve premium, calm, trust-heavy tone with deep explanatory content.
-- Ensure mobile is a first-class layout, not a compressed desktop.
+- Ensure mobile is first-class, not a compressed desktop.
+- Preserve realm continuity (AI vs Structured) end to end.
 
-## Batch Order (Approved)
-Batch 1
-- Landing Page v2
-- Entry Choice
-- Existing Will Gate
+## Phased Order (Approved)
+Phase 0  Final Pencil arrangement + frontend governance
+- Arrange `design/pencil-implementation.pen` for implementation order
+- Inspect current frontend route/page structure
+- Identify legacy interference
+- Update route map and implementation docs
 
-Batch 2
-- AI Drafting Workspace
-- AI Extraction Summary
+Phase 1  Landing foundation
+- Landing Page v2 + Mobile Landing v2
 
-Batch 3
-- Structured Flow Shell
-- Assets + Beneficiaries Mapping
-- Executors
-- Guardianship
+Phase 2  Entry foundation
+- Entry Choice + Existing Will Gate + Mobile Entry/Mobile Existing Will
 
-Batch 4
-- Review + Result
-- Export Options
-- Signing Instructions
-- Advocate Review
+Phase 3  AI realm
+- AI Drafting Workspace + AI Extraction Summary + Mobile AI Drafting
 
-Batch 5
-- FAQ
-- Privacy + Trust
-- Error / Empty States
-- Mobile refinements
+Phase 4  Structured realm
+- Structured Flow Shell + Assets + Beneficiaries Mapping + Executors + Guardianship + Mobile Assets Mapping
 
-## Status (Completed)
-Batch 1
-- Landing Page v2
-- Entry Choice
-- Existing Will Gate
+Phase 5  Review / output realm
+- Review + Result + Export Options + Signing Instructions + Advocate Review + Mobile Review
 
-Batch 2
-- AI Drafting Workspace
-- AI Extraction Summary
+Phase 6  Support / trust realm
+- FAQ + Privacy + Trust + Error + Empty States
 
-Batch 3
-- Structured Flow Shell
-- Assets + Beneficiaries Mapping
-- Executors
-- Guardianship
+Phase 7  Mobile completion pass
+- Revisit all pages with mobile references
 
-Batch 4
-- Review + Result
-- Export Options
-- Signing Instructions
-- Advocate Review
+Phase 8  Legacy cleanup / finalization
+- Remove/lock legacy routes and ambiguous surfaces
 
-Batch 5
-- FAQ
-- Privacy + Trust
-- Error / Empty States
-- Mobile refinements
+## Status
+- Phase 0: complete (Pencil arrangement + route/doc updates done)
+- Phase 1: complete (Landing Page v2)
+- Phase 2: complete (Entry Choice + Existing Will Gate)
+- Phase 3+: pending
 
-## Route Map (Active Only)
-- `/` ? Landing Page v2
-- `/entry-choice` ? Entry Choice
-- `/existing-will` ? Existing Will Gate
-- `/drafting/ai-workspace` ? AI Drafting Workspace
-- `/drafting/ai-summary` ? AI Extraction Summary
-- `/drafting/structured-flow` ? Structured Flow Shell
-- `/drafting/mapping` ? Assets + Beneficiaries Mapping
-- `/drafting/structured-executors` ? Executors
-- `/drafting/guardianship` ? Guardianship
-- `/drafting/review-result` ? Review + Result
-- `/drafting/export-options` ? Export Options
-- `/drafting/signing-guide` ? Signing Instructions
-- `/drafting/advocate-review` ? Advocate Review
-- `/faq` ? FAQ
-- `/privacy` ? Privacy + Trust
-- `/drafting/error` ? Error + Empty States
-
-## Shared Layout + UI Primitives
-Existing layout components to reuse and harden:
+## Shared Layout + UI Primitives (Likely Reusable)
+Layout:
 - `apps/web/src/components/layout/MarketingShell.tsx`
-- `apps/web/src/components/layout/MarketingNav.tsx`
-- `apps/web/src/components/layout/MarketingFooter.tsx`
 - `apps/web/src/components/layout/WorkspaceShell.tsx`
 - `apps/web/src/components/layout/Container.tsx`
 - `apps/web/src/components/layout/Section.tsx`
 - `apps/web/src/components/layout/PageHeader.tsx`
 
-Existing UI atoms to standardize:
+UI:
 - `apps/web/src/components/ui/Button.tsx`
 - `apps/web/src/components/ui/Card.tsx`
 - `apps/web/src/components/ui/Callout.tsx`
@@ -102,23 +63,13 @@ Existing UI atoms to standardize:
 - `apps/web/src/components/ui/Textarea.tsx`
 - `apps/web/src/components/ui/Select.tsx`
 - `apps/web/src/components/ui/Badge.tsx`
-- `apps/web/src/components/ui/Modal.tsx`
 - `apps/web/src/components/ui/TrustPanel.tsx`
 
 ## Critical Implementation Notes
-- AI Drafting Workspace redesigned for wider conversation area and better column balance.
-- Major pages include richer explanations, definitions, and why-this-matters copy.
-- Guardianship phrased conditionally for minors.
-- Trust and privacy messaging reinforced on entry, AI workspace, and export/signing.
-- Mobile layouts verified to maintain hierarchy and trust content.
-- Entry flow now explicitly confirms drafting mode on `/entry-choice` before `/existing-will` continues.
-- Existing-will selection persists `existingWill` intent and routes using confirmed drafting mode.
+- Do not reuse legacy pages as sources of truth.
+- Confirm drafting mode on Entry Choice before Existing Will Gate.
+- Keep AI/Structured realm boundaries intact; no silent fallback.
+- Mobile Review frame is missing in Pencil source and must be added before Phase 5.
 
 ## Validation
-- `pnpm.cmd -C apps/web test` (pass on 2026-03-26)
- - Landing v2 CTA routing checked on 2026-03-27 (manual navigation sanity).
-
-## Immediate Engineering Tasks (Pre-Batch 1)
-1. Lock routing map in `apps/web/src/App.tsx` to active-only routes. (done)
-2. Add a route-to-frame mapping reference in each page header comment (frame name + id). (done for active frames)
-3. Normalize spacing tokens and typography across marketing vs drafting surfaces. (done)
+- Pending: tests and route verification will be run per phase.

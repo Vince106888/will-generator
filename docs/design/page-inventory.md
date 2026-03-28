@@ -1,6 +1,6 @@
 # Page Inventory (Implementation-Ready)
 
-Date: 2026-03-27  
+Date: 2026-03-28  
 Source: `design/pencil-implementation.pen` -> `IMPLEMENT FROM THESE ONLY - Index` (id: `iUMph`)
 
 ## Active Pages
