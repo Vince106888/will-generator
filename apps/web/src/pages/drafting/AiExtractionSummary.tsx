@@ -3,9 +3,13 @@ import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import { HelperCallout, ReviewChecklist } from "../../components/ui/PencilPanels";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function AiExtractionSummary() {
+  useDraftingMode("ai");
+
   return (
     <WorkspaceShell nav={{ ctaLabel: "Back to drafting", ctaMode: "ai", ctaPath: "/drafting/ai-workspace" }}>
       <Container size="wide" className="py-8">
@@ -88,6 +92,20 @@ export default function AiExtractionSummary() {
                 </Button>
               </Card>
             </div>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <HelperCallout
+              title="How to review"
+              body="Read each card and confirm names, relationships, and asset descriptions. Use plain language corrections — we translate into legal format later."
+            />
+            <ReviewChecklist
+              title="Review checklist"
+              items={[
+                { label: "Legal names and ID details match", tone: "success" },
+                { label: "Executor and guardian choices confirmed", tone: "warning" }
+              ]}
+            />
           </div>
 
           <div className="flex gap-3 rounded-xl border border-warning bg-warning-soft p-4">

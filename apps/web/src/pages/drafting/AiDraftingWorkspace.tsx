@@ -5,7 +5,7 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData } from "../../lib/drafting";
+import { useDraftingMode } from "../../lib/drafting";
 
 const messages = [
   {
@@ -29,7 +29,7 @@ const starterPrompts = [
 ];
 
 export default function AiDraftingWorkspace() {
-  const { data, update } = useDraftingData();
+  const { data, update } = useDraftingMode("ai");
   const assetsCount = data.assets.filter((asset) => asset.location || asset.notes).length;
   const beneficiaryCount = data.beneficiaries.filter((beneficiary) => beneficiary.name).length;
 
@@ -165,6 +165,14 @@ export default function AiDraftingWorkspace() {
                   descriptions are fine — we will confirm details later.
                 </p>
               </Callout>
+
+              <Callout className="hidden space-y-2 lg:block">
+                <p className="text-[13px] font-semibold text-ink">What not to include</p>
+                <p className="text-[13px] leading-6 text-muted">
+                  Avoid sharing account numbers, passwords, or ID scans. Use general descriptions;
+                  we will confirm details later.
+                </p>
+              </Callout>
             </div>
 
             <div className="hidden space-y-4 lg:block">
@@ -242,6 +250,20 @@ export default function AiDraftingWorkspace() {
                   </div>
                 </div>
               </Callout>
+
+              <Card size="lg" className="space-y-3">
+                <div className="space-y-1">
+                  <p className="font-display text-xl font-semibold text-ink">Conversation guardrails</p>
+                  <p className="text-[13px] text-muted">
+                    We keep it practical and personal. We do not provide legal advice or decide on your behalf.
+                  </p>
+                </div>
+                <div className="space-y-2 text-[13px] text-muted">
+                  <p>• You choose who inherits; we only summarize.</p>
+                  <p>• We flag missing details so your draft is clear.</p>
+                  <p>• You can delete any message or pause at any time.</p>
+                </div>
+              </Card>
             </div>
           </div>
 
