@@ -16,17 +16,17 @@ Design source of truth: `docs/design/design-source-of-truth.md`
 - Phase 1 Landing Page v2 has been rebuilt from the clean Pencil source.
 - Phase 2 Entry Choice + Existing Will Gate implemented from clean Pencil source.
 - Phase 3 AI Drafting Workspace + AI Extraction Summary implemented from clean Pencil frames.
-- Structured realm entry shell and assets/beneficiaries mapping implemented; remaining structured steps pending.
-- Structured realm executors and guardianship implemented from clean Pencil frames.
-- Route map is locked to active routes; remaining pages still need rebuild.
+- Structured realm entry shell, assets/beneficiaries mapping, executors, and guardianship implemented from clean Pencil frames.
+- Review/output realm (Review + Result, Export Options, Signing Instructions, Advocate Review) implemented from Pencil.
+- Route map is locked to active routes; support realm pages still need rebuild.
 
 ## Known Gaps
-- Mobile Review frame is missing from the Pencil source (listed as `qSIY6` in docs).
+- Mobile Review frame is missing from the Pencil source (listed as `qSIY6` in docs); mobile review adapts from desktop layout for now.
 - End-to-end persistence between UI and API is not wired.
 - Legal copy requires expert review (guardianship, witnesses, codicils).
 - Mobile coverage for AI summary, export, and signing flows needs design coverage.
 
 ## Immediate Priorities
-1. Begin review/output realm (Review + Result, Export Options, Signing Instructions, Advocate Review).
+1. Implement support realm pages (FAQ, Privacy + Trust, Error + Empty States).
 2. Preserve realm continuity and prevent silent fallback between AI and structured flows.
-3. Confirm Mobile Review frame availability before Phase 5.
+3. Confirm Mobile Review frame availability and add mobile export/signing frames.

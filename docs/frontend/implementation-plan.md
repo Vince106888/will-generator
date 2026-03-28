@@ -47,7 +47,7 @@ Phase 8  Legacy cleanup / finalization
 - Phase 2: complete (Entry Choice + Existing Will Gate)
 - Phase 3: complete (AI Drafting Workspace + AI Extraction Summary)
 - Phase 4: complete (Structured Flow Shell + Assets & Beneficiaries Mapping + Executors + Guardianship)
-- Phase 5+: pending
+- Phase 5: complete (Review + Result, Export Options, Signing Instructions, Advocate Review)
 
 ## Shared Layout + UI Primitives (Likely Reusable)
 Layout:
@@ -71,7 +71,7 @@ UI:
 - Do not reuse legacy pages as sources of truth.
 - Confirm drafting mode on Entry Choice before Existing Will Gate.
 - Keep AI/Structured realm boundaries intact; no silent fallback.
-- Mobile Review frame is missing in Pencil source and must be added before Phase 5.
+- Mobile Review frame is missing in Pencil source; desktop review is implemented and mobile adapts from desktop until frame is provided.
 
 ## Validation
 - Pending: tests and route verification will be run per phase.
@@ -123,3 +123,36 @@ UI:
 - Section mapping: `guardHeader` -> title/description block
 - Section mapping: `guardMain` -> context callout + minor children card + guardian cards + legal note + actions
 - Layout mapping: vertical stack with `space-y-6` and `space-y-4`
+
+### Review + Result
+- Pencil Frame ID: `0gbAz`
+- Code Page: `apps/web/src/pages/drafting/Review.tsx`
+- Section mapping: `revHeader` -> title/description block
+- Section mapping: `readyBanner` -> success panel
+- Section mapping: `revMain` -> three section cards + warning banner + actions
+- Section mapping: `revSide` -> summary card, checklist, preview, helper callout
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+
+### Export Options
+- Pencil Frame ID: `xUIiv`
+- Code Page: `apps/web/src/pages/post/ExportOptions.tsx`
+- Section mapping: `expHeader` -> title/description block
+- Section mapping: `pricingRow` -> three section cards with tier CTAs
+- Section mapping: `exportNotes` -> two helper callouts
+- Section mapping: `expActions` -> back + continue buttons
+- Layout mapping: `grid gap-4 lg:grid-cols-3` + `grid gap-4 lg:grid-cols-2`
+
+### Signing Instructions
+- Pencil Frame ID: `JXSDZ`
+- Code Page: `apps/web/src/pages/post/SigningGuide.tsx`
+- Section mapping: `signHeader` -> title/description block
+- Section mapping: `steps` -> four section cards with bullet lists
+- Section mapping: `warning` -> warning banner
+- Section mapping: `postActions` -> back + finish buttons
+
+### Advocate Review
+- Pencil Frame ID: `K02wp`
+- Code Page: `apps/web/src/pages/post/AdvocateReview.tsx`
+- Section mapping: `advHeader` -> title/description block
+- Section mapping: `advGrid` -> three section cards
+- Section mapping: `advForm` -> form card with inputs and CTA

@@ -22,10 +22,10 @@ Status meanings:
 | Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | complete | Core asset-beneficiary linkage (Save and return later -> `/drafting/structured-flow`) |
 | Executors | `yb4Yk` | `/drafting/structured-executors` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | complete | Executor guidance (Save and exit -> `/`) |
 | Guardianship | `aSEwT` | `/drafting/guardianship` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | complete | Guardians for minors (Save and return later -> `/drafting/structured-flow`) |
-| Review + Result | `0gbAz` | `/drafting/review-result` | `apps/web/src/pages/drafting/Review.tsx` | pending | Review and result combined |
-| Export Options | `xUIiv` | `/drafting/export-options` | `apps/web/src/pages/post/ExportOptions.tsx` | pending | Export CTA |
-| Signing Instructions | `JXSDZ` | `/drafting/signing-guide` | `apps/web/src/pages/post/SigningGuide.tsx` | pending | Witness rules and steps |
-| Advocate Review | `K02wp` | `/drafting/advocate-review` | `apps/web/src/pages/post/AdvocateReview.tsx` | pending | Advocate escalation |
+| Review + Result | `0gbAz` | `/drafting/review-result` | `apps/web/src/pages/drafting/Review.tsx` | complete | Review and result combined (mobile adapts from desktop frame) |
+| Export Options | `xUIiv` | `/drafting/export-options` | `apps/web/src/pages/post/ExportOptions.tsx` | complete | Export CTA |
+| Signing Instructions | `JXSDZ` | `/drafting/signing-guide` | `apps/web/src/pages/post/SigningGuide.tsx` | complete | Witness rules and steps |
+| Advocate Review | `K02wp` | `/drafting/advocate-review` | `apps/web/src/pages/post/AdvocateReview.tsx` | complete | Advocate escalation |
 | FAQ | `puMDs` | `/faq` | `apps/web/src/pages/marketing/FaqPage.tsx` | pending | Kenya-specific FAQ |
 | Privacy + Trust | `Scsqx` | `/privacy` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | pending | Security and retention |
 | Error + Empty States | `IRKLg` | `/drafting/error` | `apps/web/src/pages/post/ErrorStates.tsx` | pending | Recovery guidance |

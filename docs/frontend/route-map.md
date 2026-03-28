@@ -18,10 +18,10 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before `/existing-
 | `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | complete | Structured realm; Save and return later routes to `/drafting/structured-flow` |
 | `/drafting/structured-executors` | Executors | `yb4Yk` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | complete | Structured realm; Save and exit returns to `/` |
 | `/drafting/guardianship` | Guardianship | `aSEwT` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | complete | Structured realm; Save and return later routes to `/drafting/structured-flow` |
-| `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | pending | Review/output realm |
-| `/drafting/export-options` | Export Options | `xUIiv` | `apps/web/src/pages/post/ExportOptions.tsx` | pending | Review/output realm |
-| `/drafting/signing-guide` | Signing Instructions | `JXSDZ` | `apps/web/src/pages/post/SigningGuide.tsx` | pending | Review/output realm |
-| `/drafting/advocate-review` | Advocate Review | `K02wp` | `apps/web/src/pages/post/AdvocateReview.tsx` | pending | Review/output realm |
+| `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | complete | Review/output realm |
+| `/drafting/export-options` | Export Options | `xUIiv` | `apps/web/src/pages/post/ExportOptions.tsx` | complete | Review/output realm |
+| `/drafting/signing-guide` | Signing Instructions | `JXSDZ` | `apps/web/src/pages/post/SigningGuide.tsx` | complete | Review/output realm |
+| `/drafting/advocate-review` | Advocate Review | `K02wp` | `apps/web/src/pages/post/AdvocateReview.tsx` | complete | Review/output realm |
 | `/drafting/error` | Error + Empty States | `IRKLg` | `apps/web/src/pages/post/ErrorStates.tsx` | pending | Support realm |
 | `/faq` | FAQ | `puMDs` | `apps/web/src/pages/marketing/FaqPage.tsx` | pending | Support realm |
 | `/privacy` | Privacy + Trust | `Scsqx` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | pending | Support realm |
