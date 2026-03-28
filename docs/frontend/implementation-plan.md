@@ -45,10 +45,10 @@ Phase 8  Legacy cleanup / finalization
 - Phase 0: complete (Pencil arrangement + route/doc updates done)
 - Phase 1: complete (Landing Page v2)
 - Phase 2: complete (Entry Choice + Existing Will Gate)
-- Phase 3: complete (AI Drafting Workspace + AI Extraction Summary)
-- Phase 4: complete (Structured Flow Shell + Assets & Beneficiaries Mapping + Executors + Guardianship)
-- Phase 5: complete (Review + Result, Export Options, Signing Instructions, Advocate Review)
-- Phase 6: complete (FAQ, Privacy + Trust, Error + Empty States)
+- Phase 3: in-progress (AI Drafting Workspace + AI Extraction Summary realignment to 2026-03-28 refinements)
+- Phase 4: in-progress (Structured Flow Shell + Assets & Beneficiaries Mapping + Executors + Guardianship realignment)
+- Phase 5: in-progress (Review + Result, Export Options, Signing Instructions, Advocate Review realignment)
+- Phase 6: in-progress (Error + Empty States realignment)
 
 ## Shared Layout + UI Primitives (Likely Reusable)
 Layout:
@@ -89,6 +89,7 @@ UI:
 - Layout mapping: vertical stack uses `space-y-6`
 - Layout mapping: `rowA`/`rowB` use `grid gap-4 lg:grid-cols-2`
 - Layout mapping: banner uses `flex gap-3` with border + background
+- 2026-03-28 refinement: added review checklist row (`Review checklist` + `How to review` helper callout)
 
 ### Structured Flow Shell
 - Pencil Frame ID: `fF89o`
@@ -98,6 +99,7 @@ UI:
 - Section mapping: `sideCol` -> progress list `Card`
 - Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]`
 - Layout mapping: progress bar uses `h-2` wrapper + full-width fill
+- 2026-03-28 refinement: added "What you will need" helper callout in main column
 
 ### Assets + Beneficiaries Mapping
 - Pencil Frame ID: `nFFsn`
@@ -107,6 +109,7 @@ UI:
 - Section mapping: `benefCol` -> beneficiaries `Card`, allocation summary callout, missing banner, actions
 - Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
 - Layout mapping: `Card` blocks use `space-y-3` vertical flow
+- 2026-03-28 refinement: added valuation note callout + remainder clause example card
 
 ### Executors
 - Pencil Frame ID: `yb4Yk`
@@ -117,6 +120,7 @@ UI:
 - Section mapping: `execActions` -> primary + secondary actions
 - Section mapping: `execSide` -> three helper callouts
 - Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+- 2026-03-28 refinement: added "Can an executor be a beneficiary?" callout + "Executor duties" card
 
 ### Guardianship
 - Pencil Frame ID: `aSEwT`
@@ -124,6 +128,7 @@ UI:
 - Section mapping: `guardHeader` -> title/description block
 - Section mapping: `guardMain` -> context callout + minor children card + guardian cards + legal note + actions
 - Layout mapping: vertical stack with `space-y-6` and `space-y-4`
+- 2026-03-28 refinement: added "Talk to your guardian first" callout
 
 ### Review + Result
 - Pencil Frame ID: `0gbAz`
@@ -133,6 +138,7 @@ UI:
 - Section mapping: `revMain` -> three section cards + warning banner + actions
 - Section mapping: `revSide` -> summary card, checklist, preview, helper callout
 - Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+- 2026-03-28 refinement: added "After you sign" guidance card to side column
 
 ### Export Options
 - Pencil Frame ID: `xUIiv`
@@ -142,6 +148,7 @@ UI:
 - Section mapping: `exportNotes` -> two helper callouts
 - Section mapping: `expActions` -> back + continue buttons
 - Layout mapping: `grid gap-4 lg:grid-cols-3` + `grid gap-4 lg:grid-cols-2`
+- 2026-03-28 refinement: added "How to choose a tier" helper callout
 
 ### Signing Instructions
 - Pencil Frame ID: `JXSDZ`
@@ -150,6 +157,7 @@ UI:
 - Section mapping: `steps` -> four section cards with bullet lists
 - Section mapping: `warning` -> warning banner
 - Section mapping: `postActions` -> back + finish buttons
+- 2026-03-28 refinement: added "If you cannot sign personally" helper callout
 
 ### Advocate Review
 - Pencil Frame ID: `K02wp`
@@ -157,6 +165,7 @@ UI:
 - Section mapping: `advHeader` -> title/description block
 - Section mapping: `advGrid` -> three section cards
 - Section mapping: `advForm` -> form card with inputs and CTA
+- 2026-03-28 refinement: added "What happens after you request" helper callout
 
 ### FAQ
 - Pencil Frame ID: `puMDs`
@@ -179,3 +188,4 @@ UI:
 - Section mapping: `errHeader` -> title/description block
 - Section mapping: `stateRow` -> error banner, empty state card, success panel
 - Section mapping: `emptyDetail` -> helper callout
+- 2026-03-28 refinement: added recovery row with `Recovery actions` card + support helper

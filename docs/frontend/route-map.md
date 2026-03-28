@@ -12,17 +12,17 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before `/existing-
 | `/` | Landing Page v2 | `DhkvM` | `apps/web/src/pages/marketing/Landing.tsx` | complete | Implemented from clean Pencil source |
 | `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Implemented from clean Pencil source |
 | `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Drafting mode confirmed before proceed |
-| `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | complete | AI realm start |
-| `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | complete | Implemented from clean Pencil frame |
-| `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | complete | Structured realm start; Save and exit returns to `/` |
-| `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | complete | Structured realm; Save and return later routes to `/drafting/structured-flow` |
-| `/drafting/structured-executors` | Executors | `yb4Yk` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | complete | Structured realm; Save and exit returns to `/` |
-| `/drafting/guardianship` | Guardianship | `aSEwT` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | complete | Structured realm; Save and return later routes to `/drafting/structured-flow` |
-| `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | complete | Review/output realm |
-| `/drafting/export-options` | Export Options | `xUIiv` | `apps/web/src/pages/post/ExportOptions.tsx` | complete | Review/output realm |
-| `/drafting/signing-guide` | Signing Instructions | `JXSDZ` | `apps/web/src/pages/post/SigningGuide.tsx` | complete | Review/output realm |
-| `/drafting/advocate-review` | Advocate Review | `K02wp` | `apps/web/src/pages/post/AdvocateReview.tsx` | complete | Review/output realm |
-| `/drafting/error` | Error + Empty States | `IRKLg` | `apps/web/src/pages/post/ErrorStates.tsx` | complete | Support realm |
+| `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | refine | AI realm start; guardrails + safety helper added |
+| `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Added review checklist + guidance row |
+| `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | refine | Added "What you will need" guidance |
+| `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | refine | Added valuation note + remainder clause example |
+| `/drafting/structured-executors` | Executors | `yb4Yk` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | refine | Added executor duties + beneficiary note |
+| `/drafting/guardianship` | Guardianship | `aSEwT` | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | refine | Added guardian consent guidance |
+| `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | refine | Added post-signing guidance card |
+| `/drafting/export-options` | Export Options | `xUIiv` | `apps/web/src/pages/post/ExportOptions.tsx` | refine | Added tier choice guidance |
+| `/drafting/signing-guide` | Signing Instructions | `JXSDZ` | `apps/web/src/pages/post/SigningGuide.tsx` | refine | Added special signing guidance |
+| `/drafting/advocate-review` | Advocate Review | `K02wp` | `apps/web/src/pages/post/AdvocateReview.tsx` | refine | Added post-request guidance |
+| `/drafting/error` | Error + Empty States | `IRKLg` | `apps/web/src/pages/post/ErrorStates.tsx` | refine | Added recovery row; icon scale corrected |
 | `/faq` | FAQ | `puMDs` | `apps/web/src/pages/marketing/FaqPage.tsx` | complete | Support realm |
 | `/privacy` | Privacy + Trust | `Scsqx` | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | complete | Support realm |
 
