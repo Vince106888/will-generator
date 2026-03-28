@@ -1,13 +1,19 @@
 ﻿import { ReactNode } from "react";
-import { MarketingNav } from "./MarketingNav";
+import { MarketingNav, type MarketingNavProps } from "./MarketingNav";
 import { MarketingFooter } from "./MarketingFooter";
 
-export function MarketingShell({ children }: { children: ReactNode }) {
+type MarketingShellProps = {
+  children: ReactNode;
+  showFooter?: boolean;
+  nav?: MarketingNavProps;
+};
+
+export function MarketingShell({ children, showFooter = true, nav }: MarketingShellProps) {
   return (
     <div className="bg-paper">
-      <MarketingNav />
+      <MarketingNav {...nav} />
       <main>{children}</main>
-      <MarketingFooter />
+      {showFooter ? <MarketingFooter /> : null}
     </div>
   );
 }

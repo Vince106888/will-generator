@@ -1,9 +1,9 @@
 // Frame: Entry Choice (V6ysS)
 import { MarketingShell } from "../../components/layout/MarketingShell";
 import { Container } from "../../components/layout/Container";
-import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
+import { Button } from "../../components/ui/Button";
 import { TrustPanel } from "../../components/ui/TrustPanel";
 import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
@@ -12,8 +12,8 @@ export default function EntryChoice() {
   const { update } = useDraftingData();
 
   return (
-    <MarketingShell>
-      <Container className="pb-24 pt-12">
+    <MarketingShell showFooter={false} nav={{ ctaLabel: "Start drafting" }}>
+      <Container size="narrow" className="pb-24 pt-12">
         <div className="space-y-3">
           <div className="space-y-2">
             <h1 className="font-display text-3xl text-ink sm:text-4xl">
@@ -25,8 +25,8 @@ export default function EntryChoice() {
             </p>
           </div>
           <p className="max-w-[760px] text-sm leading-6 text-muted">
-            We explain executor, beneficiary, guardian, and codicil as you go, so you never have to
-            guess legal terms.
+            We explain executor, beneficiary, guardian, and codicil as you go, so you never have
+            to guess legal terms.
           </p>
         </div>
 
@@ -43,23 +43,27 @@ export default function EntryChoice() {
               <p className="text-sm italic text-muted">
                 Example: "I have a home in Kiambu, my wife gets the house, my son gets the car."
               </p>
-              <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-                <li>Voice input and document upload supported</li>
-                <li>We ask follow-ups only where needed</li>
-                <li>Review extracted assets and beneficiaries before you confirm</li>
+              <ul className="space-y-2 text-sm leading-6 text-muted">
+                {[
+                  "Voice input and document upload supported",
+                  "We ask follow-ups only where needed",
+                  "Review extracted assets and beneficiaries before you confirm"
+                ].map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
               </ul>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                update({ draftingMode: "ai", draftingModeConfirmed: true });
-                navigate("/existing-will");
-              }}
-            >
-              Start with AI drafting
-            </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  update({ draftingMode: "ai", draftingModeConfirmed: true });
+                  navigate("/existing-will");
+                }}
+              >
+                Start with AI drafting
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
                 See a sample conversation
               </Button>
@@ -73,22 +77,26 @@ export default function EntryChoice() {
                 Answer a step-by-step checklist with explanations and examples.
               </p>
             </div>
-            <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-              <li>Clear required vs optional labels</li>
-              <li>Asset-to-beneficiary mapping built in</li>
-              <li>Progress bar with ability to return later</li>
+            <ul className="space-y-2 text-sm leading-6 text-muted">
+              {[
+                "Clear required vs optional labels",
+                "Asset-to-beneficiary mapping built in",
+                "Progress bar with ability to return later"
+              ].map((item) => (
+                <li key={item}>• {item}</li>
+              ))}
             </ul>
             <div className="flex flex-wrap items-center gap-3">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                update({ draftingMode: "structured", draftingModeConfirmed: true });
-                navigate("/existing-will");
-              }}
-            >
-              Start guided form
-            </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  update({ draftingMode: "structured", draftingModeConfirmed: true });
+                  navigate("/existing-will");
+                }}
+              >
+                Start guided form
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
                 Preview the steps
               </Button>
@@ -97,9 +105,12 @@ export default function EntryChoice() {
         </div>
 
         <div className="mt-6">
-          <Callout tone="info">
-            Start with AI or the checklist, then switch any time without losing progress. Your
-            draft stays synced.
+          <Callout>
+            <p className="text-sm font-semibold text-ink">You can switch paths later</p>
+            <p className="text-sm text-muted">
+              Start with AI or the checklist, then switch any time without losing progress. Your
+              draft stays synced.
+            </p>
           </Callout>
         </div>
 
@@ -119,11 +130,15 @@ export default function EntryChoice() {
                   These details make drafting faster, but they are not required to start.
                 </p>
               </div>
-              <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-                <li>National ID or passport details</li>
-                <li>A list of assets and rough values</li>
-                <li>Names of beneficiaries and executors</li>
-                <li>Guardianship preferences if you have minors</li>
+              <ul className="space-y-2 text-sm leading-6 text-muted">
+                {[
+                  "National ID or passport details",
+                  "A list of assets and rough values",
+                  "Names of beneficiaries and executors",
+                  "Guardianship preferences if you have minors"
+                ].map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
               </ul>
             </Card>
           </div>
