@@ -17,6 +17,7 @@ Design source of truth: `docs/design/design-source-of-truth.md`
 - Phase 2 Entry Choice + Existing Will Gate implemented from clean Pencil source.
 - Phase 3 AI Drafting Workspace + AI Extraction Summary implemented from clean Pencil frames.
 - Structured realm entry shell and assets/beneficiaries mapping implemented; remaining structured steps pending.
+- Structured realm executors and guardianship implemented from clean Pencil frames.
 - Route map is locked to active routes; remaining pages still need rebuild.
 
 ## Known Gaps
@@ -26,6 +27,6 @@ Design source of truth: `docs/design/design-source-of-truth.md`
 - Mobile coverage for AI summary, export, and signing flows needs design coverage.
 
 ## Immediate Priorities
-1. Complete structured realm: Executors + Guardianship, then confirm structured flow continuity.
+1. Begin review/output realm (Review + Result, Export Options, Signing Instructions, Advocate Review).
 2. Preserve realm continuity and prevent silent fallback between AI and structured flows.
 3. Confirm Mobile Review frame availability before Phase 5.

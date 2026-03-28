@@ -46,7 +46,7 @@ Phase 8  Legacy cleanup / finalization
 - Phase 1: complete (Landing Page v2)
 - Phase 2: complete (Entry Choice + Existing Will Gate)
 - Phase 3: complete (AI Drafting Workspace + AI Extraction Summary)
-- Phase 4: in progress (Structured Flow Shell + Assets & Beneficiaries Mapping done; Executors + Guardianship pending)
+- Phase 4: complete (Structured Flow Shell + Assets & Beneficiaries Mapping + Executors + Guardianship)
 - Phase 5+: pending
 
 ## Shared Layout + UI Primitives (Likely Reusable)
@@ -106,3 +106,20 @@ UI:
 - Section mapping: `benefCol` -> beneficiaries `Card`, allocation summary callout, missing banner, actions
 - Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
 - Layout mapping: `Card` blocks use `space-y-3` vertical flow
+
+### Executors
+- Pencil Frame ID: `yb4Yk`
+- Code Page: `apps/web/src/pages/drafting/StructuredExecutors.tsx`
+- Section mapping: `execHeader` -> title/description block
+- Section mapping: `primaryCard` -> primary executor `Card` with three input fields
+- Section mapping: `backupCard` -> backup executor `Card` with two inputs + ghost action
+- Section mapping: `execActions` -> primary + secondary actions
+- Section mapping: `execSide` -> three helper callouts
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+
+### Guardianship
+- Pencil Frame ID: `aSEwT`
+- Code Page: `apps/web/src/pages/drafting/StructuredGuardianship.tsx`
+- Section mapping: `guardHeader` -> title/description block
+- Section mapping: `guardMain` -> context callout + minor children card + guardian cards + legal note + actions
+- Layout mapping: vertical stack with `space-y-6` and `space-y-4`
