@@ -5221,6 +5221,32 @@
                       "y": 22
                     }
                   }
+                },
+                {
+                  "id": "mK3m2",
+                  "type": "ref",
+                  "ref": "ToJlu",
+                  "width": "fill_container",
+                  "name": "newHelper",
+                  "height": "fit_content",
+                  "x": 0,
+                  "y": 762,
+                  "descendants": {
+                    "ldGzf": {
+                      "iconFontName": "circle-alert"
+                    },
+                    "m3FE3": {
+                      "width": "fill_container",
+                      "height": "fit_content"
+                    },
+                    "g7nNy": {
+                      "content": "What not to include"
+                    },
+                    "4mOXd": {
+                      "width": "fill_container",
+                      "content": "Avoid sharing account numbers, passwords, or ID scans. Use general descriptions; we will confirm details later."
+                    }
+                  }
                 }
               ]
             },
@@ -5415,6 +5441,59 @@
                       "width": "fill_container",
                       "content": "These details help your executor act clearly and reduce family disputes. You can edit or remove anything before signing.",
                       "y": 22
+                    }
+                  }
+                },
+                {
+                  "id": "mh7Oh",
+                  "type": "ref",
+                  "ref": "wFDg7",
+                  "width": "fill_container",
+                  "name": "newSideCard",
+                  "y": 678,
+                  "height": "fit_content",
+                  "descendants": {
+                    "q8LPo": {
+                      "width": "fill_container"
+                    },
+                    "TXIO8": {
+                      "content": "Conversation guardrails"
+                    },
+                    "S5Ewl": {
+                      "content": "We keep it practical and personal. We do not provide legal advice or decide on your behalf."
+                    },
+                    "V1VuY": {
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Md1Fu",
+                          "fill": "$--foreground",
+                          "content": "• You choose who inherits; we only summarize.",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ffJDH",
+                          "fill": "$--foreground",
+                          "content": "• We flag missing details so your draft is clear.",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "PVjw5",
+                          "fill": "$--muted-foreground",
+                          "content": "• You can delete any message or pause at any time.",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
                   }
                 }
@@ -5866,6 +5945,68 @@
           ]
         },
         {
+          "type": "frame",
+          "id": "D64kq",
+          "name": "reviewRow",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "id": "7UuBQ",
+              "type": "ref",
+              "ref": "ToJlu",
+              "width": "fill_container",
+              "name": "reviewHelp",
+              "height": "fit_content",
+              "x": 0,
+              "descendants": {
+                "ldGzf": {
+                  "iconFontName": "circle-check"
+                },
+                "m3FE3": {
+                  "width": "fill_container",
+                  "height": "fit_content"
+                },
+                "g7nNy": {
+                  "content": "How to review"
+                },
+                "4mOXd": {
+                  "width": "fill_container",
+                  "content": "Read each card and confirm names, relationships, and asset descriptions. Use plain language corrections — we translate into legal format later."
+                }
+              }
+            },
+            {
+              "id": "SrzDP",
+              "type": "ref",
+              "ref": "ZasVz",
+              "width": "fill_container",
+              "name": "reviewChecklist",
+              "x": 664,
+              "descendants": {
+                "GV5hu": {
+                  "content": "Review checklist"
+                },
+                "TukiL": {
+                  "width": "fill_container"
+                },
+                "GfV0P": {
+                  "content": "Legal names and ID details match"
+                },
+                "ZjPWX": {
+                  "width": "fill_container"
+                },
+                "pxrhz": {
+                  "iconFontName": "circle-alert"
+                },
+                "V6BIx": {
+                  "content": "Executor and guardian choices confirmed"
+                }
+              }
+            }
+          ]
+        },
+        {
           "id": "38k9g",
           "type": "ref",
           "ref": "8Jbfl",
@@ -5873,7 +6014,7 @@
           "name": "missingBanner",
           "height": "fit_content",
           "x": 64,
-          "y": 799,
+          "y": 923,
           "descendants": {
             "dPa4A": {
               "x": 16,
@@ -6242,6 +6383,32 @@
                       "width": "fill_container",
                       "content": "We mark every field as required or optional. A valid will needs your legal name, identification details, assets, beneficiaries, and an executor. Phone number and marital status are optional.",
                       "y": 22
+                    }
+                  }
+                },
+                {
+                  "id": "gw5Ut",
+                  "type": "ref",
+                  "ref": "ToJlu",
+                  "width": "fill_container",
+                  "name": "flowHelp",
+                  "height": "fit_content",
+                  "x": 0,
+                  "y": 300,
+                  "descendants": {
+                    "ldGzf": {
+                      "iconFontName": "timer"
+                    },
+                    "m3FE3": {
+                      "width": "fill_container",
+                      "height": "fit_content"
+                    },
+                    "g7nNy": {
+                      "content": "What you will need"
+                    },
+                    "4mOXd": {
+                      "width": "fill_container",
+                      "content": "Have a list of your assets, the people you want to provide for, and a preferred executor. Most people complete this in 15–25 minutes."
                     }
                   }
                 },
@@ -6859,6 +7026,32 @@
                       "y": 22
                     }
                   }
+                },
+                {
+                  "id": "ac4sz",
+                  "type": "ref",
+                  "ref": "ToJlu",
+                  "width": "fill_container",
+                  "name": "assetValHelp",
+                  "height": "fit_content",
+                  "x": 0,
+                  "y": 707,
+                  "descendants": {
+                    "ldGzf": {
+                      "iconFontName": "scale"
+                    },
+                    "m3FE3": {
+                      "width": "fill_container",
+                      "height": "fit_content"
+                    },
+                    "g7nNy": {
+                      "content": "Valuation is optional"
+                    },
+                    "4mOXd": {
+                      "width": "fill_container",
+                      "content": "You do not need exact values. If helpful, note approximate amounts or locations to help your executor identify the asset."
+                    }
+                  }
                 }
               ]
             },
@@ -6977,13 +7170,62 @@
                   }
                 },
                 {
+                  "id": "jhAhe",
+                  "type": "ref",
+                  "ref": "wFDg7",
+                  "width": "fill_container",
+                  "name": "remainderCard",
+                  "y": 360,
+                  "height": "fit_content",
+                  "descendants": {
+                    "TXIO8": {
+                      "content": "Remainder clause example"
+                    },
+                    "S5Ewl": {
+                      "content": "Use when assets are not listed individually."
+                    },
+                    "V1VuY": {
+                      "height": "fit_content",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "W5zq8",
+                          "fill": "$--foreground",
+                          "content": "• \"Everything else goes equally to my children.\"",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ViQoC",
+                          "fill": "$--foreground",
+                          "content": "• \"Any remaining property goes to my spouse.\"",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "MYmR1",
+                          "fill": "$--muted-foreground",
+                          "content": "You can change this later if needed.",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
                   "id": "whAhK",
                   "type": "ref",
                   "ref": "8Jbfl",
                   "width": "fill_container",
                   "name": "missing",
                   "x": 0,
-                  "y": 360,
+                  "y": 554,
                   "height": "fit_content",
                   "descendants": {
                     "dPa4A": {
@@ -7375,6 +7617,32 @@
                   }
                 },
                 {
+                  "id": "IWPfS",
+                  "type": "ref",
+                  "ref": "ToJlu",
+                  "width": "fill_container",
+                  "name": "execNote",
+                  "height": "fit_content",
+                  "x": 0,
+                  "y": 764,
+                  "descendants": {
+                    "ldGzf": {
+                      "iconFontName": "users"
+                    },
+                    "m3FE3": {
+                      "width": "fill_container",
+                      "height": "fit_content"
+                    },
+                    "g7nNy": {
+                      "content": "Can an executor be a beneficiary?"
+                    },
+                    "4mOXd": {
+                      "width": "fill_container",
+                      "content": "Yes. It is common to choose a trusted family member who will also inherit. Ensure they are willing and organized."
+                    }
+                  }
+                },
+                {
                   "type": "frame",
                   "id": "Q7sLx",
                   "name": "execActions",
@@ -7511,6 +7779,64 @@
                       "content": "Yes. You can update your executor or create a new will or codicil if your situation changes.",
                       "width": "fill_container",
                       "y": 22
+                    }
+                  }
+                },
+                {
+                  "id": "xIkUz",
+                  "type": "ref",
+                  "ref": "wFDg7",
+                  "width": "fill_container",
+                  "name": "execDuties",
+                  "y": 370,
+                  "height": "fit_content",
+                  "descendants": {
+                    "TXIO8": {
+                      "content": "Executor duties"
+                    },
+                    "S5Ewl": {
+                      "content": "What they will actually do."
+                    },
+                    "V1VuY": {
+                      "height": "fit_content",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZkEsU",
+                          "fill": "$--foreground",
+                          "content": "• Collect and secure assets",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "vIExe",
+                          "fill": "$--foreground",
+                          "content": "• Pay debts, taxes, and funeral costs",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Iy9lg",
+                          "fill": "$--foreground",
+                          "content": "• Distribute assets per your instructions",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "cff44",
+                          "fill": "$--muted-foreground",
+                          "content": "We recommend choosing someone organized and available.",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
                   }
                 }
@@ -7902,6 +8228,32 @@
               }
             },
             {
+              "id": "V3WcO",
+              "type": "ref",
+              "ref": "ToJlu",
+              "width": "fill_container",
+              "name": "consentHelp",
+              "height": "fit_content",
+              "x": 0,
+              "y": 920,
+              "descendants": {
+                "ldGzf": {
+                  "iconFontName": "message-circle"
+                },
+                "m3FE3": {
+                  "width": "fill_container",
+                  "height": "fit_content"
+                },
+                "g7nNy": {
+                  "content": "Talk to your guardian first"
+                },
+                "4mOXd": {
+                  "width": "fill_container",
+                  "content": "It is best to confirm they are willing and able to care for the children. A backup guardian helps if plans change."
+                }
+              }
+            },
+            {
               "id": "isxdX",
               "type": "ref",
               "ref": "8Jbfl",
@@ -7909,7 +8261,7 @@
               "name": "legalNote",
               "height": "fit_content",
               "x": 0,
-              "y": 920,
+              "y": 1010,
               "descendants": {
                 "dPa4A": {
                   "x": 16,
@@ -8477,13 +8829,62 @@
                   }
                 },
                 {
+                  "id": "kjaax",
+                  "type": "ref",
+                  "ref": "wFDg7",
+                  "width": "fill_container",
+                  "name": "postSignCard",
+                  "y": 505,
+                  "height": "fit_content",
+                  "descendants": {
+                    "TXIO8": {
+                      "content": "After you sign"
+                    },
+                    "S5Ewl": {
+                      "content": "Keep the will accessible and tell the right people."
+                    },
+                    "V1VuY": {
+                      "height": "fit_content",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "4b1WA",
+                          "fill": "$--foreground",
+                          "content": "• Store the signed copy safely",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "W7a23",
+                          "fill": "$--foreground",
+                          "content": "• Tell your executor where it is kept",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "1uGfk",
+                          "fill": "$--muted-foreground",
+                          "content": "• Update this will if your circumstances change",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
                   "id": "rpXcg",
                   "type": "ref",
                   "ref": "ToJlu",
                   "width": "fill_container",
                   "name": "sideHelp",
                   "x": 0,
-                  "y": 505,
+                  "y": 699,
                   "height": "fit_content",
                   "descendants": {
                     "ldGzf": {
@@ -8834,6 +9235,32 @@
               }
             }
           ]
+        },
+        {
+          "id": "lUujy",
+          "type": "ref",
+          "ref": "ToJlu",
+          "width": "fill_container",
+          "name": "chooseHelp",
+          "height": "fit_content",
+          "x": 64,
+          "y": 473,
+          "descendants": {
+            "ldGzf": {
+              "iconFontName": "layers"
+            },
+            "m3FE3": {
+              "width": "fill_container",
+              "height": "fit_content"
+            },
+            "g7nNy": {
+              "content": "How to choose a tier"
+            },
+            "4mOXd": {
+              "width": "fill_container",
+              "content": "All tiers use the same legal content. Choose based on whether you want a clean PDF, Word editing, or witness support."
+            }
+          }
         },
         {
           "type": "frame",
@@ -9312,6 +9739,32 @@
           }
         },
         {
+          "id": "lyj6D",
+          "type": "ref",
+          "ref": "ToJlu",
+          "width": "fill_container",
+          "name": "signHelp",
+          "height": "fit_content",
+          "x": 64,
+          "y": 1029,
+          "descendants": {
+            "ldGzf": {
+              "iconFontName": "info"
+            },
+            "m3FE3": {
+              "width": "fill_container",
+              "height": "fit_content"
+            },
+            "g7nNy": {
+              "content": "If you cannot sign personally"
+            },
+            "4mOXd": {
+              "width": "fill_container",
+              "content": "If you are unable to sign, the law allows a signed mark or assisted signing in front of witnesses. Consider advocate review for guidance."
+            }
+          }
+        },
+        {
           "type": "frame",
           "id": "EhL7W",
           "name": "postActions",
@@ -9761,6 +10214,32 @@
                   }
                 }
               ]
+            }
+          }
+        },
+        {
+          "id": "ogK1Q",
+          "type": "ref",
+          "ref": "ToJlu",
+          "width": "fill_container",
+          "name": "advNext",
+          "height": "fit_content",
+          "x": 64,
+          "y": 965,
+          "descendants": {
+            "ldGzf": {
+              "iconFontName": "check"
+            },
+            "m3FE3": {
+              "width": "fill_container",
+              "height": "fit_content"
+            },
+            "g7nNy": {
+              "content": "What happens after you request"
+            },
+            "4mOXd": {
+              "width": "fill_container",
+              "content": "We will confirm availability, share pricing, and connect you with a vetted advocate. No work begins without your approval."
             }
           }
         }
@@ -10830,17 +11309,19 @@
               "x": 442.6666666666667,
               "descendants": {
                 "sdFGa": {
-                  "x": 203.33333333333334,
-                  "y": 16
+                  "x": 205.33333333333334,
+                  "y": 16,
+                  "width": 16,
+                  "height": 16
                 },
                 "7vZEY": {
-                  "x": 146.33333333333331,
-                  "y": 44
+                  "x": 146.33333333333334,
+                  "y": 40
                 },
                 "H8wVF": {
                   "width": "fill_container",
                   "x": 16,
-                  "y": 68
+                  "y": 64
                 }
               }
             },
@@ -10866,6 +11347,92 @@
           ]
         },
         {
+          "type": "frame",
+          "id": "armjl",
+          "name": "recoveryRow",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "id": "byXH3",
+              "type": "ref",
+              "ref": "wFDg7",
+              "width": "fill_container",
+              "name": "recoveryCard",
+              "height": "fit_content",
+              "descendants": {
+                "q8LPo": {
+                  "width": "fill_container"
+                },
+                "TXIO8": {
+                  "content": "Recovery actions"
+                },
+                "S5Ewl": {
+                  "content": "What people typically do next."
+                },
+                "V1VuY": {
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fZddU",
+                      "fill": "$--foreground",
+                      "content": "• Try saving again in a few seconds",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tLYeX",
+                      "fill": "$--foreground",
+                      "content": "• Check your internet connection",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cQ3Fs",
+                      "fill": "$--foreground",
+                      "content": "• Return to the last saved step",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "b5Q80",
+              "type": "ref",
+              "ref": "ToJlu",
+              "width": "fill_container",
+              "name": "needHelp",
+              "height": "fit_content",
+              "x": 664,
+              "descendants": {
+                "ldGzf": {
+                  "iconFontName": "message-circle"
+                },
+                "m3FE3": {
+                  "width": "fill_container",
+                  "height": "fit_content"
+                },
+                "g7nNy": {
+                  "content": "If this keeps happening"
+                },
+                "4mOXd": {
+                  "width": "fill_container",
+                  "content": "Contact support with the time and step you were on. We can restore the last saved draft."
+                }
+              }
+            }
+          ]
+        },
+        {
           "id": "xT2d0",
           "type": "ref",
           "ref": "ToJlu",
@@ -10873,17 +11440,19 @@
           "name": "emptyDetail",
           "height": "fit_content",
           "x": 64,
-          "y": 373,
+          "y": 571,
           "descendants": {
             "ldGzf": {
               "iconFontName": "alert-circle",
               "x": 16,
-              "y": 16
+              "y": 16,
+              "width": 16,
+              "height": 16
             },
             "m3FE3": {
               "width": "fill_container",
               "height": "fit_content",
-              "x": 46,
+              "x": 44,
               "y": 16
             },
             "g7nNy": {
