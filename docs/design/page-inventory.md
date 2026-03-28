@@ -16,7 +16,7 @@ Status meanings:
 | Landing Page v2 | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | complete | Implemented from clean Pencil source |
 | Entry Choice | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Implemented from clean Pencil source |
 | Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Implemented from clean Pencil source |
-| AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | pending | Corrected in Pencil to fix chat width/wrapping; implement from corrected frame only |
+| AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | complete | Implemented from corrected frame |
 | AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Needs final design pass before implementation |
 | Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | pending | Structured entry shell |
 | Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | pending | Core asset-beneficiary linkage |
@@ -32,7 +32,7 @@ Status meanings:
 | Mobile Landing v2 | `tNapD` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | complete | Mobile layout follows M1 |
 | Mobile Entry Choice | `ny4DT` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Mobile layout follows M2 |
 | Mobile Existing Will Gate | `boVDU` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Mobile layout follows M3 |
-| Mobile AI Drafting | `jdj6J` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | pending | Corrected in Pencil to fix mobile chat width/wrapping; implement from corrected frame only |
+| Mobile AI Drafting | `jdj6J` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | complete | Mobile layout aligned to M4 (chat + privacy reminder) |
 | Mobile Assets Mapping | `ui2iU` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | pending | Mobile layout follows M5 |
 | Mobile Review | `qSIY6` | `/drafting/review-result` | `apps/web/src/pages/drafting/Review.tsx` | missing | Frame not found in Pencil source |
 

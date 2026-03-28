@@ -1,10 +1,15 @@
 import { ReactNode } from "react";
-import { MarketingNav } from "./MarketingNav";
+import { MarketingNav, type MarketingNavProps } from "./MarketingNav";
 
-export function WorkspaceShell({ children }: { children: ReactNode }) {
+type WorkspaceShellProps = {
+  children: ReactNode;
+  nav?: MarketingNavProps;
+};
+
+export function WorkspaceShell({ children, nav }: WorkspaceShellProps) {
   return (
     <div className="bg-paper">
-      <MarketingNav />
+      <MarketingNav {...nav} />
       <main>{children}</main>
     </div>
   );

@@ -12,7 +12,7 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before `/existing-
 | `/` | Landing Page v2 | `DhkvM` | `apps/web/src/pages/marketing/Landing.tsx` | complete | Implemented from clean Pencil source |
 | `/entry-choice` | Entry Choice | `V6ysS` | `apps/web/src/pages/marketing/EntryChoice.tsx` | complete | Implemented from clean Pencil source |
 | `/existing-will` | Existing Will Gate | `Fd207` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | complete | Drafting mode confirmed before proceed |
-| `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | pending | AI realm start |
+| `/drafting/ai-workspace` | AI Drafting Workspace | `iVFMi` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | complete | AI realm start |
 | `/drafting/ai-summary` | AI Extraction Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Awaiting final design pass |
 | `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | pending | Structured realm start |
 | `/drafting/mapping` | Assets + Beneficiaries Mapping | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | pending | Structured realm |
