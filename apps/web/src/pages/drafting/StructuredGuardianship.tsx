@@ -5,9 +5,12 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function StructuredGuardianship() {
+  useDraftingMode("structured");
+
   return (
     <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
       <Container size="wide" className="py-8">
@@ -89,6 +92,24 @@ export default function StructuredGuardianship() {
                 </Button>
               </div>
             </Card>
+
+            <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+              <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
+                <path
+                  d="M5 6h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <div className="space-y-1">
+                <p className="text-[13px] font-semibold text-ink">Talk to your guardian first</p>
+                <p className="text-[13px] leading-[1.5] text-muted">
+                  It is best to confirm they are willing and able to care for the children. A backup guardian helps if
+                  plans change.
+                </p>
+              </div>
+            </div>
 
             <div className="flex gap-3 rounded-xl border border-warning bg-warning-soft p-4">
               <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-warning" fill="none">

@@ -3,9 +3,12 @@ import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function StructuredFlowShell() {
+  useDraftingMode("structured");
+
   return (
     <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
       <Container size="wide" className="py-8">
@@ -69,6 +72,26 @@ export default function StructuredFlowShell() {
                   <p className="text-[13px] leading-[1.5] text-muted">
                     We mark every field as required or optional. A valid will needs your legal name, identification
                     details, assets, beneficiaries, and an executor. Phone number and marital status are optional.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
+                  <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
+                  <path
+                    d="M12 7.5v5l3 2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">What you will need</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    Have a list of your assets, the people you want to provide for, and a preferred executor. Most
+                    people complete this in 15–25 minutes.
                   </p>
                 </div>
               </div>

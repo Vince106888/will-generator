@@ -3,9 +3,12 @@ import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function AssetsBeneficiariesMapping() {
+  useDraftingMode("structured");
+
   return (
     <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
       <Container size="wide" className="py-8">
@@ -89,6 +92,42 @@ export default function AssetsBeneficiariesMapping() {
                   </p>
                 </div>
               </div>
+
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
+                  <path
+                    d="M6 4h12"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M4 8h16"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M8 8v12"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M16 8v12"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">Valuation is optional</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    You do not need exact values. If helpful, note approximate amounts or locations to help your
+                    executor identify the asset.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -132,6 +171,18 @@ export default function AssetsBeneficiariesMapping() {
                   </p>
                 </div>
               </div>
+
+              <Card size="lg" className="space-y-3">
+                <div className="space-y-1.5">
+                  <p className="font-display text-xl font-semibold text-ink">Remainder clause example</p>
+                  <p className="text-[13px] text-muted">Use when assets are not listed individually.</p>
+                </div>
+                <div className="space-y-2 text-[13px] text-ink">
+                  <p>• "Everything else goes equally to my children."</p>
+                  <p>• "Any remaining property goes to my spouse."</p>
+                  <p className="text-muted">You can change this later if needed.</p>
+                </div>
+              </Card>
 
               <div className="flex gap-3 rounded-xl border border-warning bg-warning-soft p-4">
                 <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-warning" fill="none">

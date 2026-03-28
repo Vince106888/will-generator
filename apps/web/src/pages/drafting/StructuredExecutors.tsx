@@ -5,9 +5,12 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function StructuredExecutors() {
+  useDraftingMode("structured");
+
   return (
     <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
       <Container size="wide" className="py-8">
@@ -59,6 +62,31 @@ export default function StructuredExecutors() {
                   </Button>
                 </div>
               </Card>
+
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
+                  <path
+                    d="M12 4a5 5 0 0 1 5 5v3"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M12 20a5 5 0 0 1-5-5v-3"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+                </svg>
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">Can an executor be a beneficiary?</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    Yes. It is common to choose a trusted family member who will also inherit. Ensure they are willing
+                    and organized.
+                  </p>
+                </div>
+              </div>
 
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="primary" size="sm" onClick={() => navigate("/drafting/guardianship")}>
@@ -145,6 +173,19 @@ export default function StructuredExecutors() {
                   </p>
                 </div>
               </div>
+
+              <Card size="lg" className="space-y-3">
+                <div className="space-y-1.5">
+                  <p className="font-display text-xl font-semibold text-ink">Executor duties</p>
+                  <p className="text-[13px] text-muted">What they will actually do.</p>
+                </div>
+                <div className="space-y-2 text-[13px] text-ink">
+                  <p>• Collect and secure assets</p>
+                  <p>• Pay debts, taxes, and funeral costs</p>
+                  <p>• Distribute assets per your instructions</p>
+                  <p className="text-muted">We recommend choosing someone organized and available.</p>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
