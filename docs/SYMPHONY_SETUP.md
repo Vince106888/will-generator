@@ -79,6 +79,9 @@ For the pilot run, follow the checklist below to validate pickup and lifecycle.
 Use this checklist for the pilot run to confirm Symphony picked up a Todo issue
 and executed the full lifecycle.
 
+Expected status path:
+- `Todo` -> `In Progress` -> `In Review`
+
 Steps to run Symphony:
 - [ ] Ensure `LINEAR_API_KEY` is available and points to Lexsgo (`LEX`).
 - [ ] Confirm `SYMPHONY_WORKSPACE_ROOT` and `SYMPHONY_SOURCE_REPO_URL` resolve to the correct workspace and repo.
@@ -100,6 +103,7 @@ Confirm issue pickup:
 - [ ] Verify a PR is opened against `main` and linked to the Linear issue.
 - [ ] Verify the issue is moved to `In Review` once the PR is open and checks pass.
 - [ ] Verify Symphony stops because `In Review` is not an active execution state.
+ - [ ] Verify `corepack pnpm lint` and `corepack pnpm build` both completed without errors.
 
 ## One-Line Launcher
 
