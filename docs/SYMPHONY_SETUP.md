@@ -78,6 +78,18 @@ If no issues are claimed, re-check:
 Use this checklist for the pilot run to confirm Symphony picked up a Todo issue
 and executed the full lifecycle.
 
+- [ ] Ensure `LINEAR_API_KEY` is available and points to Lexsgo (`LEX`).
+- [ ] From repo root, run `corepack pnpm symphony:start`.
+- [ ] Confirm logs show:
+- [ ] Linear authentication success.
+- [ ] Polling project `esheria-wills` with status `Todo`.
+- [ ] Claimed issue ID (for this pilot, `LEX-277`).
+- [ ] Workspace creation path and `codex app-server` launch.
+- [ ] Confirm issue pickup by verifying:
+- [ ] The Linear issue moved to `In Progress`.
+- [ ] A branch exists locally matching `task/<issue-key>-symphony-pilot`.
+- [ ] A PR is opened against `main` and linked to the Linear issue.
+
 ## One-Line Launcher
 
 Use the repo wrapper (Windows):
