@@ -65,30 +65,34 @@ Symphony should log:
 - Successful authentication against Linear.
 - The project slug and status filter it is polling.
 - Issue IDs when it claims work (e.g., `LEX-257`).
- - Workspace root + runtime path.
+- Workspace root + runtime path.
 
 If no issues are claimed, re-check:
 - Status spelling (Todo vs To Do).
 - Project slug correctness (`esheria-wills`).
 - Issue readiness (acceptance criteria and dependencies present).
- - That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
+- That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
 
 ## Symphony Run Verification Checklist
 
 Use this checklist for the pilot run to confirm Symphony picked up a Todo issue
 and executed the full lifecycle.
 
+Steps to run Symphony:
 - [ ] Ensure `LINEAR_API_KEY` is available and points to Lexsgo (`LEX`).
 - [ ] From repo root, run `corepack pnpm symphony:start`.
-- [ ] Confirm logs show:
-- [ ] Linear authentication success.
-- [ ] Polling project `esheria-wills` with status `Todo`.
-- [ ] Claimed issue ID (for this pilot, `LEX-277`).
-- [ ] Workspace creation path and `codex app-server` launch.
-- [ ] Confirm issue pickup by verifying:
-- [ ] The Linear issue moved to `In Progress`.
-- [ ] A branch exists locally matching `task/<issue-key>-symphony-pilot`.
-- [ ] A PR is opened against `main` and linked to the Linear issue.
+- [ ] Keep the runner terminal open to observe logs and issue pickup.
+
+Expected logs (examples):
+- [ ] Log line indicating Linear authentication success.
+- [ ] Log line showing polling project `esheria-wills` with status `Todo`.
+- [ ] Log line showing claimed issue ID (for this pilot, `LEX-277`).
+- [ ] Log line showing workspace creation path and `codex app-server` launch.
+
+Confirm issue pickup:
+- [ ] Verify the Linear issue moved to `In Progress`.
+- [ ] Verify a branch exists locally matching `task/<issue-key>-symphony-pilot`.
+- [ ] Verify a PR is opened against `main` and linked to the Linear issue.
 
 ## One-Line Launcher
 
