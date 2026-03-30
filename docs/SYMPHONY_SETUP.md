@@ -82,17 +82,21 @@ Steps to run Symphony:
 - [ ] Ensure `LINEAR_API_KEY` is available and points to Lexsgo (`LEX`).
 - [ ] From repo root, run `corepack pnpm symphony:start`.
 - [ ] Keep the runner terminal open to observe logs and issue pickup.
+- [ ] Confirm `WORKFLOW.symphony.md` is the workflow being loaded (not `WORKFLOW.md`).
 
 Expected logs (examples):
 - [ ] Log line indicating Linear authentication success.
+- [ ] Log line showing workflow load from repo root.
 - [ ] Log line showing polling project `esheria-wills` with status `Todo`.
 - [ ] Log line showing claimed issue ID (for this pilot, `LEX-277`).
 - [ ] Log line showing workspace creation path and `codex app-server` launch.
+- [ ] Log line indicating validations kicked off (lint/build) and their outcome.
 
 Confirm issue pickup:
 - [ ] Verify the Linear issue moved to `In Progress`.
 - [ ] Verify a branch exists locally matching `task/<issue-key>-symphony-pilot`.
 - [ ] Verify a PR is opened against `main` and linked to the Linear issue.
+- [ ] Verify the issue is moved to `In Review` once the PR is open and checks pass.
 
 ## One-Line Launcher
 
