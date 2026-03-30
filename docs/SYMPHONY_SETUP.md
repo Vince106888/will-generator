@@ -97,6 +97,15 @@ Expected logs (examples):
 - [ ] Log line showing workspace creation path and `codex app-server` launch.
 - [ ] Log line showing validations kicked off (lint/build) and their outcome.
 
+Log fragments to match (strings vary by runner):
+- [ ] `Linear auth` or `Authenticated` with `LEX`.
+- [ ] `Loaded workflow` and `WORKFLOW.symphony.md`.
+- [ ] `Polling` with `project=esheria-wills` and `status=Todo`.
+- [ ] `Claimed` with `LEX-277`.
+- [ ] `Workspace` path under `SYMPHONY_WORKSPACE_ROOT`.
+- [ ] `codex app-server` command launch.
+- [ ] `pnpm lint` and `pnpm build` start + exit status.
+
 Confirm issue pickup:
 - [ ] Verify the Linear issue moved to `In Progress`.
 - [ ] Verify a branch exists locally matching `task/<issue-key>-symphony-pilot`.
