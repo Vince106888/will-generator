@@ -78,6 +78,11 @@ An issue is NOT READY if:
 
 If blocked, keep in `Todo` and add a `[BLOCKED]` note with the dependency.
 
+## Symphony Runtime Notes
+- Symphony Elixir reads `WORKFLOW.md` (YAML front matter + prompt body).
+- Start with `./bin/symphony ./WORKFLOW.md` from the repo root.
+- `WORKFLOW.md` launches Codex in app-server mode (`codex app-server`).
+
 ## Review Handoff Expectations
 - Provide a succinct implementation summary.
 - Call out known gaps or risks.
