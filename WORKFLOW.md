@@ -1,55 +1,49 @@
----
-tracker:
-  kind: linear
-  team_name: Lexsgo
-  team_key: LEX
-  project_name: Esheria Wills
-  project_slug: esheria-wills
+# WORKFLOW.md (Process Policy)
 
-workspace_root: .
+## Purpose
+Define process expectations for Symphony-driven work. This file is policy only.
 
-status_map:
-  backlog: Backlog
-  ready: Todo
-  in_progress: In Progress
-  review: In Review
-  done: Done
+For the executable Symphony workflow file (YAML front matter), use:
+- `WORKFLOW.symphony.md`
 
-approval_policy: never
-sandbox_mode: danger-full-access
+## Tracker
+- Source of truth: Linear issue
+- One issue per branch per PR
+- No direct pushes to `main`
+- CI must pass before requesting review
 
-hooks:
-  after_create:
-    - git checkout -b "<issue.gitBranchName>"
+## Symphony Mode (First Live Run)
+- Single agent only (no concurrency)
+- No auto-merge
+- Use small, reversible doc-only changes
 
-# Launch Codex in app-server mode inside the issue workspace.
-codex_command: codex app-server
----
+## Expected Linear States
+These are the expected states for Symphony-driven work:
+- Todo
+- In Progress
+- In Review
+- Done
 
-# Symphony Workflow (Esheria Wills)
+If your Linear workspace uses different names, map them to the states above and keep the sequence unchanged.
 
-This file is the operational entrypoint for Symphony. It defines the Linear
-project to watch, the statuses that are eligible for pickup, and the execution
-contract for Codex vs Symphony.
+## Branch Naming
+`task/<linear-issue-key>-short-description`
+Example: `task/LEX-277-symphony-pilot`
 
-## Pickup Rules (Executable)
+## Bootstrap (Workspace)
+```
+corepack pnpm install
+```
 
-Symphony should claim issues only when all are true:
-1. Issue is in project `Esheria Wills` (slug `esheria-wills`).
-2. Issue status is `Todo` (exact spelling matters).
-3. Issue description includes purpose, scope, dependencies, and acceptance criteria.
-4. Design/API/doc references are linked where required.
+## App-Server Mode (Codex)
+Run Codex in app-server mode for this repo. Use the executable referenced by `SYMPHONY_CODEX_COMMAND`.
 
-## Execution Rules (Executor)
+## Validation (Required Before Review)
+```
+corepack pnpm lint
+corepack pnpm build
+```
 
-- Start work only after pickup and branch creation.
-- Keep changes scoped to the issue and avoid unrelated edits.
-- Update source-of-truth docs when routes/APIs/flows change.
-- Open a PR and move the issue to `In Review` when implementation is complete.
-
-## Blocked Work
-
-If blocked:
-- Keep status in `Todo`.
-- Add a `[BLOCKED]` note in the issue body or a comment with the dependency.
-- Do not move to `In Progress` unless work is actively underway.
+## Scope Discipline
+- Do not implement product features unless explicitly required for the issue.
+- Keep changes minimal and focused.
