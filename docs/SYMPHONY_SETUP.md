@@ -72,6 +72,7 @@ If no issues are claimed, re-check:
 - Project slug correctness (`esheria-wills`).
 - Issue readiness (acceptance criteria and dependencies present).
 - That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
+For the pilot run, follow the checklist below to validate pickup and lifecycle.
 
 ## Symphony Run Verification Checklist
 
@@ -91,7 +92,7 @@ Expected logs (examples):
 - [ ] Log line showing polling project `esheria-wills` with status `Todo` (and team `LEX`).
 - [ ] Log line showing claimed issue ID (for this pilot, `LEX-277`).
 - [ ] Log line showing workspace creation path and `codex app-server` launch.
-- [ ] Log line indicating validations kicked off (lint/build) and their outcome.
+- [ ] Log line showing validations kicked off (lint/build) and their outcome.
 
 Confirm issue pickup:
 - [ ] Verify the Linear issue moved to `In Progress`.
