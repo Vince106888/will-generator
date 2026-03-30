@@ -99,6 +99,7 @@ Confirm issue pickup:
 - [ ] Verify a branch exists locally matching `task/<issue-key>-symphony-pilot`.
 - [ ] Verify a PR is opened against `main` and linked to the Linear issue.
 - [ ] Verify the issue is moved to `In Review` once the PR is open and checks pass.
+- [ ] Verify Symphony stops because `In Review` is not an active execution state.
 
 ## One-Line Launcher
 
