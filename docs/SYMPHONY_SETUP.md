@@ -82,10 +82,10 @@ and executed the full lifecycle.
 Expected status path:
 - `Todo` -> `In Progress` -> `In Review`
 
-Steps to run Symphony:
-- [ ] Ensure `LINEAR_API_KEY` is available and points to Lexsgo (`LEX`).
-- [ ] Confirm `SYMPHONY_WORKSPACE_ROOT` and `SYMPHONY_SOURCE_REPO_URL` resolve to the correct workspace and repo.
-- [ ] From repo root, run `corepack pnpm symphony:start`.
+Steps to run Symphony (pilot):
+- [ ] Ensure `LINEAR_API_KEY` is available in the current shell session.
+- [ ] Ensure `SYMPHONY_WORKSPACE_ROOT`, `SYMPHONY_SOURCE_REPO_URL`, and `SYMPHONY_CODEX_COMMAND` resolve to the expected values.
+- [ ] From the repo root, run `corepack pnpm symphony:start`.
 - [ ] Keep the runner terminal open to observe logs and issue pickup.
 - [ ] Confirm `WORKFLOW.symphony.md` is the workflow being loaded (not `WORKFLOW.md`).
 
