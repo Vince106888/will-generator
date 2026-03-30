@@ -9,6 +9,7 @@ repo.
 ## Required Inputs
 
 - Linear API key in environment: `LINEAR_API_KEY`
+- GitHub token with repo access: `GITHUB_TOKEN`
 - Repository root available on disk.
 - `WORKFLOW.symphony.md` present at repo root (executable workflow).
 - `WORKFLOW.md` present at repo root (policy).
@@ -16,7 +17,7 @@ repo.
 ## Project Targets
 
 - Team: Lexsgo (`LEX`)
-- Project slug: `esheria-wills`
+- Project slug: `esheria-wills-cf36a69caf55`
 - Ready status: `Todo` (exact spelling matters)
 - In-progress status: `In Progress`
 - Review status: `In Review`
@@ -41,7 +42,7 @@ corepack pnpm symphony:start
 Runner expectations:
 1. Load `WORKFLOW.symphony.md` from the repo root (YAML front matter + prompt body).
 2. Authenticate with Linear using `LINEAR_API_KEY`.
-3. Poll for issues in project `esheria-wills` with status `Todo`.
+3. Poll for issues in project `esheria-wills-cf36a69caf55` with status `Todo`.
 4. Create a per-issue workspace and launch Codex in app-server mode.
 
 The workflow sets:
@@ -53,6 +54,7 @@ If you run Symphony directly without the wrapper script, use:
 
 ```bash
 setx LINEAR_API_KEY "<token>"
+setx GITHUB_TOKEN "<token>"
 setx SYMPHONY_WORKSPACE_ROOT "C:\\symphony-workspaces"
 setx SYMPHONY_SOURCE_REPO_URL "https://github.com/esherialabs/esheria-wills.git"
 setx SYMPHONY_CODEX_COMMAND "codex app-server"
@@ -69,7 +71,7 @@ Symphony should log:
 
 If no issues are claimed, re-check:
 - Status spelling (Todo vs To Do).
-- Project slug correctness (`esheria-wills`).
+- Project slug correctness (`esheria-wills-cf36a69caf55`).
 - Issue readiness (acceptance criteria and dependencies present).
  - That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
 

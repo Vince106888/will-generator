@@ -1,7 +1,7 @@
 ---
 tracker:
   kind: linear
-  project_slug: "esheria-wills"
+  project_slug: "esheria-wills-cf36a69caf55"
   api_key: "$LINEAR_API_KEY"
   active_states:
     - Todo
@@ -24,9 +24,13 @@ hooks:
     echo "Workspace cleanup complete."
 agent:
   max_concurrent_agents: 1
-  max_turns: 6
+  max_turns: 10
 codex:
   command: "$SYMPHONY_CODEX_COMMAND"
+  approval_policy: never
+  thread_sandbox: workspace-write
+  turn_sandbox_policy:
+    type: workspaceWrite
 ---
 
 You are working on a Linear issue in the Esheria Wills repository.
@@ -40,10 +44,9 @@ Repository policy and expectations:
 - Prefer doc-only changes for the first live run.
 - If any required env var is missing, stop and report the blocker.
 
-Repo validation commands:
+Repo validation commands (pilot):
 
-- `corepack pnpm lint`
-- `corepack pnpm build`
+- Skip lint/build for the pilot issue unless explicitly required by the ticket.
 
 Workspace/bootstrap notes:
 
@@ -74,3 +77,9 @@ First live workflow (doc-only):
 - PR: open against `main`, branch name matches policy, no auto-merge.
 - Success criteria: PR linked on issue, issue moved to `In Review`, and Symphony stops because `In Review` is not an active execution state.
 - Failure criteria: missing env vars, missing Codex app-server, or validations failing.
+
+Execution requirements:
+- On pickup, move the issue to `In Progress` via Linear.
+- If Linear update fails, stop and report the blocker.
+- For the pilot issue, do not run lint/build unless explicitly required by the ticket.
+- Use `gh` to open a PR; if GitHub auth is missing, report and stop.

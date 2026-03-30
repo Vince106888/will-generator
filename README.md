@@ -111,6 +111,21 @@ design/         # Design artifacts (source of truth)
 - Symphony executes issues that are Ready and moves them to In Review when complete.
 - No direct work on `main`.
 - One branch per workstream or issue, ending in a PR.
+- Use the pre-created workstream branches as the base for execution:
+  - `workstream/audit-architecture-reset`
+  - `workstream/design-alignment-route-mapping`
+  - `workstream/frontend-marketing-entry`
+  - `workstream/frontend-ai-drafting`
+  - `workstream/frontend-structured-drafting`
+  - `workstream/frontend-result-output`
+  - `workstream/frontend-support-recovery`
+  - `workstream/backend-core-api-engines`
+  - `workstream/backend-persistence-retrieval-leads`
+  - `workstream/ai-orchestration-boundaries`
+  - `workstream/content-legal-trust`
+  - `workstream/qa-analytics-launch`
+  - `workstream/docs-delivery-system`
+- Issue branches should be created off the matching workstream branch and named `task/<issue-key>-short-description`.
 
 Symphony launcher (Windows):
 

@@ -10,6 +10,7 @@ const rootChecks = [
 
 const envRequired = [
   "LINEAR_API_KEY",
+  "GITHUB_TOKEN",
   "SYMPHONY_SOURCE_REPO_URL",
   "SYMPHONY_CODEX_COMMAND",
 ];
@@ -19,7 +20,7 @@ const envOptional = [
   "SYMPHONY_RUNTIME_ROOT",
 ];
 
-const expectedProjectSlug = "esheria-wills";
+const expectedProjectSlug = "esheria-wills-cf36a69caf55";
 
 const checkCommand = (cmd) => {
   try {
