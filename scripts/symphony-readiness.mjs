@@ -19,7 +19,7 @@ const envOptional = [
   "SYMPHONY_RUNTIME_ROOT",
 ];
 
-const expectedProjectSlug = "esheria-wills";
+const expectedProjectSlug = "esheria-wills-cf36a69caf55";
 
 const checkCommand = (cmd) => {
   try {

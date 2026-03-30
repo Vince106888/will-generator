@@ -1,7 +1,7 @@
 ---
 tracker:
   kind: linear
-  project_slug: "esheria-wills"
+  project_slug: "esheria-wills-cf36a69caf55"
   api_key: "$LINEAR_API_KEY"
   active_states:
     - Todo
@@ -27,6 +27,10 @@ agent:
   max_turns: 6
 codex:
   command: "$SYMPHONY_CODEX_COMMAND"
+  approval_policy: never
+  thread_sandbox: workspace-write
+  turn_sandbox_policy:
+    type: workspaceWrite
 ---
 
 You are working on a Linear issue in the Esheria Wills repository.
@@ -40,10 +44,9 @@ Repository policy and expectations:
 - Prefer doc-only changes for the first live run.
 - If any required env var is missing, stop and report the blocker.
 
-Repo validation commands:
+Repo validation commands (pilot):
 
-- `corepack pnpm lint`
-- `corepack pnpm build`
+- Skip lint/build for the pilot issue unless explicitly required by the ticket.
 
 Workspace/bootstrap notes:
 
