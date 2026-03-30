@@ -46,6 +46,12 @@ Not ready:
 - Done: PR merged and validated.
 Blocked: keep status in `Todo` and add a `[BLOCKED]` note in the issue body or comment.
 
+## State Model Decision
+We are **not** adopting the extended Symphony sample states (Human Review, Merging, Rework).
+Lexsgo already uses `Backlog`, `Todo`, `In Progress`, `In Review`, `Done`, and the
+workflow is aligned to those exact names for pickup. If a rework is needed, add
+context in the issue and move back to `Todo`.
+
 ## Symphony Pickup Rules
 - Do not start underdefined work.
 - If an issue is In Progress and not blocked, carry it to completion.
