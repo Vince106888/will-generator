@@ -1,16 +1,27 @@
-﻿// Frame: Structured Flow Shell (fF89o)
+// Frame: Structured Flow Shell (fF89o)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
+import { Asterisk, Clock3 } from "lucide-react";
 
 export default function StructuredFlowShell() {
   useDraftingMode("structured");
 
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save and exit</span>
+          </>
+        ),
+        ctaPath: "/"
+      }}
+    >
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
@@ -20,7 +31,7 @@ export default function StructuredFlowShell() {
               can pause and return at any time.
             </p>
             <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 2 of 9 — Assets & beneficiaries</p>
+              <p className="text-[12px] font-semibold text-muted">Step 2 of 9 - Assets & beneficiaries</p>
               <div className="h-2 rounded-full border border-border bg-secondary">
                 <div className="h-full w-full rounded-full bg-primary" />
               </div>
@@ -41,32 +52,13 @@ export default function StructuredFlowShell() {
                   <p>1) What do you have?</p>
                   <p>2) Who should receive it?</p>
                   <p className="text-muted">
-                    Everything else — executors, guardianship, witnesses — supports those decisions.
+                    Everything else - executors, guardianship, witnesses - supports those decisions.
                   </p>
                 </div>
               </Card>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M12 4v16"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M6.5 7.5l11 9"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M17.5 7.5l-11 9"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <Asterisk className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Required vs optional</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -77,16 +69,7 @@ export default function StructuredFlowShell() {
               </div>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
-                  <path
-                    d="M12 7.5v5l3 2"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Clock3 className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">What you will need</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -137,3 +120,5 @@ export default function StructuredFlowShell() {
     </WorkspaceShell>
   );
 }
+
+

@@ -11,13 +11,13 @@ import {
   SummaryCard,
   WarningBanner
 } from "../../components/ui/PencilPanels";
-import { useDraftingMode } from "../../lib/drafting";
+import { useDraftingData } from "../../lib/drafting";
 import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
 
 export default function Review() {
-  const { data } = useDraftingMode("structured");
+  const { data } = useDraftingData();
   const handleGenerateDraft = async () => {
     try {
       const response = await api.post("/api/v1/wills/generate", {
@@ -70,7 +70,12 @@ export default function Review() {
   return (
     <WorkspaceShell
       nav={{
-        ctaLabel: "Export options",
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Export</span>
+            <span className="hidden sm:inline">Export options</span>
+          </>
+        ),
         ctaPath: "/drafting/export-options",
         ctaClassName: "px-5 py-3 text-[13px]"
       }}
@@ -99,11 +104,11 @@ export default function Review() {
                 subtitle="Plain-English overview of what you asked for, with room to edit."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>• House in Kiambu → Wife</p>
-                  <p>• Toyota Prado KDM 456A → Brian (son)</p>
-                  <p>• Rental plots in Machakos → Nia (daughter)</p>
+                  <p>&bull; House in Kiambu &rarr; Wife</p>
+                  <p>&bull; Toyota Prado KDM 456A &rarr; Brian (son)</p>
+                  <p>&bull; Rental plots in Machakos &rarr; Nia (daughter)</p>
                   <p className="text-warning">
-                    • Remainder assets → Not specified (please confirm)
+                    &bull; Remainder assets &rarr; Not specified (please confirm)
                   </p>
                 </div>
               </SectionCard>
@@ -113,10 +118,10 @@ export default function Review() {
                 subtitle="Key people who carry out your wishes and care for minors."
               >
                 <div className="space-y-2 text-[13px]">
-                  <p className="text-ink">• Executor: Grace Wanjiku Mwangi</p>
-                  <p className="text-muted">• Backup executor: Not provided</p>
+                  <p className="text-ink">&bull; Executor: Grace Wanjiku Mwangi</p>
+                  <p className="text-muted">&bull; Backup executor: Not provided</p>
                   <p className="text-muted">
-                    • Guardianship: Not applicable (no minor children listed)
+                    &bull; Guardianship: Not applicable (no minor children listed)
                   </p>
                 </div>
               </SectionCard>
@@ -126,9 +131,9 @@ export default function Review() {
                 subtitle="We flag items that could affect legal validity or clarity."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>• You must sign in front of two independent witnesses</p>
-                  <p>• A beneficiary cannot be a witness</p>
-                  <p>• Executor and beneficiary details should match their legal names</p>
+                  <p>&bull; You must sign in front of two independent witnesses</p>
+                  <p>&bull; A beneficiary cannot be a witness</p>
+                  <p>&bull; Executor and beneficiary details should match their legal names</p>
                 </div>
               </SectionCard>
 
@@ -185,9 +190,9 @@ export default function Review() {
                 subtitle="Keep the will accessible and tell the right people."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>• Store the signed copy safely</p>
-                  <p>• Tell your executor where it is kept</p>
-                  <p className="text-muted">• Update this will if your circumstances change</p>
+                  <p>&bull; Store the signed copy safely</p>
+                  <p>&bull; Tell your executor where it is kept</p>
+                  <p className="text-muted">&bull; Update this will if your circumstances change</p>
                 </div>
               </SectionCard>
               <HelperCallout

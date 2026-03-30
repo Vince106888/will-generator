@@ -1,4 +1,4 @@
-﻿// Frame: Executors (yb4Yk)
+// Frame: Executors (yb4Yk)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
@@ -7,12 +7,23 @@ import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
+import { Info, MessageSquareText, RefreshCcw, UserRound } from "lucide-react";
 
 export default function StructuredExecutors() {
   useDraftingMode("structured");
 
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save and exit</span>
+          </>
+        ),
+        ctaPath: "/"
+      }}
+    >
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
@@ -64,21 +75,7 @@ export default function StructuredExecutors() {
               </Card>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M12 4a5 5 0 0 1 5 5v3"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M12 20a5 5 0 0 1-5-5v-3"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-                </svg>
+                <UserRound className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Can an executor be a beneficiary?</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -100,16 +97,7 @@ export default function StructuredExecutors() {
 
             <div className="space-y-4">
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-                  <path
-                    d="M12 8v4"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="12" cy="16" r="1" fill="currentColor" />
-                </svg>
+                <Info className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">What if I am not sure?</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -120,14 +108,7 @@ export default function StructuredExecutors() {
               </div>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M5 6h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <MessageSquareText className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Do they have to agree?</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -138,34 +119,7 @@ export default function StructuredExecutors() {
               </div>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M4 12a8 8 0 0 1 13.7-5.6"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M18 4v5h-5"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M20 12a8 8 0 0 1-13.7 5.6"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M6 20v-5h5"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <RefreshCcw className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Can I change this later?</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -180,9 +134,9 @@ export default function StructuredExecutors() {
                   <p className="text-[13px] text-muted">What they will actually do.</p>
                 </div>
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>• Collect and secure assets</p>
-                  <p>• Pay debts, taxes, and funeral costs</p>
-                  <p>• Distribute assets per your instructions</p>
+                  <p>&bull; Collect and secure assets</p>
+                  <p>&bull; Pay debts, taxes, and funeral costs</p>
+                  <p>&bull; Distribute assets per your instructions</p>
                   <p className="text-muted">We recommend choosing someone organized and available.</p>
                 </div>
               </Card>
@@ -193,3 +147,5 @@ export default function StructuredExecutors() {
     </WorkspaceShell>
   );
 }
+
+

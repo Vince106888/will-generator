@@ -6,12 +6,12 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
 import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
-import { useDraftingMode } from "../../lib/drafting";
+import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
 
 export default function AdvocateReview() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingData();
   const [form, setForm] = useState({
     name: data.legalName || "",
     contact: data.email || data.phone || "",
@@ -96,9 +96,9 @@ export default function AdvocateReview() {
               subtitle="Examples of more complex estates."
             >
               <div className="space-y-1.5 text-[13px] text-ink">
-                <p>• Multiple spouses or blended families</p>
-                <p>• Cross-border property or businesses</p>
-                <p>• High-value or disputed assets</p>
+                <p>&bull; Multiple spouses or blended families</p>
+                <p>&bull; Cross-border property or businesses</p>
+                <p>&bull; High-value or disputed assets</p>
               </div>
             </SectionCard>
             <SectionCard
@@ -106,9 +106,9 @@ export default function AdvocateReview() {
               subtitle="Clear feedback and corrections."
             >
               <div className="space-y-1.5 text-[13px] text-ink">
-                <p>• Written review notes</p>
-                <p>• Suggested language edits</p>
-                <p>• Optional call to explain changes</p>
+                <p>&bull; Written review notes</p>
+                <p>&bull; Suggested language edits</p>
+                <p>&bull; Optional call to explain changes</p>
               </div>
             </SectionCard>
             <SectionCard
@@ -116,9 +116,9 @@ export default function AdvocateReview() {
               subtitle="Your information stays protected."
             >
               <div className="space-y-1.5 text-[13px] text-ink">
-                <p>• Share only what is necessary</p>
-                <p>• Advocate bound by confidentiality</p>
-                <p>• You can withdraw your request</p>
+                <p>&bull; Share only what is necessary</p>
+                <p>&bull; Advocate bound by confidentiality</p>
+                <p>&bull; You can withdraw your request</p>
               </div>
             </SectionCard>
           </div>

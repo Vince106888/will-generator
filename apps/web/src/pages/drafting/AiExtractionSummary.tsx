@@ -1,4 +1,4 @@
-﻿// Frame: AI Extraction Summary (9MjGI)
+// Frame: AI Extraction Summary (9MjGI)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
@@ -6,12 +6,24 @@ import { Button } from "../../components/ui/Button";
 import { HelperCallout, ReviewChecklist } from "../../components/ui/PencilPanels";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
+import { AlertTriangle, Info } from "lucide-react";
 
 export default function AiExtractionSummary() {
   useDraftingMode("ai");
 
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Back to drafting", ctaMode: "ai", ctaPath: "/drafting/ai-workspace" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Back</span>
+            <span className="hidden sm:inline">Back to drafting</span>
+          </>
+        ),
+        ctaMode: "ai",
+        ctaPath: "/drafting/ai-workspace"
+      }}
+    >
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
@@ -37,10 +49,10 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">Review and edit each asset description.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p>• House in Kiambu</p>
-                  <p>• Rental plots in Machakos (2)</p>
-                  <p>• Toyota vehicle</p>
-                  <p className="text-muted">• Other personal items (not detailed)</p>
+                  <p>&bull; House in Kiambu</p>
+                  <p>&bull; Rental plots in Machakos (2)</p>
+                  <p>&bull; Toyota vehicle</p>
+                  <p className="text-muted">&bull; Other personal items (not detailed)</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add asset
@@ -53,9 +65,9 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">Confirm names and relationships.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p>• Wife — receives house</p>
-                  <p>• Brian (son) — receives Toyota</p>
-                  <p>• Nia (daughter) — receives rental plots</p>
+                  <p>&bull; Wife - receives house</p>
+                  <p>&bull; Brian (son) - receives Toyota</p>
+                  <p>&bull; Nia (daughter) - receives rental plots</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add beneficiary
@@ -70,8 +82,8 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">We did not detect an executor yet.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p className="text-warning">• Required to finalize the will</p>
-                  <p className="text-muted">• You can add a backup executor</p>
+                  <p className="text-warning">&bull; Required to finalize the will</p>
+                  <p className="text-muted">&bull; You can add a backup executor</p>
                 </div>
                 <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured-executors")}>
                   Add executor
@@ -84,8 +96,8 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">Only relevant if you have minor children.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-muted">
-                  <p>• No guardianship details found</p>
-                  <p>• We will explain when this applies</p>
+                  <p>&bull; No guardianship details found</p>
+                  <p>&bull; We will explain when this applies</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/guardianship")}>
                   Add guardian
@@ -97,7 +109,7 @@ export default function AiExtractionSummary() {
           <div className="grid gap-4 lg:grid-cols-2">
             <HelperCallout
               title="How to review"
-              body="Read each card and confirm names, relationships, and asset descriptions. Use plain language corrections — we translate into legal format later."
+              body="Read each card and confirm names, relationships, and asset descriptions. Use plain language corrections - we translate into legal format later."
             />
             <ReviewChecklist
               title="Review checklist"
@@ -109,21 +121,7 @@ export default function AiExtractionSummary() {
           </div>
 
           <div className="flex gap-3 rounded-xl border border-warning bg-warning-soft p-4">
-            <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-warning" fill="none">
-              <path
-                d="M12 3l9 16H3l9-16z"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M12 9v5"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-              />
-              <circle cx="12" cy="17" r="1" fill="currentColor" />
-            </svg>
+            <AlertTriangle className="mt-0.5 text-warning" size={20} strokeWidth={1.6} />
             <div className="space-y-1">
               <p className="text-[13px] font-semibold text-ink">Missing information to confirm</p>
               <p className="text-[13px] leading-[1.5] text-muted">
@@ -148,16 +146,7 @@ export default function AiExtractionSummary() {
               </Button>
             </div>
             <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-              <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-                <path
-                  d="M12 10v4"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-                <circle cx="12" cy="16.5" r="1" fill="currentColor" />
-              </svg>
+              <Info className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
               <div className="space-y-1">
                 <p className="text-[13px] font-semibold text-ink">Need help before you finalize?</p>
                 <p className="text-[13px] leading-[1.5] text-muted">
@@ -171,3 +160,5 @@ export default function AiExtractionSummary() {
     </WorkspaceShell>
   );
 }
+
+

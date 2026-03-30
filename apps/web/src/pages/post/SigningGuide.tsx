@@ -3,11 +3,11 @@ import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
 import { HelperCallout, SectionCard, WarningBanner } from "../../components/ui/PencilPanels";
-import { useDraftingMode } from "../../lib/drafting";
+import { useDraftingData } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function SigningGuide() {
-  useDraftingMode("structured");
+  useDraftingData();
 
   return (
     <WorkspaceShell
@@ -35,8 +35,8 @@ export default function SigningGuide() {
               subtitle="Signatures must be on a physical copy."
             >
               <div className="space-y-1.5 text-[13px] text-muted">
-                <p>• Use a clean, readable printout</p>
-                <p>• Keep all pages together</p>
+                <p>&bull; Use a clean, readable printout</p>
+                <p>&bull; Keep all pages together</p>
               </div>
             </SectionCard>
 
@@ -45,9 +45,9 @@ export default function SigningGuide() {
               subtitle="Witnesses must be independent adults."
             >
               <div className="space-y-1.5 text-[13px]">
-                <p className="text-warning">• A beneficiary cannot be a witness</p>
-                <p className="text-muted">• Witnesses should see you sign</p>
-                <p className="text-muted">• They must sign in your presence</p>
+                <p className="text-warning">&bull; A beneficiary cannot be a witness</p>
+                <p className="text-muted">&bull; Witnesses should see you sign</p>
+                <p className="text-muted">&bull; They must sign in your presence</p>
               </div>
             </SectionCard>
 
@@ -56,9 +56,9 @@ export default function SigningGuide() {
               subtitle="Write the date and place clearly."
             >
               <div className="space-y-1.5 text-[13px] text-muted">
-                <p>• Use your full legal signature</p>
-                <p>• Record the location (town/county)</p>
-                <p>• Witnesses sign immediately after</p>
+                <p>&bull; Use your full legal signature</p>
+                <p>&bull; Record the location (town/county)</p>
+                <p>&bull; Witnesses sign immediately after</p>
               </div>
             </SectionCard>
 
@@ -67,9 +67,9 @@ export default function SigningGuide() {
               subtitle="Let your executor know where the will is kept."
             >
               <div className="space-y-1.5 text-[13px] text-muted">
-                <p>• Keep a copy in a secure location</p>
-                <p>• Tell your executor how to access it</p>
-                <p>• Consider a certified copy if needed</p>
+                <p>&bull; Keep a copy in a secure location</p>
+                <p>&bull; Tell your executor how to access it</p>
+                <p>&bull; Consider a certified copy if needed</p>
               </div>
             </SectionCard>
           </div>

@@ -47,9 +47,9 @@ export default function ErrorStates() {
           <div className="grid gap-4 lg:grid-cols-2">
             <SectionCard title="Recovery actions" subtitle="What people typically do next.">
               <div className="space-y-2 text-[13px] text-ink">
-                <p>• Try saving again in a few seconds</p>
-                <p>• Check your internet connection</p>
-                <p>• Return to the last saved step</p>
+                <p>&bull; Try saving again in a few seconds</p>
+                <p>&bull; Check your internet connection</p>
+                <p>&bull; Return to the last saved step</p>
               </div>
             </SectionCard>
             <HelperCallout

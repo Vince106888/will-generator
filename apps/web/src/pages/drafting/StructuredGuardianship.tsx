@@ -1,4 +1,4 @@
-﻿// Frame: Guardianship (aSEwT)
+// Frame: Guardianship (aSEwT)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
@@ -7,12 +7,23 @@ import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
+import { AlertTriangle, MessageSquareText, ShieldCheck } from "lucide-react";
 
 export default function StructuredGuardianship() {
   useDraftingMode("structured");
 
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save and exit</span>
+          </>
+        ),
+        ctaPath: "/"
+      }}
+    >
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
@@ -25,13 +36,7 @@ export default function StructuredGuardianship() {
 
           <div className="space-y-4">
             <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-              <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                <path
-                  d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                />
-              </svg>
+              <ShieldCheck className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
               <div className="space-y-1">
                 <p className="text-[13px] font-semibold text-ink">Important context</p>
                 <p className="text-[13px] leading-[1.5] text-muted">
@@ -94,14 +99,7 @@ export default function StructuredGuardianship() {
             </Card>
 
             <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-              <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                <path
-                  d="M5 6h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <MessageSquareText className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
               <div className="space-y-1">
                 <p className="text-[13px] font-semibold text-ink">Talk to your guardian first</p>
                 <p className="text-[13px] leading-[1.5] text-muted">
@@ -112,21 +110,7 @@ export default function StructuredGuardianship() {
             </div>
 
             <div className="flex gap-3 rounded-xl border border-warning bg-warning-soft p-4">
-              <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-warning" fill="none">
-                <path
-                  d="M12 3l9 16H3l9-16z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 9v5"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-                <circle cx="12" cy="17" r="1" fill="currentColor" />
-              </svg>
+              <AlertTriangle className="mt-0.5 text-warning" size={20} strokeWidth={1.6} />
               <div className="space-y-1">
                 <p className="text-[13px] font-semibold text-ink">Court confirmation may be required</p>
                 <p className="text-[13px] leading-[1.5] text-muted">
@@ -150,3 +134,5 @@ export default function StructuredGuardianship() {
     </WorkspaceShell>
   );
 }
+
+

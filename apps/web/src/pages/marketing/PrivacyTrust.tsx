@@ -6,7 +6,17 @@ import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
 
 export default function PrivacyTrust() {
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Start drafting", ctaPath: "/entry-choice" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Start</span>
+            <span className="hidden sm:inline">Start drafting</span>
+          </>
+        ),
+        ctaPath: "/entry-choice"
+      }}
+    >
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-[10px]">
@@ -37,9 +47,9 @@ export default function PrivacyTrust() {
 
           <SectionCard title="Legal safeguards" subtitle="How we handle confidentiality and access.">
             <div className="space-y-2 text-[13px] text-ink">
-              <p>• Data is stored in secure Kenyan-compliant infrastructure</p>
-              <p>• Advocate review is opt-in and requires your consent</p>
-              <p>• We never sell or share personal data</p>
+              <p>&bull; Data is stored in secure Kenyan-compliant infrastructure</p>
+              <p>&bull; Advocate review is opt-in and requires your consent</p>
+              <p>&bull; We never sell or share personal data</p>
             </div>
           </SectionCard>
 

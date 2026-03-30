@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { AlertTriangle, CheckCircle2, Info, MinusCircle } from "lucide-react";
 import { cn } from "../../lib/cn";
 
 type SectionCardProps = {
@@ -64,25 +65,7 @@ export function WarningBanner({ title, body, className }: WarningBannerProps) {
         className
       )}
     >
-      <svg
-        viewBox="0 0 24 24"
-        className="mt-0.5 h-[18px] w-[18px] text-warning"
-        fill="none"
-      >
-        <path
-          d="M12 3l9 16H3l9-16z"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12 9v5"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-        />
-        <circle cx="12" cy="17" r="1" fill="currentColor" />
-      </svg>
+      <AlertTriangle className="mt-0.5 text-warning" size={20} strokeWidth={1.6} />
       <div className="space-y-1.5">
         <p className="text-[13px] font-semibold text-ink">{title}</p>
         <p className="text-[13px] leading-[1.6] text-muted">{body}</p>
@@ -105,20 +88,7 @@ export function HelperCallout({ title, body, className }: HelperCalloutProps) {
         className
       )}
     >
-      <svg
-        viewBox="0 0 24 24"
-        className="mt-0.5 h-[18px] w-[18px] text-primary"
-        fill="none"
-      >
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-        <path
-          d="M12 10v4"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-        />
-        <circle cx="12" cy="16.5" r="1" fill="currentColor" />
-      </svg>
+      <Info className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
       <div className="space-y-1.5">
         <p className="text-[13px] font-semibold text-ink">{title}</p>
         <p className="text-[13px] leading-[1.6] text-muted">{body}</p>
@@ -179,46 +149,9 @@ export function ReviewChecklist({
         {items.map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             {item.tone === "success" ? (
-              <svg
-                viewBox="0 0 24 24"
-                className="h-[14px] w-[14px] text-success"
-                fill="none"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="9"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                />
-                <path
-                  d="M8 12.5l2.5 2.5L16 9"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <CheckCircle2 className="text-success" size={16} strokeWidth={1.6} />
             ) : (
-              <svg
-                viewBox="0 0 24 24"
-                className="h-[14px] w-[14px] text-warning"
-                fill="none"
-              >
-                <path
-                  d="M12 3l9 16H3l9-16z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 9v5"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-                <circle cx="12" cy="17" r="1" fill="currentColor" />
-              </svg>
+              <AlertTriangle className="text-warning" size={16} strokeWidth={1.6} />
             )}
             <span className="text-[12px] text-ink">{item.label}</span>
           </div>
@@ -288,21 +221,10 @@ export function EmptyStateCard({ title, body, className }: EmptyStateCardProps) 
         className
       )}
     >
-      <svg
-        viewBox="0 0 24 24"
-        className="h-4 w-4 text-muted"
-        fill="none"
-      >
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-        <path
-          d="M8.5 12.5h7"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-        />
-      </svg>
+      <MinusCircle className="text-muted" size={18} strokeWidth={1.6} />
       <p className="text-[13px] font-semibold text-ink">{title}</p>
       <p className="text-[12px] text-muted">{body}</p>
     </div>
   );
 }
+

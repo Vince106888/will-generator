@@ -5,12 +5,12 @@ import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
 import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
 import { navigate } from "../../lib/navigation";
-import { useDraftingMode } from "../../lib/drafting";
+import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
 
 export default function ExportOptions() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingData();
   const willId = useMemo(() => {
     if (typeof window === "undefined") return null;
     const stored = window.localStorage.getItem(STORAGE_KEYS.willResult);
@@ -71,10 +71,10 @@ export default function ExportOptions() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <SectionCard title="Free" subtitle="KES 0 — watermarked draft">
+            <SectionCard title="Free" subtitle="KES 0 - watermarked draft">
               <div className="space-y-2 text-[13px]">
-                <p className="text-ink">• PDF download</p>
-                <p className="text-muted">• Watermarked for draft use</p>
+                <p className="text-ink">&bull; PDF download</p>
+                <p className="text-muted">&bull; Watermarked for draft use</p>
               </div>
               <Button
                 variant="primary"
@@ -86,11 +86,11 @@ export default function ExportOptions() {
               </Button>
             </SectionCard>
 
-            <SectionCard title="Basic" subtitle="KES 250 — clean PDF + Word">
+            <SectionCard title="Basic" subtitle="KES 250 - clean PDF + Word">
               <div className="space-y-2 text-[13px]">
-                <p className="text-ink">• Clean PDF (no watermark)</p>
-                <p className="text-ink">• Word (.docx) download</p>
-                <p className="text-muted">• Editable for later updates</p>
+                <p className="text-ink">&bull; Clean PDF (no watermark)</p>
+                <p className="text-ink">&bull; Word (.docx) download</p>
+                <p className="text-muted">&bull; Editable for later updates</p>
               </div>
               <Button
                 variant="primary"
@@ -104,13 +104,13 @@ export default function ExportOptions() {
 
             <SectionCard
               title="Premium"
-              subtitle="KES 4,000–5,000 — witness service"
+              subtitle="KES 4,000–5,000 - witness service"
             >
               <div className="space-y-2 text-[13px]">
-                <p className="text-ink">• Printed glossy copy</p>
-                <p className="text-ink">• Two vetted witnesses dispatched</p>
+                <p className="text-ink">&bull; Printed glossy copy</p>
+                <p className="text-ink">&bull; Two vetted witnesses dispatched</p>
                 <p className="text-muted">
-                  • ID verification + time/location proof
+                  &bull; ID verification + time/location proof
                 </p>
               </div>
               <Button

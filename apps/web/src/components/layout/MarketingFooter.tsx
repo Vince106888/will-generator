@@ -6,10 +6,10 @@
           <div className="max-w-[280px] space-y-2">
             <p className="font-display text-lg font-semibold text-ink">WillGuide Kenya</p>
             <p className="text-[13px] text-muted">
-              Kenya‑first will drafting with calm guidance.
+              Kenya-first will drafting with calm guidance.
             </p>
             <p className="text-[13px] text-muted">
-              Plain‑English explanations, legal signing support, and privacy by default.
+              Plain-English explanations, legal signing support, and privacy by default.
             </p>
           </div>
           <div className="grid gap-8 sm:grid-cols-2">

@@ -195,14 +195,18 @@ export function useDraftingData() {
   return { data, update, setData };
 }
 
-export function useDraftingMode(mode: DraftingData["draftingMode"]) {
+export function useDraftingMode(
+  mode: DraftingData["draftingMode"],
+  options?: { enforce?: boolean }
+) {
   const { data, update, setData } = useDraftingData();
 
   useEffect(() => {
+    if (options?.enforce === false) return;
     if (data.draftingMode !== mode || data.draftingModeConfirmed !== true) {
       update({ draftingMode: mode, draftingModeConfirmed: true });
     }
-  }, [data.draftingMode, data.draftingModeConfirmed, mode, update]);
+  }, [data.draftingMode, data.draftingModeConfirmed, mode, options?.enforce, update]);
 
   return { data, update, setData };
 }

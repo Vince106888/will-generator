@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "What is a beneficiary?",
-    a: "A beneficiary is anyone you want to receive something from your estate — for example a spouse, child, relative, or friend."
+    a: "A beneficiary is anyone you want to receive something from your estate - for example a spouse, child, relative, or friend."
   },
   {
     q: "What is a dependent?",
@@ -53,7 +53,15 @@ const faqs = [
 export default function FaqPage() {
   return (
     <WorkspaceShell
-      nav={{ ctaLabel: "Start drafting", ctaPath: "/entry-choice" }}
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Start</span>
+            <span className="hidden sm:inline">Start drafting</span>
+          </>
+        ),
+        ctaPath: "/entry-choice"
+      }}
     >
       <Container size="wide" className="py-8">
         <div className="space-y-6">

@@ -6,6 +6,7 @@ import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
 import { useDraftingMode } from "../../lib/drafting";
+import { Info, Mic, ShieldCheck, Upload } from "lucide-react";
 
 const messages = [
   {
@@ -34,7 +35,18 @@ export default function AiDraftingWorkspace() {
   const beneficiaryCount = data.beneficiaries.filter((beneficiary) => beneficiary.name).length;
 
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Save draft", ctaMode: "ai", ctaPath: "/drafting/ai-summary" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save draft</span>
+          </>
+        ),
+        ctaMode: "ai",
+        ctaPath: "/drafting/ai-summary"
+      }}
+    >
       <div className="pb-24 pt-10">
         <Container size="wide">
           <div className="space-y-3">
@@ -109,51 +121,11 @@ export default function AiDraftingWorkspace() {
 
               <div className="hidden flex-wrap gap-3 lg:flex">
                 <span className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-2 text-[12px] text-ink">
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 text-primary" fill="none">
-                    <path
-                      d="M12 3a3 3 0 0 1 3 3v6a3 3 0 1 1-6 0V6a3 3 0 0 1 3-3z"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                    <path
-                      d="M19 11a7 7 0 0 1-14 0"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                    <path
-                      d="M12 18v3"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                  <Mic className="text-primary" size={18} strokeWidth={1.6} />
                   Voice input
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-2 text-[12px] text-ink">
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 text-primary" fill="none">
-                    <path
-                      d="M12 16V4"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M8 8l4-4 4 4"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <rect
-                      x="4"
-                      y="16"
-                      width="16"
-                      height="4"
-                      rx="1.5"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                  </svg>
+                  <Upload className="text-primary" size={18} strokeWidth={1.6} />
                   Upload documents
                 </span>
               </div>
@@ -192,13 +164,7 @@ export default function AiDraftingWorkspace() {
 
               <Callout className="space-y-2">
                 <div className="flex items-start gap-3">
-                  <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                    <path
-                      d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                  </svg>
+                  <ShieldCheck className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                   <div className="space-y-1">
                     <p className="text-[13px] font-semibold text-ink">Your privacy</p>
                     <p className="text-[13px] leading-6 text-muted">
@@ -231,16 +197,7 @@ export default function AiDraftingWorkspace() {
 
               <Callout className="space-y-2">
                 <div className="flex items-start gap-3">
-                  <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-                    <path
-                      d="M12 8v4"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <circle cx="12" cy="16" r="1" fill="currentColor" />
-                  </svg>
+                  <Info className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                   <div className="space-y-1">
                     <p className="text-[13px] font-semibold text-ink">Why we ask these questions</p>
                     <p className="text-[13px] leading-6 text-muted">
@@ -270,13 +227,7 @@ export default function AiDraftingWorkspace() {
           <div className="mt-6 lg:hidden">
             <Callout className="space-y-2">
               <div className="flex items-start gap-3">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                  />
-                </svg>
+                <ShieldCheck className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Privacy reminder</p>
                   <p className="text-[13px] leading-6 text-muted">
@@ -292,3 +243,5 @@ export default function AiDraftingWorkspace() {
     </WorkspaceShell>
   );
 }
+
+

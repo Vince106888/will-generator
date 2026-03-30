@@ -1,16 +1,27 @@
-﻿// Frame: Assets + Beneficiaries Mapping (nFFsn)
+// Frame: Assets + Beneficiaries Mapping (nFFsn)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
+import { AlertTriangle, Info, Link2, Table2 } from "lucide-react";
 
 export default function AssetsBeneficiariesMapping() {
   useDraftingMode("structured");
 
   return (
-    <WorkspaceShell nav={{ ctaLabel: "Save and exit", ctaPath: "/" }}>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save and exit</span>
+          </>
+        ),
+        ctaPath: "/"
+      }}
+    >
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
@@ -74,16 +85,7 @@ export default function AssetsBeneficiariesMapping() {
               </Card>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-                  <path
-                    d="M12 8v4"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="12" cy="16" r="1" fill="currentColor" />
-                </svg>
+                <Info className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Tips for describing assets</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -94,32 +96,7 @@ export default function AssetsBeneficiariesMapping() {
               </div>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M6 4h12"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M4 8h16"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M8 8v12"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M16 8v12"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <Table2 className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Valuation is optional</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -139,9 +116,9 @@ export default function AssetsBeneficiariesMapping() {
                   </p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p>• Wife</p>
-                  <p>• Brian (son)</p>
-                  <p>• Nia (daughter)</p>
+                  <p>&bull; Wife</p>
+                  <p>&bull; Brian (son)</p>
+                  <p>&bull; Nia (daughter)</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add beneficiary
@@ -149,20 +126,7 @@ export default function AssetsBeneficiariesMapping() {
               </Card>
 
               <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-primary" fill="none">
-                  <path
-                    d="M10 13a4 4 0 1 1 0-6"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M14 11a4 4 0 1 1 0 6"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <Link2 className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Allocation summary</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -178,28 +142,14 @@ export default function AssetsBeneficiariesMapping() {
                   <p className="text-[13px] text-muted">Use when assets are not listed individually.</p>
                 </div>
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>• "Everything else goes equally to my children."</p>
-                  <p>• "Any remaining property goes to my spouse."</p>
+                  <p>&bull; "Everything else goes equally to my children."</p>
+                  <p>&bull; "Any remaining property goes to my spouse."</p>
                   <p className="text-muted">You can change this later if needed.</p>
                 </div>
               </Card>
 
               <div className="flex gap-3 rounded-xl border border-warning bg-warning-soft p-4">
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4.5 w-4.5 text-warning" fill="none">
-                  <path
-                    d="M12 3l9 16H3l9-16z"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M12 9v5"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="12" cy="17" r="1" fill="currentColor" />
-                </svg>
+                <AlertTriangle className="mt-0.5 text-warning" size={20} strokeWidth={1.6} />
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Missing: remainder clause</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
@@ -223,3 +173,5 @@ export default function AssetsBeneficiariesMapping() {
     </WorkspaceShell>
   );
 }
+
+
