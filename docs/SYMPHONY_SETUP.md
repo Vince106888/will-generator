@@ -67,13 +67,55 @@ Symphony should log:
 - Successful authentication against Linear.
 - The project slug and status filter it is polling.
 - Issue IDs when it claims work (e.g., `LEX-257`).
- - Workspace root + runtime path.
+- Workspace root + runtime path.
 
 If no issues are claimed, re-check:
 - Status spelling (Todo vs To Do).
 - Project slug correctness (`esheria-wills-cf36a69caf55`).
 - Issue readiness (acceptance criteria and dependencies present).
- - That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
+- That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
+For the pilot run, follow the checklist below to validate pickup and lifecycle.
+
+## Symphony Run Verification Checklist
+
+Use this checklist for the pilot run to confirm Symphony picked up a Todo issue
+and executed the full lifecycle.
+
+Expected status path:
+- `Todo` -> `In Progress` -> `In Review`
+
+Steps to run Symphony (pilot):
+- [ ] Ensure `LINEAR_API_KEY` is available in the current shell session.
+- [ ] Ensure `SYMPHONY_WORKSPACE_ROOT`, `SYMPHONY_SOURCE_REPO_URL`, and `SYMPHONY_CODEX_COMMAND` resolve to the expected values.
+- [ ] From the repo root, run `corepack pnpm symphony:start`.
+- [ ] Keep the runner terminal open to observe logs and issue pickup.
+- [ ] Confirm `WORKFLOW.symphony.md` is the workflow being loaded (not `WORKFLOW.md`).
+
+Expected logs (examples):
+- [ ] Log line indicating Linear authentication success.
+- [ ] Log line showing workflow load from repo root (mentions `WORKFLOW.symphony.md`).
+- [ ] Log line showing polling project `esheria-wills` with status `Todo` (and team `LEX`).
+- [ ] Log line showing claimed issue ID (for this pilot, `LEX-277`).
+- [ ] Log line showing workspace creation path and `codex app-server` launch.
+- [ ] Log line showing validations kicked off (lint/build) and their outcome.
+
+Log fragments to match (strings vary by runner):
+- [ ] `Linear auth` or `Authenticated` with `LEX`.
+- [ ] `Loaded workflow` and `WORKFLOW.symphony.md`.
+- [ ] `Polling` with `project=esheria-wills` and `status=Todo`.
+- [ ] `Claimed` with `LEX-277`.
+- [ ] `Workspace` path under `SYMPHONY_WORKSPACE_ROOT`.
+- [ ] `codex app-server` command launch.
+- [ ] `pnpm lint` and `pnpm build` start + exit status.
+
+Confirm issue pickup:
+- [ ] Verify the Linear issue moved to `In Progress`.
+- [ ] Verify a branch exists locally matching `task/<issue-key>-symphony-pilot`.
+- [ ] Verify a PR is opened against `main` and linked to the Linear issue.
+- [ ] Verify the PR targets `main` and has no auto-merge enabled.
+- [ ] Verify the issue is moved to `In Review` once the PR is open and checks pass.
+- [ ] Verify Symphony stops because `In Review` is not an active execution state.
+- [ ] Verify `corepack pnpm lint` and `corepack pnpm build` both completed without errors.
 
 ## One-Line Launcher
 
