@@ -20,14 +20,12 @@ Project: Esheria Wills - MVP Delivery
 13. Documentation & Delivery System
 
 ## Milestone Use
-- M0: Systemization and documentation closeout
-- M1: Route and API contract hardening
-- M2: Backend engines and persistence
-- M3: AI and structured flow execution
-- M4: Output, support, and mobile parity
-- M5: QA and launch readiness
-
-Use existing milestone names in Linear if they differ, but keep the sequencing above.
+Use existing milestone names in Linear (Lexsgo):
+- Audit & system truth
+- Frontend flow completion
+- Backend core implementation
+- AI-assisted flow boundaries
+- QA, legal/content validation, launch prep
 
 ## Issue Readiness Criteria
 Ready for Symphony:
@@ -42,16 +40,16 @@ Not ready:
 - Scope is undefined or too broad.
 
 ## Status Movement Logic
-- Backlog / To Do: ready or awaiting readiness confirmation.
+- Backlog / Todo: ready or awaiting readiness confirmation.
 - In Progress: Symphony is actively executing.
-- Review: implementation complete, PR open, docs updated.
+- In Review: implementation complete, PR open, docs updated.
 - Done: PR merged and validated.
-- Blocked: cannot proceed; dependency listed.
+Blocked: keep status in `Todo` and add a `[BLOCKED]` note in the issue body or comment.
 
 ## Symphony Pickup Rules
 - Do not start underdefined work.
 - If an issue is In Progress and not blocked, carry it to completion.
-- Move to Review only when PR is ready and docs are updated.
+- Move to In Review only when PR is ready and docs are updated.
 
 ## Labels (Preferred)
 - audit

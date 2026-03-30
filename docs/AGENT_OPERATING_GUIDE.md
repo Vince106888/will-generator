@@ -8,6 +8,7 @@ Date: 2026-03-30
 - Route map: `docs/FRONTEND_IMPLEMENTATION_MAP.md`
 - Backend plan: `docs/BACKEND_ARCHITECTURE_PLAN.md`
 - AI boundaries: `docs/AI_BOUNDARIES_AND_ORCHESTRATION.md`
+- Symphony runtime: `WORKFLOW.md` and `docs/SYMPHONY_SETUP.md`
 
 ## Roles and Responsibilities
 
@@ -21,7 +22,7 @@ Codex (PM/Systemizer)
 Symphony (Executor)
 - Executes ready issues from Linear.
 - Works an issue to completion or marks it Blocked with explicit reasons.
-- Moves work to Review when implementation is complete.
+- Moves work to In Review when implementation is complete.
 - Updates issue progress with clear summaries and remaining risks.
 
 ## Readiness Rules (Before Symphony Starts)
@@ -64,9 +65,18 @@ An issue is NOT READY if:
 
 ## Linear Hygiene
 - Move issues to In Progress only when work is active and ready.
-- Move to Review only when implementation is complete and tests (if any) pass.
+- Move to In Review only when implementation is complete and tests (if any) pass.
 - Keep audit issues separate from implementation tasks.
 - Never start vague work; request clarification instead.
+
+## Linear Status Names (Lexsgo)
+- Backlog
+- Todo
+- In Progress
+- In Review
+- Done
+
+If blocked, keep in `Todo` and add a `[BLOCKED]` note with the dependency.
 
 ## Review Handoff Expectations
 - Provide a succinct implementation summary.

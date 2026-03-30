@@ -9,13 +9,17 @@ This repository is a pnpm monorepo with a Vite/React web app and an Express/Type
 This project uses a two-lane execution model:
 
 - Codex (PM/Systemizer): owns repo truth, documentation, issue quality, sequencing, and PR hygiene.
-- Symphony (Executor): implements validated issues from Linear, carries work to Review, and summarizes progress.
+- Symphony (Executor): implements validated issues from Linear, carries work to In Review, and summarizes progress.
 
 Rules:
 - No direct work on `main`.
 - Every change happens on a branch and ends in a PR.
 - Issues are only moved to In Progress when they are ready for execution.
 - Source-of-truth docs must be updated whenever routes, APIs, or design alignment change.
+
+Symphony setup references:
+- `WORKFLOW.md`
+- `docs/SYMPHONY_SETUP.md`
 
 ## Source-of-Truth Docs
 
@@ -103,7 +107,7 @@ design/         # Design artifacts (source of truth)
 
 - Work is tracked in Linear under the Lexsgo team.
 - Codex maintains issue readiness and documentation accuracy.
-- Symphony executes issues that are Ready and moves them to Review when complete.
+- Symphony executes issues that are Ready and moves them to In Review when complete.
 - No direct work on `main`.
 - One branch per workstream or issue, ending in a PR.
 

@@ -11,7 +11,7 @@ Codex (PM/Systemizer)
 
 Symphony (Executor)
 - Executes ready issues end-to-end.
-- Carries work to Review unless blocked.
+- Carries work to In Review unless blocked.
 - Updates issue status with clear summaries and evidence.
 
 ## Workstreams
@@ -66,6 +66,13 @@ Not ready:
 - Missing design frames or API contract.
 - Open product decision blocks execution.
 - Acceptance criteria are vague or untestable.
+
+## Linear Status Names (Lexsgo)
+- Backlog
+- Todo
+- In Progress
+- In Review
+- Done
 
 ## Blockers (Current)
 - AI steps beyond summary are undefined in code.
