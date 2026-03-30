@@ -73,6 +73,11 @@ If no issues are claimed, re-check:
 - Issue readiness (acceptance criteria and dependencies present).
  - That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
 
+## Symphony Run Verification Checklist
+
+Use this checklist for the pilot run to confirm Symphony picked up a Todo issue
+and executed the full lifecycle.
+
 ## One-Line Launcher
 
 Use the repo wrapper (Windows):
