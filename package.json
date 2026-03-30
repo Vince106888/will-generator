@@ -10,7 +10,9 @@
     "lint": "pnpm -C apps/api lint && pnpm -C apps/web lint",
     "test": "pnpm -C apps/api test && pnpm -C apps/web test",
     "build": "pnpm -C apps/api build && pnpm -C apps/web build",
-    "start": "pnpm -C apps/api start"
+    "start": "pnpm -C apps/api start",
+    "symphony:readiness": "node scripts/symphony-readiness.mjs",
+    "symphony:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-symphony.ps1"
   },
   "keywords": [],
   "author": "",

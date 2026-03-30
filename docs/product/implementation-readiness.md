@@ -1,19 +1,18 @@
 # Implementation Readiness Checklist
 
-Date: 2026-03-27
+Date: 2026-03-28
 Source of truth: `design/pencil-implementation.pen`
 
 ## What Is Ready
-- Clean Pencil canvas with AI drafting, structured flow, review/output, support/trust, and mobile
-- Implementation parity pages created under `apps/web/src/pages`
-- Product docs updated in `docs/product`
-- Design governance docs in `docs/design`
+- Clean Pencil source with active index and realm grouping.
+- Route map updated to active-only routes.
+- Documentation aligned to the clean design source.
 
-## Design Governance (Must Follow)
-- `docs/design/design-source-of-truth.md`
-- `docs/design/page-inventory.md`
+## What Is Not Ready
+- Mobile Review frame is missing from the Pencil source.
+- Legacy pages still exist in code and must not be used as implementation references.
 
-## Required Validation (Before Coding)
+## Required Validation (Before and During Coding)
 1. Legal review
    - Witness rules and beneficiary restrictions
    - Codicil wording and replacement guidance
@@ -23,6 +22,7 @@ Source of truth: `design/pencil-implementation.pen`
    - Privacy claims vs actual storage/security practices
 3. Engineering review
    - Final route map
+   - Realm continuity enforcement
    - API contract ownership and response shapes
 
 ## How To Run Tests (Local)
@@ -43,4 +43,4 @@ If your shell blocks scripts, use `cmd` or adjust your PowerShell execution poli
 `pnpm` and `corepack` were not available via PowerShell or `cmd` in this environment, so lint/test/build were not executed here. Please run the steps above locally to verify.
 
 ## Next Implementation Step
-Maintain route alignment to `docs/design/page-inventory.md`, then wire persistence and legal review.
+Complete Phase 0 and begin Phase 1 (Landing Page v2).

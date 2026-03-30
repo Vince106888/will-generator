@@ -1,147 +1,151 @@
 // Frame: Executors (yb4Yk)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
-import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { Callout } from "../../components/ui/Callout";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
 import { Input } from "../../components/ui/Input";
-import { TrustPanel } from "../../components/ui/TrustPanel";
+import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData } from "../../lib/drafting";
+import { Info, MessageSquareText, RefreshCcw, UserRound } from "lucide-react";
 
 export default function StructuredExecutors() {
-  const { data, update } = useDraftingData();
-  const primary = data.executors[0] ?? { name: "", relationship: "", phone: "" };
-  const backup = data.executors[1] ?? { name: "", relationship: "", phone: "" };
-
-  const updateExecutor = (index: number, field: "name" | "relationship" | "phone", value: string) => {
-    const next = [...data.executors];
-    if (!next[index]) next[index] = { name: "", relationship: "", phone: "" };
-    next[index] = { ...next[index], [field]: value };
-    update({ executors: next });
-  };
+  useDraftingMode("structured");
 
   return (
-    <WorkspaceShell>
-      <Container size="wide" className="pb-24 pt-12">
-        <PageHeader
-          eyebrow="Structured flow"
-          title="Executors"
-          description="An executor is the trusted person who carries out your wishes. Choose someone responsible and willing. You can name a backup executor in case the first person cannot serve."
-        />
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-          <div className="space-y-5">
-            <Card size="lg" className="space-y-4">
-              <p className="text-sm font-semibold text-ink">Primary executor</p>
-              <div className="grid gap-4 md:grid-cols-2">
-                <FieldGroup label="Full name">
-                  <Input
-                    placeholder="e.g., Grace Wanjiru"
-                    value={primary.name}
-                    onChange={(event) => updateExecutor(0, "name", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Relationship">
-                  <Input
-                    placeholder="Spouse, sibling, friend"
-                    value={primary.relationship}
-                    onChange={(event) => updateExecutor(0, "relationship", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Phone number">
-                  <Input
-                    placeholder="07xx xxx xxx"
-                    value={primary.phone}
-                    onChange={(event) => updateExecutor(0, "phone", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Availability check" hint="Confirm they are willing to serve.">
-                  <Input
-                    placeholder="Yes - discussed"
-                    value={data.executorNotes}
-                    onChange={(event) => update({ executorNotes: event.target.value })}
-                  />
-                </FieldGroup>
-              </div>
-            </Card>
-
-            <Card size="lg" variant="secondary" className="space-y-4">
-              <p className="text-sm font-semibold text-ink">Backup executor</p>
-              <p className="text-xs text-muted">
-                A backup executor helps if your first choice is unable to act. This avoids delays for your family.
-              </p>
-              <div className="grid gap-4 md:grid-cols-2">
-                <FieldGroup label="Full name">
-                  <Input
-                    placeholder="Optional"
-                    value={backup.name}
-                    onChange={(event) => updateExecutor(1, "name", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Relationship">
-                  <Input
-                    placeholder="Optional"
-                    value={backup.relationship}
-                    onChange={(event) => updateExecutor(1, "relationship", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Phone number">
-                  <Input
-                    placeholder="Optional"
-                    value={backup.phone}
-                    onChange={(event) => updateExecutor(1, "phone", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Availability check">
-                  <Input placeholder="Have you spoken?" />
-                </FieldGroup>
-              </div>
-            </Card>
-
-            <Callout tone="info">
-              Executors manage the legal process, settle debts, and distribute assets. Choose someone who is calm, fair,
-              and organized.
-            </Callout>
+    <WorkspaceShell
+      nav={{
+        ctaLabel: (
+          <>
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save and exit</span>
+          </>
+        ),
+        ctaPath: "/"
+      }}
+    >
+      <Container size="wide" className="py-8">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h1 className="font-display text-[34px] font-semibold text-ink">Executors</h1>
+            <p className="text-[16px] leading-[1.6] text-muted">
+              An executor is the trusted person who carries out your instructions, pays debts, and distributes assets.
+              They have a legal duty to act in the best interest of your beneficiaries.
+            </p>
           </div>
 
-          <div className="space-y-4">
-            <Card size="md" className="space-y-2">
-              <p className="text-xs font-semibold text-ink">Executor responsibilities</p>
-              <ul className="list-disc space-y-2 pl-5 text-xs text-muted">
-                <li>Locate and secure the signed will</li>
-                <li>Pay outstanding debts and taxes</li>
-                <li>Distribute assets according to your wishes</li>
-                <li>Communicate clearly with beneficiaries</li>
-              </ul>
-            </Card>
-            <Card size="md" variant="secondary" className="space-y-2">
-              <p className="text-xs font-semibold text-ink">What to tell them</p>
-              <p className="text-xs text-muted">
-                Let your executor know where the signed will is stored and provide contact details for your lawyer or
-                advocate if you use one.
-              </p>
-            </Card>
-            <TrustPanel
-              title="We keep executors informed"
-              items={[
-                "You can share a draft summary with them later.",
-                "We include clear instructions for accessing the final will.",
-                "You remain in control of what is shared."
-              ]}
-            />
-          </div>
-        </div>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="space-y-4">
+              <Card size="lg" className="space-y-4">
+                <div className="space-y-1.5">
+                  <p className="font-display text-xl font-semibold text-ink">Primary executor</p>
+                  <p className="text-[13px] text-muted">Choose someone responsible and willing to handle paperwork.</p>
+                </div>
+                <div className="space-y-3">
+                  <FieldGroup label="Full legal name">
+                    <Input placeholder="e.g. Grace Wanjiku Mwangi" />
+                  </FieldGroup>
+                  <FieldGroup label="Relationship to you">
+                    <Input placeholder="e.g. sister, friend" />
+                  </FieldGroup>
+                  <FieldGroup label="Phone or email (optional)" hint="Optional">
+                    <Input placeholder="So we can contact them if needed" />
+                  </FieldGroup>
+                </div>
+              </Card>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-          <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/mapping")}>Back</Button>
-          <Button variant="primary" size="sm" onClick={() => navigate("/drafting/guardianship")}>
-            Continue to guardianship
-          </Button>
+              <Card size="lg" className="space-y-4">
+                <div className="space-y-1.5">
+                  <p className="font-display text-xl font-semibold text-ink">Backup executor</p>
+                  <p className="text-[13px] text-muted">
+                    If the primary executor cannot act, this person takes over.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <FieldGroup label="Full legal name">
+                    <Input placeholder="Optional" />
+                  </FieldGroup>
+                  <FieldGroup label="Relationship to you">
+                    <Input placeholder="Optional" />
+                  </FieldGroup>
+                  <Button variant="ghost" size="sm">
+                    I do not want a backup
+                  </Button>
+                </div>
+              </Card>
+
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <UserRound className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">Can an executor be a beneficiary?</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    Yes. It is common to choose a trusted family member who will also inherit. Ensure they are willing
+                    and organized.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/guardianship")}>
+                  Continue to guardianship
+                </Button>
+                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-flow")}>
+                  Save and return later
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <Info className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">What if I am not sure?</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    If you are not sure today, you can proceed and return later. We will remind you before finalizing the
+                    draft.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <MessageSquareText className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">Do they have to agree?</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    It is best to talk to them. If they decline later, the backup executor can step in or a court can
+                    appoint someone.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 rounded-xl border border-border bg-secondary p-4">
+                <RefreshCcw className="mt-0.5 text-primary" size={20} strokeWidth={1.6} />
+                <div className="space-y-1">
+                  <p className="text-[13px] font-semibold text-ink">Can I change this later?</p>
+                  <p className="text-[13px] leading-[1.5] text-muted">
+                    Yes. You can update your executor or create a new will or codicil if your situation changes.
+                  </p>
+                </div>
+              </div>
+
+              <Card size="lg" className="space-y-3">
+                <div className="space-y-1.5">
+                  <p className="font-display text-xl font-semibold text-ink">Executor duties</p>
+                  <p className="text-[13px] text-muted">What they will actually do.</p>
+                </div>
+                <div className="space-y-2 text-[13px] text-ink">
+                  <p>&bull; Collect and secure assets</p>
+                  <p>&bull; Pay debts, taxes, and funeral costs</p>
+                  <p>&bull; Distribute assets per your instructions</p>
+                  <p className="text-muted">We recommend choosing someone organized and available.</p>
+                </div>
+              </Card>
+            </div>
+          </div>
         </div>
       </Container>
     </WorkspaceShell>
   );
 }
+
+

@@ -1,100 +1,64 @@
 # Frontend Implementation Plan
 
-Date: 2026-03-27  
+Date: 2026-03-28  
 Design source of truth: `docs/design/design-source-of-truth.md`  
-Route map: `docs/frontend/route-map.md`  
-Route migration plan: `docs/frontend/route-migration-plan.md`
+Route map: `docs/frontend/route-map.md`
 
 ## Goals
-- Implement only the active frames listed in `00 Canvas Index`.
+- Implement only the active frames listed in the Pencil index.
 - Preserve premium, calm, trust-heavy tone with deep explanatory content.
-- Ensure mobile is a first-class layout, not a compressed desktop.
+- Ensure mobile is first-class, not a compressed desktop.
+- Preserve realm continuity (AI vs Structured) end to end.
 
-## Batch Order (Approved)
-Batch 1
-- Landing Page v2
-- Entry Choice
-- Existing Will Gate
+## Phased Order (Approved)
+Phase 0  Final Pencil arrangement + frontend governance
+- Arrange `design/pencil-implementation.pen` for implementation order
+- Inspect current frontend route/page structure
+- Identify legacy interference
+- Update route map and implementation docs
 
-Batch 2
-- AI Drafting Workspace
-- AI Extraction Summary
+Phase 1  Landing foundation
+- Landing Page v2 + Mobile Landing v2
 
-Batch 3
-- Structured Flow Shell
-- Assets + Beneficiaries Mapping
-- Executors
-- Guardianship
+Phase 2  Entry foundation
+- Entry Choice + Existing Will Gate + Mobile Entry/Mobile Existing Will
 
-Batch 4
-- Review + Result
-- Export Options
-- Signing Instructions
-- Advocate Review
+Phase 3  AI realm
+- AI Drafting Workspace + AI Extraction Summary + Mobile AI Drafting
 
-Batch 5
-- FAQ
-- Privacy + Trust
-- Error / Empty States
-- Mobile refinements
+Phase 4  Structured realm
+- Structured Flow Shell + Assets + Beneficiaries Mapping + Executors + Guardianship + Mobile Assets Mapping
 
-## Status (Completed)
-Batch 1
-- Landing Page v2
-- Entry Choice
-- Existing Will Gate
+Phase 5  Review / output realm
+- Review + Result + Export Options + Signing Instructions + Advocate Review + Mobile Review
 
-Batch 2
-- AI Drafting Workspace
-- AI Extraction Summary
+Phase 6  Support / trust realm
+- FAQ + Privacy + Trust + Error + Empty States
 
-Batch 3
-- Structured Flow Shell
-- Assets + Beneficiaries Mapping
-- Executors
-- Guardianship
+Phase 7  Mobile completion pass
+- Revisit all pages with mobile references
 
-Batch 4
-- Review + Result
-- Export Options
-- Signing Instructions
-- Advocate Review
+Phase 8  Legacy cleanup / finalization
+- Remove/lock legacy routes and ambiguous surfaces
 
-Batch 5
-- FAQ
-- Privacy + Trust
-- Error / Empty States
-- Mobile refinements
+## Status
+- Phase 0: complete (Pencil arrangement + route/doc updates done)
+- Phase 1: complete (Landing Page v2)
+- Phase 2: complete (Entry Choice + Existing Will Gate)
+- Phase 3: in-progress (AI Drafting Workspace + AI Extraction Summary realignment to 2026-03-28 refinements)
+- Phase 4: in-progress (Structured Flow Shell + Assets & Beneficiaries Mapping + Executors + Guardianship realignment)
+- Phase 5: in-progress (Review + Result, Export Options, Signing Instructions, Advocate Review realignment)
+- Phase 6: in-progress (Error + Empty States realignment)
 
-## Route Map (Active Only)
-- `/` ? Landing Page v2
-- `/entry-choice` ? Entry Choice
-- `/existing-will` ? Existing Will Gate
-- `/drafting/ai-workspace` ? AI Drafting Workspace
-- `/drafting/ai-summary` ? AI Extraction Summary
-- `/drafting/structured-flow` ? Structured Flow Shell
-- `/drafting/mapping` ? Assets + Beneficiaries Mapping
-- `/drafting/structured-executors` ? Executors
-- `/drafting/guardianship` ? Guardianship
-- `/drafting/review-result` ? Review + Result
-- `/drafting/export-options` ? Export Options
-- `/drafting/signing-guide` ? Signing Instructions
-- `/drafting/advocate-review` ? Advocate Review
-- `/faq` ? FAQ
-- `/privacy` ? Privacy + Trust
-- `/drafting/error` ? Error + Empty States
-
-## Shared Layout + UI Primitives
-Existing layout components to reuse and harden:
+## Shared Layout + UI Primitives (Likely Reusable)
+Layout:
 - `apps/web/src/components/layout/MarketingShell.tsx`
-- `apps/web/src/components/layout/MarketingNav.tsx`
-- `apps/web/src/components/layout/MarketingFooter.tsx`
 - `apps/web/src/components/layout/WorkspaceShell.tsx`
 - `apps/web/src/components/layout/Container.tsx`
 - `apps/web/src/components/layout/Section.tsx`
 - `apps/web/src/components/layout/PageHeader.tsx`
 
-Existing UI atoms to standardize:
+UI:
 - `apps/web/src/components/ui/Button.tsx`
 - `apps/web/src/components/ui/Card.tsx`
 - `apps/web/src/components/ui/Callout.tsx`
@@ -102,23 +66,126 @@ Existing UI atoms to standardize:
 - `apps/web/src/components/ui/Textarea.tsx`
 - `apps/web/src/components/ui/Select.tsx`
 - `apps/web/src/components/ui/Badge.tsx`
-- `apps/web/src/components/ui/Modal.tsx`
 - `apps/web/src/components/ui/TrustPanel.tsx`
 
 ## Critical Implementation Notes
-- AI Drafting Workspace redesigned for wider conversation area and better column balance.
-- Major pages include richer explanations, definitions, and why-this-matters copy.
-- Guardianship phrased conditionally for minors.
-- Trust and privacy messaging reinforced on entry, AI workspace, and export/signing.
-- Mobile layouts verified to maintain hierarchy and trust content.
-- Entry flow now explicitly confirms drafting mode on `/entry-choice` before `/existing-will` continues.
-- Existing-will selection persists `existingWill` intent and routes using confirmed drafting mode.
+- Do not reuse legacy pages as sources of truth.
+- Confirm drafting mode on Entry Choice before Existing Will Gate.
+- Keep AI/Structured realm boundaries intact; no silent fallback.
+- Mobile Review frame is missing in Pencil source; desktop review is implemented and mobile adapts from desktop until frame is provided.
 
 ## Validation
-- `pnpm.cmd -C apps/web test` (pass on 2026-03-26)
- - Landing v2 CTA routing checked on 2026-03-27 (manual navigation sanity).
+- Pending: tests and route verification will be run per phase.
 
-## Immediate Engineering Tasks (Pre-Batch 1)
-1. Lock routing map in `apps/web/src/App.tsx` to active-only routes. (done)
-2. Add a route-to-frame mapping reference in each page header comment (frame name + id). (done for active frames)
-3. Normalize spacing tokens and typography across marketing vs drafting surfaces. (done)
+## Latest Page Mappings (Pencil -> Code)
+### AI Extraction Summary
+- Pencil Frame ID: `9MjGI`
+- Code Page: `apps/web/src/pages/drafting/AiExtractionSummary.tsx`
+- Section mapping: `summaryIntro` -> title/description block
+- Section mapping: `statusBanner` -> success `Card` with summary text
+- Section mapping: `Extraction Cards` -> two `Card` rows (`lg:grid-cols-2`)
+- Section mapping: `missingBanner` -> warning banner with icon + text
+- Section mapping: `Summary Actions` -> action copy + buttons + helper callout
+- Layout mapping: vertical stack uses `space-y-6`
+- Layout mapping: `rowA`/`rowB` use `grid gap-4 lg:grid-cols-2`
+- Layout mapping: banner uses `flex gap-3` with border + background
+- 2026-03-28 refinement: added review checklist row (`Review checklist` + `How to review` helper callout)
+
+### Structured Flow Shell
+- Pencil Frame ID: `fF89o`
+- Code Page: `apps/web/src/pages/drafting/StructuredFlowShell.tsx`
+- Section mapping: `flowHeader` -> title/description + progress block
+- Section mapping: `mainCol` -> overview `Card`, required/optional helper, CTA row
+- Section mapping: `sideCol` -> progress list `Card`
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]`
+- Layout mapping: progress bar uses `h-2` wrapper + full-width fill
+- 2026-03-28 refinement: added "What you will need" helper callout in main column
+
+### Assets + Beneficiaries Mapping
+- Pencil Frame ID: `nFFsn`
+- Code Page: `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx`
+- Section mapping: `mapHeader` -> title/description block
+- Section mapping: `assetsCol` -> assets `Card`, mapping `Card`, asset tips callout
+- Section mapping: `benefCol` -> beneficiaries `Card`, allocation summary callout, missing banner, actions
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+- Layout mapping: `Card` blocks use `space-y-3` vertical flow
+- 2026-03-28 refinement: added valuation note callout + remainder clause example card
+
+### Executors
+- Pencil Frame ID: `yb4Yk`
+- Code Page: `apps/web/src/pages/drafting/StructuredExecutors.tsx`
+- Section mapping: `execHeader` -> title/description block
+- Section mapping: `primaryCard` -> primary executor `Card` with three input fields
+- Section mapping: `backupCard` -> backup executor `Card` with two inputs + ghost action
+- Section mapping: `execActions` -> primary + secondary actions
+- Section mapping: `execSide` -> three helper callouts
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+- 2026-03-28 refinement: added "Can an executor be a beneficiary?" callout + "Executor duties" card
+
+### Guardianship
+- Pencil Frame ID: `aSEwT`
+- Code Page: `apps/web/src/pages/drafting/StructuredGuardianship.tsx`
+- Section mapping: `guardHeader` -> title/description block
+- Section mapping: `guardMain` -> context callout + minor children card + guardian cards + legal note + actions
+- Layout mapping: vertical stack with `space-y-6` and `space-y-4`
+- 2026-03-28 refinement: added "Talk to your guardian first" callout
+
+### Review + Result
+- Pencil Frame ID: `0gbAz`
+- Code Page: `apps/web/src/pages/drafting/Review.tsx`
+- Section mapping: `revHeader` -> title/description block
+- Section mapping: `readyBanner` -> success panel
+- Section mapping: `revMain` -> three section cards + warning banner + actions
+- Section mapping: `revSide` -> summary card, checklist, preview, helper callout
+- Layout mapping: `grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]`
+- 2026-03-28 refinement: added "After you sign" guidance card to side column
+
+### Export Options
+- Pencil Frame ID: `xUIiv`
+- Code Page: `apps/web/src/pages/post/ExportOptions.tsx`
+- Section mapping: `expHeader` -> title/description block
+- Section mapping: `pricingRow` -> three section cards with tier CTAs
+- Section mapping: `exportNotes` -> two helper callouts
+- Section mapping: `expActions` -> back + continue buttons
+- Layout mapping: `grid gap-4 lg:grid-cols-3` + `grid gap-4 lg:grid-cols-2`
+- 2026-03-28 refinement: added "How to choose a tier" helper callout
+
+### Signing Instructions
+- Pencil Frame ID: `JXSDZ`
+- Code Page: `apps/web/src/pages/post/SigningGuide.tsx`
+- Section mapping: `signHeader` -> title/description block
+- Section mapping: `steps` -> four section cards with bullet lists
+- Section mapping: `warning` -> warning banner
+- Section mapping: `postActions` -> back + finish buttons
+- 2026-03-28 refinement: added "If you cannot sign personally" helper callout
+
+### Advocate Review
+- Pencil Frame ID: `K02wp`
+- Code Page: `apps/web/src/pages/post/AdvocateReview.tsx`
+- Section mapping: `advHeader` -> title/description block
+- Section mapping: `advGrid` -> three section cards
+- Section mapping: `advForm` -> form card with inputs and CTA
+- 2026-03-28 refinement: added "What happens after you request" helper callout
+
+### FAQ
+- Pencil Frame ID: `puMDs`
+- Code Page: `apps/web/src/pages/marketing/FaqPage.tsx`
+- Section mapping: `faqHeader` -> title/description block
+- Section mapping: `faqList` -> list of FAQ cards
+- Section mapping: `faqFooter` -> footer base
+
+### Privacy + Trust
+- Pencil Frame ID: `Scsqx`
+- Code Page: `apps/web/src/pages/marketing/PrivacyTrust.tsx`
+- Section mapping: `privHeader` -> title/description block
+- Section mapping: `privGrid` -> three helper callouts
+- Section mapping: `legalBlock` -> section card + bullet list
+- Section mapping: `privFooter` -> footer base
+
+### Error + Empty States
+- Pencil Frame ID: `IRKLg`
+- Code Page: `apps/web/src/pages/post/ErrorStates.tsx`
+- Section mapping: `errHeader` -> title/description block
+- Section mapping: `stateRow` -> error banner, empty state card, success panel
+- Section mapping: `emptyDetail` -> helper callout
+- 2026-03-28 refinement: added recovery row with `Recovery actions` card + support helper

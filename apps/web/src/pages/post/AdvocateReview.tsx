@@ -2,37 +2,19 @@
 import { useMemo, useState } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { Callout } from "../../components/ui/Callout";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
-import { FieldGroup } from "../../components/drafting/FieldGroup";
-import { TrustPanel } from "../../components/ui/TrustPanel";
-import { navigate } from "../../lib/navigation";
+import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
 import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
-
-const reviewOptions = [
-  {
-    title: "Light review",
-    body: "Quick check for completeness and signing guidance."
-  },
-  {
-    title: "Full advocate review",
-    body: "Detailed review for complex estates, minors, or multiple households."
-  }
-];
 
 export default function AdvocateReview() {
   const { data, update } = useDraftingData();
   const [form, setForm] = useState({
     name: data.legalName || "",
-    email: data.email || "",
-    phone: data.phone || "",
-    county: data.county || "",
+    contact: data.email || data.phone || "",
     notes: ""
   });
   const [status, setStatus] = useState<string | null>(null);
@@ -66,19 +48,17 @@ export default function AdvocateReview() {
       setSubmitting(false);
       return;
     }
-    if (!form.email) {
+    if (!form.contact) {
       setStatus("Please provide an email so we can contact you.");
       setSubmitting(false);
       return;
     }
     try {
       await api.post(`/api/v1/wills/${willId}/lead`, {
-        email: form.email,
+        email: form.contact,
         metadata: {
           source: "advocate-review",
           name: form.name,
-          phone: form.phone,
-          county: form.county,
           notes: form.notes
         }
       });
@@ -91,103 +71,101 @@ export default function AdvocateReview() {
   };
 
   return (
-    <WorkspaceShell>
-      <Container size="wide" className="pb-24 pt-12">
-        <PageHeader
-          eyebrow="Support"
-          title="Advocate review"
-          description="If you want professional support, request a review. We will connect you with a Kenyan advocate who can help you finalize the draft confidently."
-        />
+    <WorkspaceShell
+      nav={{
+        ctaLabel: "Request review",
+        ctaPath: "/drafting/advocate-review",
+        ctaClassName: "px-5 py-3 text-[13px]"
+      }}
+    >
+      <Container size="wide" className="py-8">
+        <div className="space-y-6">
+          <div className="space-y-[10px]">
+            <h1 className="font-display text-[34px] font-semibold text-ink">
+              Advocate review
+            </h1>
+            <p className="text-[16px] leading-[1.6] text-muted">
+              If your estate is complex or you want extra confidence, you can
+              request a Kenyan advocate to review your draft before you sign.
+            </p>
+          </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-5">
-            <Card size="lg" className="space-y-4">
-              <p className="text-sm font-semibold text-ink">Choose the type of review</p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {reviewOptions.map((option) => (
-                  <div key={option.title} className="rounded-xl border border-border bg-paper p-4">
-                    <p className="text-sm font-semibold text-ink">{option.title}</p>
-                    <p className="text-xs text-muted">{option.body}</p>
-                  </div>
-                ))}
+          <div className="grid gap-4 lg:grid-cols-3">
+            <SectionCard
+              title="When to consider review"
+              subtitle="Examples of more complex estates."
+            >
+              <div className="space-y-1.5 text-[13px] text-ink">
+                <p>&bull; Multiple spouses or blended families</p>
+                <p>&bull; Cross-border property or businesses</p>
+                <p>&bull; High-value or disputed assets</p>
               </div>
-            </Card>
+            </SectionCard>
+            <SectionCard
+              title="What you will receive"
+              subtitle="Clear feedback and corrections."
+            >
+              <div className="space-y-1.5 text-[13px] text-ink">
+                <p>&bull; Written review notes</p>
+                <p>&bull; Suggested language edits</p>
+                <p>&bull; Optional call to explain changes</p>
+              </div>
+            </SectionCard>
+            <SectionCard
+              title="Privacy safeguards"
+              subtitle="Your information stays protected."
+            >
+              <div className="space-y-1.5 text-[13px] text-ink">
+                <p>&bull; Share only what is necessary</p>
+                <p>&bull; Advocate bound by confidentiality</p>
+                <p>&bull; You can withdraw your request</p>
+              </div>
+            </SectionCard>
+          </div>
 
-            <Card size="lg" className="space-y-4">
-              <p className="text-sm font-semibold text-ink">Request details</p>
-              <div className="grid gap-4 md:grid-cols-2">
-                <FieldGroup label="Full name">
-                  <Input
-                    placeholder="Your name"
-                    value={form.name}
-                    onChange={(event) => handleChange("name", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Email address">
-                  <Input
-                    placeholder="you@example.com"
-                    value={form.email}
-                    onChange={(event) => handleChange("email", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="Phone number">
-                  <Input
-                    placeholder="07xx xxx xxx"
-                    value={form.phone}
-                    onChange={(event) => handleChange("phone", event.target.value)}
-                  />
-                </FieldGroup>
-                <FieldGroup label="County">
-                  <Input
-                    placeholder="e.g., Nairobi"
-                    value={form.county}
-                    onChange={(event) => handleChange("county", event.target.value)}
-                  />
-                </FieldGroup>
+          <HelperCallout
+            title="What happens after you request"
+            body="We will confirm availability, share pricing, and connect you with a vetted advocate. No work begins without your approval."
+          />
+
+          <SectionCard title="Request review" subtitle="Tell us what kind of support you need.">
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <p className="text-[12px] font-semibold text-ink">Full name</p>
+                <Input
+                  placeholder=""
+                  value={form.name}
+                  onChange={(event) => handleChange("name", event.target.value)}
+                />
               </div>
-              <FieldGroup label="Anything the advocate should know?" hint="Optional, but helpful for complex cases.">
+              <div className="space-y-1.5">
+                <p className="text-[12px] font-semibold text-ink">Email or phone</p>
+                <Input
+                  placeholder=""
+                  value={form.contact}
+                  onChange={(event) => handleChange("contact", event.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-[12px] font-semibold text-ink">What do you want reviewed?</p>
                 <Textarea
-                  placeholder="Describe any unique family or asset situations."
-                  className="min-h-[120px]"
+                  placeholder="Describe your complexity or questions"
                   value={form.notes}
                   onChange={(event) => handleChange("notes", event.target.value)}
                 />
-              </FieldGroup>
-              {status && <p className="text-xs text-muted">{status}</p>}
-              <Button variant="primary" size="sm" onClick={handleSubmit} disabled={submitting}>
-                {submitting ? "Sending..." : "Request review"}
+              </div>
+              {status && <p className="text-[12px] text-muted">{status}</p>}
+              <Button
+                variant="primary"
+                size="sm"
+                className="px-5 py-3 text-[13px]"
+                onClick={handleSubmit}
+                disabled={submitting}
+              >
+                {submitting ? "Sending..." : "Request advocate review"}
               </Button>
-            </Card>
-          </div>
-
-          <div className="space-y-4">
-            <Card size="md" className="space-y-2">
-              <p className="text-xs font-semibold text-ink">What happens next</p>
-              <p className="text-xs text-muted">
-                We will review your request within one business day and introduce you to an advocate if needed.
-              </p>
-            </Card>
-            <Card size="md" variant="secondary" className="space-y-2">
-              <p className="text-xs font-semibold text-ink">Cost guidance</p>
-              <p className="text-xs text-muted">
-                Advocate fees vary by complexity. We confirm pricing before any work begins.
-              </p>
-            </Card>
-            <TrustPanel
-              title="Privacy and confidentiality"
-              items={[
-                "We share only the information you approve.",
-                "Your draft stays encrypted in your account.",
-                "You can proceed without advocate review if you prefer."
-              ]}
-            />
-            <Callout tone="info">
-              You can still sign without an advocate review. This service is optional and designed for peace of mind.
-            </Callout>
-            <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/export-options")}>
-              Back to export options
-            </Button>
-          </div>
+            </div>
+          </SectionCard>
         </div>
       </Container>
     </WorkspaceShell>

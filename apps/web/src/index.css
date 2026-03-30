@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   color-scheme: light;
   --paper: #f7f4ef;
@@ -35,6 +36,12 @@ body {
   color: var(--ink);
   background: var(--paper);
   min-height: 100vh;
+}
+
+#root svg.lucide {
+  display: inline-block;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
 }
 
 #root {

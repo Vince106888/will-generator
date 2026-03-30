@@ -20,7 +20,7 @@ export default function Distribution() {
               </p>
             </div>
             <Card size="md" className="space-y-2">
-              <p className="text-xs font-semibold text-ink">Family home — Lavington</p>
+              <p className="text-xs font-semibold text-ink">Family home - Lavington</p>
               <p className="text-xs text-muted">Allocate to one or more beneficiaries.</p>
             </Card>
           </div>
@@ -35,13 +35,13 @@ export default function Distribution() {
         >
           <div className="space-y-4">
             <Card size="md" className="space-y-3">
-              <p className="text-sm font-semibold text-ink">Family home — Lavington</p>
+              <p className="text-sm font-semibold text-ink">Family home - Lavington</p>
               <p className="text-xs text-muted">
                 Allocate this asset to one or more beneficiaries.
               </p>
               <div className="flex flex-wrap gap-2 text-xs text-muted">
-                <span className="rounded-full bg-secondary px-2 py-1 text-ink">Grace Wanjiku • 60%</span>
-                <span className="rounded-full bg-secondary px-2 py-1 text-ink">Daniel Mwangi • 40%</span>
+                <span className="rounded-full bg-secondary px-2 py-1 text-ink">Grace Wanjiku * 60%</span>
+                <span className="rounded-full bg-secondary px-2 py-1 text-ink">Daniel Mwangi * 40%</span>
               </div>
               <Button variant="secondary" size="sm">
                 Add allocation

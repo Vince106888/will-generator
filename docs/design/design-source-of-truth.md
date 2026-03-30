@@ -1,9 +1,9 @@
 # Design Source of Truth
 
-Date: 2026-03-27  
+Date: 2026-03-28  
 Primary file: `design/pencil-implementation.pen`  
 Archive file: `design/pencil-new.pen` (history only)  
-Active index frame: `IMPLEMENT FROM THESE ONLY - Index` (id: `iUMph`)
+Active index frame: `IMPLEMENT FROM THESE ONLY — Index` (id: `iUMph`)
 
 ## Decision
 The only implementation-approved design source is `design/pencil-implementation.pen`. Any frame not listed in the index frame is **not** approved for implementation.
@@ -36,6 +36,8 @@ These are the only frames eligible for implementation:
 - Mobile Review: `ACTIVE M6 Mobile Review` (id: `qSIY6`) (missing from file)
 
 ## Recent Updates
+- 2026-03-28: Refined implementation depth for `ACTIVE 04 AI Drafting Workspace` (id: `iVFMi`), `REFINE 05 AI Extraction Summary` (id: `9MjGI`), `ACTIVE 06 Structured Flow Shell` (id: `fF89o`), `ACTIVE 07 Assets + Beneficiaries Mapping` (id: `nFFsn`), `ACTIVE 08 Executors` (id: `yb4Yk`), `ACTIVE 09 Guardianship` (id: `aSEwT`), `ACTIVE 10 Review + Result` (id: `0gbAz`), `ACTIVE 11 Export Options` (id: `xUIiv`), `ACTIVE 12 Signing Instructions` (id: `JXSDZ`), `ACTIVE 13 Advocate Review` (id: `K02wp`), and `ACTIVE 16 Error + Empty States` (id: `IRKLg`). Added explanatory depth, checklist guidance, and recovery actions. Error/empty icon scale and balance corrected.
+- 2026-03-28: Canvas index updated with implementation-order grouping and explicit missing Mobile Review note.
 - 2026-03-27: `ACTIVE 04 AI Drafting Workspace` (id: `iVFMi`) corrected in `design/pencil-implementation.pen` to fix chat bubble width/wrapping and restore the main conversation column. Implementation must use the corrected frame only.
 - 2026-03-27: `ACTIVE M4 Mobile AI Drafting` (id: `jdj6J`) corrected in `design/pencil-implementation.pen` to fix mobile chat bubble width/wrapping. Implementation must use the corrected frame only.
 
@@ -68,7 +70,7 @@ Proposed routes and current intended files (update during implementation if need
 - Any promotion must update the index frame and this document in the same change.
 
 ## Known Design Risks (Must Be Addressed Before Implementation)
-- AI Extraction Summary: needs denser content and clearer edit affordances.
-- Content depth: several pages still feel too short; add more plain-English explanations and "why this matters".
+- AI Extraction Summary: ensure code reflects the new review checklist row and guidance callout.
+- Content depth: after 2026-03-28 refinements, re-verify desktop spacing and side column density in code.
 - Mobile Review frame is missing from `design/pencil-implementation.pen` (listed as `qSIY6` in docs).
 - Mobile: mobile frames exist but do not cover AI summary, export, signing. These remain future work.

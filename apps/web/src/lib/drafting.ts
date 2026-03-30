@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { STORAGE_KEYS } from "./storage";
 
 export type DraftingData = {
@@ -188,9 +188,25 @@ export function useDraftingData() {
     saveDraftingData(data);
   }, [data]);
 
-  const update = (next: Partial<DraftingData>) => {
+  const update = useCallback((next: Partial<DraftingData>) => {
     setData((prev) => ({ ...prev, ...next }));
-  };
+  }, []);
+
+  return { data, update, setData };
+}
+
+export function useDraftingMode(
+  mode: DraftingData["draftingMode"],
+  options?: { enforce?: boolean }
+) {
+  const { data, update, setData } = useDraftingData();
+
+  useEffect(() => {
+    if (options?.enforce === false) return;
+    if (data.draftingMode !== mode || data.draftingModeConfirmed !== true) {
+      update({ draftingMode: mode, draftingModeConfirmed: true });
+    }
+  }, [data.draftingMode, data.draftingModeConfirmed, mode, options?.enforce, update]);
 
   return { data, update, setData };
 }

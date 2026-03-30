@@ -1,8 +1,41 @@
-﻿# Esheria Wills
+# Esheria Wills
 
 Esheria Wills is a Kenya-first estate planning platform for guided will creation, complexity detection, validity guidance, and advocate escalation. It is the first consumer-facing product in the Esheria ecosystem and is positioned as structured legal data capture and legal intelligence infrastructure, not just a document generator.
 
 This repository is a pnpm monorepo with a Vite/React web app and an Express/TypeScript API. The current state focuses on the will drafting flow, a draft generation engine, PDF output, and a foundational data model.
+
+## Operating Model (Codex + Symphony)
+
+This project uses a two-lane execution model:
+
+- Codex (PM/Systemizer): owns repo truth, documentation, issue quality, sequencing, and PR hygiene.
+- Symphony (Executor): implements validated issues from Linear, carries work to In Review, and summarizes progress.
+
+Rules:
+- No direct work on `main`.
+- Every change happens on a branch and ends in a PR.
+- Issues are only moved to In Progress when they are ready for execution.
+- Source-of-truth docs must be updated whenever routes, APIs, or design alignment change.
+
+Symphony setup references:
+- `WORKFLOW.symphony.md`
+- `WORKFLOW.md` (policy-only)
+- `docs/SYMPHONY_SETUP.md`
+
+## Source-of-Truth Docs
+
+All new work starts with these docs:
+
+- `docs/PRODUCT_SYSTEM_OVERVIEW.md`
+- `docs/REPO_SYSTEM_MAP.md`
+- `docs/FRONTEND_IMPLEMENTATION_MAP.md`
+- `docs/BACKEND_ARCHITECTURE_PLAN.md`
+- `docs/AI_BOUNDARIES_AND_ORCHESTRATION.md`
+- `docs/DESIGN_TO_CODE_ALIGNMENT.md`
+- `docs/EXECUTION_PLAN.md`
+- `docs/AGENT_OPERATING_GUIDE.md`
+- `docs/LINEAR_BREAKDOWN.md`
+- `docs/RISKS_AND_DECISIONS.md`
 
 ## Product Purpose
 
@@ -65,10 +98,24 @@ Data flow (current):
 apps/
   api/          # Express API
   web/          # Vite + React UI
+docs/           # Source-of-truth docs (see list above)
 prisma/         # Prisma schema
 tests/          # Test entry point notes
-design/         # Design artifacts (if present)
-docs/           # Product and engineering documentation
+design/         # Design artifacts (source of truth)
+```
+
+## Workflow and Branching
+
+- Work is tracked in Linear under the Lexsgo team.
+- Codex maintains issue readiness and documentation accuracy.
+- Symphony executes issues that are Ready and moves them to In Review when complete.
+- No direct work on `main`.
+- One branch per workstream or issue, ending in a PR.
+
+Symphony launcher (Windows):
+
+```bash
+corepack pnpm symphony:start
 ```
 
 ## Local Development
@@ -172,13 +219,17 @@ See `CONTRIBUTING.md` for branching, code style, and contribution guidance.
 
 ## Documentation Map
 
-- `docs/engineering/repo-audit.md` - current architecture and risks
-- `docs/engineering/commit-map.md` - commit intent and grouping
-- `docs/engineering/bootstrap-summary.md` - bootstrap summary and next actions
-- `docs/product/current-state.md` - product reality snapshot
-- `docs/roadmap/next-steps.md` - near-term roadmap
-- `docs/devops/ci-cd-plan.md` - CI/CD baseline and maturation plan
-- `docs/deployment/README.md` - deployment notes
+- `docs/PRODUCT_SYSTEM_OVERVIEW.md`
+- `docs/REPO_SYSTEM_MAP.md`
+- `docs/FRONTEND_IMPLEMENTATION_MAP.md`
+- `docs/BACKEND_ARCHITECTURE_PLAN.md`
+- `docs/AI_BOUNDARIES_AND_ORCHESTRATION.md`
+- `docs/DESIGN_TO_CODE_ALIGNMENT.md`
+- `docs/EXECUTION_PLAN.md`
+- `docs/AGENT_OPERATING_GUIDE.md`
+- `docs/LINEAR_BREAKDOWN.md`
+- `docs/RISKS_AND_DECISIONS.md`
+- `docs/design/design-source-of-truth.md`
 
 ## MVP vs In-Progress vs Deferred
 
