@@ -8,7 +8,7 @@ Date: 2026-03-30
 - Route map: `docs/FRONTEND_IMPLEMENTATION_MAP.md`
 - Backend plan: `docs/BACKEND_ARCHITECTURE_PLAN.md`
 - AI boundaries: `docs/AI_BOUNDARIES_AND_ORCHESTRATION.md`
-- Symphony runtime: `WORKFLOW.md` and `docs/SYMPHONY_SETUP.md`
+- Symphony runtime: `WORKFLOW.symphony.md`, `WORKFLOW.md`, and `docs/SYMPHONY_SETUP.md`
 
 ## Roles and Responsibilities
 
@@ -79,9 +79,9 @@ An issue is NOT READY if:
 If blocked, keep in `Todo` and add a `[BLOCKED]` note with the dependency.
 
 ## Symphony Runtime Notes
-- Symphony Elixir reads `WORKFLOW.md` (YAML front matter + prompt body).
-- Start with `./bin/symphony ./WORKFLOW.md` from the repo root.
-- `WORKFLOW.md` launches Codex in app-server mode (`codex app-server`).
+- Symphony Elixir reads `WORKFLOW.symphony.md` (YAML front matter + prompt body).
+- Start with `corepack pnpm symphony:start` from the repo root.
+- `WORKFLOW.symphony.md` launches Codex in app-server mode (`codex app-server`).
 
 ## Review Handoff Expectations
 - Provide a succinct implementation summary.

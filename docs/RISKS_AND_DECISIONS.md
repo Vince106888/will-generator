@@ -37,7 +37,7 @@ Date: 2026-03-30
 - AI is restricted to extraction and summarization only.
 - Codex is PM/systemizer; Symphony is executor.
 - No direct work on `main`. Every change is a branch + PR.
-- Symphony uses `WORKFLOW.md` and must match Linear status names (Todo, In Progress, In Review).
+- Symphony uses `WORKFLOW.symphony.md` and must match Linear status names (Todo, In Progress, In Review).
 
 ## Decisions Still Needed
 - Final list of required structured steps for MVP.

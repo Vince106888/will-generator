@@ -18,7 +18,8 @@ Rules:
 - Source-of-truth docs must be updated whenever routes, APIs, or design alignment change.
 
 Symphony setup references:
-- `WORKFLOW.md`
+- `WORKFLOW.symphony.md`
+- `WORKFLOW.md` (policy-only)
 - `docs/SYMPHONY_SETUP.md`
 
 ## Source-of-Truth Docs
@@ -110,6 +111,12 @@ design/         # Design artifacts (source of truth)
 - Symphony executes issues that are Ready and moves them to In Review when complete.
 - No direct work on `main`.
 - One branch per workstream or issue, ending in a PR.
+
+Symphony launcher (Windows):
+
+```bash
+corepack pnpm symphony:start
+```
 
 ## Local Development
 

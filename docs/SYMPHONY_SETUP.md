@@ -10,7 +10,8 @@ repo.
 
 - Linear API key in environment: `LINEAR_API_KEY`
 - Repository root available on disk.
-- `WORKFLOW.md` present at repo root.
+- `WORKFLOW.symphony.md` present at repo root (executable workflow).
+- `WORKFLOW.md` present at repo root (policy).
 
 ## Project Targets
 
@@ -24,27 +25,31 @@ repo.
 ## Startup (Symphony Elixir)
 
 Symphony Elixir is prototype/evaluation software. Run it from the repo root
-and point it to the local `WORKFLOW.md`:
+and point it to the local `WORKFLOW.symphony.md`:
 
 ```bash
-./bin/symphony ./WORKFLOW.md
+corepack pnpm symphony:start
 ```
 
 Runner expectations:
-1. Load `WORKFLOW.md` from the repo root (YAML front matter + prompt body).
+1. Load `WORKFLOW.symphony.md` from the repo root (YAML front matter + prompt body).
 2. Authenticate with Linear using `LINEAR_API_KEY`.
 3. Poll for issues in project `esheria-wills` with status `Todo`.
 4. Create a per-issue workspace and launch Codex in app-server mode.
 
 The workflow sets:
-- `codex_command: codex app-server`
-- `workspace_root: .`
+- `codex` command via `SYMPHONY_CODEX_COMMAND` (defaults to `codex app-server`)
+- `workspace` root via `SYMPHONY_WORKSPACE_ROOT`
+- `SYMPHONY_SOURCE_REPO_URL` for cloning
 
-If your runner uses environment variables instead of CLI args, set:
+If you run Symphony directly without the wrapper script, use:
 
 ```bash
 setx LINEAR_API_KEY "<token>"
-setx SYMPHONY_WORKFLOW "WORKFLOW.md"
+setx SYMPHONY_WORKSPACE_ROOT "C:\\symphony-workspaces"
+setx SYMPHONY_SOURCE_REPO_URL "https://github.com/esherialabs/esheria-wills.git"
+setx SYMPHONY_CODEX_COMMAND "codex app-server"
+setx SYMPHONY_RUNTIME_ROOT "C:\\Users\\HP\\work\\esherialabs\\esheria-opssec\\tooling\\symphony\\elixir"
 ```
 
 ## Verification Signals
@@ -53,11 +58,28 @@ Symphony should log:
 - Successful authentication against Linear.
 - The project slug and status filter it is polling.
 - Issue IDs when it claims work (e.g., `LEX-257`).
+ - Workspace root + runtime path.
 
 If no issues are claimed, re-check:
 - Status spelling (Todo vs To Do).
 - Project slug correctness (`esheria-wills`).
 - Issue readiness (acceptance criteria and dependencies present).
+ - That `WORKFLOW.symphony.md` is used, not `WORKFLOW.md`.
+
+## One-Line Launcher
+
+Use the repo wrapper (Windows):
+
+```bash
+corepack pnpm symphony:start
+```
+
+This script:
+- Loads `.env`
+- Verifies required env keys
+- Uses the shared Symphony runtime from OpsSec by default
+- Runs `scripts/symphony-readiness.mjs`
+- Starts Symphony with logs in the runtime folder
 
 ## Pilot Issue Template (Ready-For-Symphony)
 
