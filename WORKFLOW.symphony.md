@@ -24,7 +24,7 @@ hooks:
     echo "Workspace cleanup complete."
 agent:
   max_concurrent_agents: 1
-  max_turns: 6
+  max_turns: 10
 codex:
   command: "$SYMPHONY_CODEX_COMMAND"
   approval_policy: never
@@ -77,3 +77,9 @@ First live workflow (doc-only):
 - PR: open against `main`, branch name matches policy, no auto-merge.
 - Success criteria: PR linked on issue, issue moved to `In Review`, and Symphony stops because `In Review` is not an active execution state.
 - Failure criteria: missing env vars, missing Codex app-server, or validations failing.
+
+Execution requirements:
+- On pickup, move the issue to `In Progress` via Linear.
+- If Linear update fails, stop and report the blocker.
+- For the pilot issue, do not run lint/build unless explicitly required by the ticket.
+- Use `gh` to open a PR; if GitHub auth is missing, report and stop.

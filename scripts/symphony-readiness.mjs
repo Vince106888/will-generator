@@ -10,6 +10,7 @@ const rootChecks = [
 
 const envRequired = [
   "LINEAR_API_KEY",
+  "GITHUB_TOKEN",
   "SYMPHONY_SOURCE_REPO_URL",
   "SYMPHONY_CODEX_COMMAND",
 ];

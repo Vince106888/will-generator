@@ -9,6 +9,7 @@ repo.
 ## Required Inputs
 
 - Linear API key in environment: `LINEAR_API_KEY`
+- GitHub token with repo access: `GITHUB_TOKEN`
 - Repository root available on disk.
 - `WORKFLOW.symphony.md` present at repo root (executable workflow).
 - `WORKFLOW.md` present at repo root (policy).
@@ -53,6 +54,7 @@ If you run Symphony directly without the wrapper script, use:
 
 ```bash
 setx LINEAR_API_KEY "<token>"
+setx GITHUB_TOKEN "<token>"
 setx SYMPHONY_WORKSPACE_ROOT "C:\\symphony-workspaces"
 setx SYMPHONY_SOURCE_REPO_URL "https://github.com/esherialabs/esheria-wills.git"
 setx SYMPHONY_CODEX_COMMAND "codex app-server"

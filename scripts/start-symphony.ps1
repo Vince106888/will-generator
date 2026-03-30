@@ -9,6 +9,7 @@ $defaultWorkspaceRoot = "C:\\symphony-workspaces"
 $defaultCodexCommand = "codex app-server"
 $requiredEnvKeys = @(
   "LINEAR_API_KEY",
+  "GITHUB_TOKEN",
   "SYMPHONY_SOURCE_REPO_URL"
 )
 $gitUsrBin = "C:\\Program Files\\Git\\usr\\bin"
