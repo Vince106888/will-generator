@@ -22,6 +22,13 @@ repo.
 - Review status: `In Review`
 - Done status: `Done`
 
+## Shared Runtime (OpsSec Reference)
+
+This repo reuses the shared Symphony Elixir runtime located in:
+`C:\Users\HP\work\esherialabs\esheria-opssec\tooling\symphony\elixir`.
+
+Override with `SYMPHONY_RUNTIME_ROOT` if the runtime lives elsewhere.
+
 ## Startup (Symphony Elixir)
 
 Symphony Elixir is prototype/evaluation software. Run it from the repo root
