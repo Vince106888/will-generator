@@ -6,8 +6,8 @@ type ContainerProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const sizeStyles: Record<NonNullable<ContainerProps["size"]>, string> = {
-  narrow: "max-w-[980px]",
-  default: "max-w-[1200px]",
+  narrow: "max-w-[1440px]",
+  default: "max-w-[1440px]",
   wide: "max-w-[1440px]"
 };
 
