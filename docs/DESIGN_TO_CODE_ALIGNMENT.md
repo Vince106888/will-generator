@@ -34,7 +34,7 @@ Design Source: `design/pencil-implementation.pen` (see `docs/design/design-sourc
 - Guard applies only to AI + Structured drafting routes, not post-result routes.
 - Guard uses explicit route list plus `/drafting/ai/*` and `/drafting/structured/*` prefix matching.
 - Access requires `draftingModeConfirmed=true` and mode match; otherwise guard redirects to `/entry-choice`.
-- On redirect, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, and stores the originally requested route (`sessionStorage` key `esheriaDraftingReturnPath`).
+- On redirect, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, and stores the originally requested route (pathname + search, `sessionStorage` key `esheriaDraftingReturnPath`).
 - Guard never changes `draftingMode`; only Entry Choice confirmation updates it.
 - Entry Choice confirmation sets `draftingMode` + `draftingModeConfirmed=true`, then returns to the stored route if it matches the selected mode.
 
