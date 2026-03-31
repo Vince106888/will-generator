@@ -23,6 +23,23 @@ export function MarketingNav({
 }: MarketingNavProps) {
   const { data, setData } = useDraftingData();
 
+  const scrollToSection = (sectionId: string) => {
+    if (typeof window === "undefined") return;
+    const target = document.getElementById(sectionId);
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleSectionNav = (sectionId: string) => {
+    if (typeof window === "undefined") return;
+    if (window.location.pathname === "/") {
+      scrollToSection(sectionId);
+      return;
+    }
+    navigate("/");
+    window.setTimeout(() => scrollToSection(sectionId), 160);
+  };
+
   return (
     <header className="border-b border-border bg-card">
       <Container size="wide" className="flex h-[56px] items-center justify-between gap-4 sm:h-[64px] lg:h-[72px]">
@@ -35,15 +52,19 @@ export function MarketingNav({
           <span className="hidden sm:inline">WillGuide Kenya</span>
         </button>
         <nav className="hidden items-center gap-6 text-[13px] text-muted lg:flex">
-          <a href="#how-it-works" className="hover:text-ink">
+          <button
+            type="button"
+            className="hover:text-ink"
+            onClick={() => handleSectionNav("how-it-works")}
+          >
             How it works
-          </a>
-          <a href="#privacy" className="hover:text-ink">
+          </button>
+          <button type="button" className="hover:text-ink" onClick={() => navigate("/privacy")}>
             Privacy
-          </a>
-          <a href="#faq" className="hover:text-ink">
+          </button>
+          <button type="button" className="hover:text-ink" onClick={() => navigate("/faq")}>
             FAQ
-          </a>
+          </button>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <button className="text-[12px] font-semibold text-primary sm:text-[13px]">Sign in</button>
