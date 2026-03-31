@@ -89,7 +89,7 @@ export default function AiExtractionSummary() {
                     </p>
                   ))}
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai-workspace")}>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai/input")}>
                   Add asset
                 </Button>
               </Card>
@@ -104,7 +104,7 @@ export default function AiExtractionSummary() {
                     <p key={`${item}-${index}`}>&bull; {item}</p>
                   ))}
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai-workspace")}>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai/input")}>
                   Add beneficiary
                 </Button>
               </Card>
@@ -126,7 +126,7 @@ export default function AiExtractionSummary() {
                   )}
                   <p className="text-muted">&bull; You can add a backup executor</p>
                 </div>
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/ai-workspace")}>
+                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/ai/input")}>
                   Add executor
                 </Button>
               </Card>
@@ -147,7 +147,7 @@ export default function AiExtractionSummary() {
                   </p>
                   <p>&bull; We will explain when this applies</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai-workspace")}>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/ai/input")}>
                   Add guardian
                 </Button>
               </Card>
