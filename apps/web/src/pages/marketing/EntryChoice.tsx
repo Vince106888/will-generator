@@ -134,7 +134,7 @@ export default function EntryChoice() {
                 size="sm"
                 onClick={() => navigate("/existing-will")}
               >
-                Start guided form
+                Start review
               </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
                 Preview the steps
