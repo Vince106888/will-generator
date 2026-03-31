@@ -8,6 +8,10 @@ const DRAFTING_ROUTE_MODES: Record<string, DraftingData["draftingMode"]> = {
   "/drafting/structured-executors": "structured",
   "/drafting/guardianship": "structured"
 };
+const DRAFTING_ROUTE_PREFIXES = [
+  { prefix: "/drafting/ai/", mode: "ai" as const },
+  { prefix: "/drafting/structured/", mode: "structured" as const }
+];
 
 const RETURN_PATH_KEY = "esheriaDraftingReturnPath";
 
@@ -32,7 +36,11 @@ function getTargetLocation(target: string) {
 
 export function getDraftingRouteMode(target: string) {
   const pathname = getTargetPathname(target);
-  return DRAFTING_ROUTE_MODES[pathname] ?? null;
+  if (DRAFTING_ROUTE_MODES[pathname]) return DRAFTING_ROUTE_MODES[pathname];
+  const match = DRAFTING_ROUTE_PREFIXES.find(({ prefix }) =>
+    pathname.startsWith(prefix)
+  );
+  return match?.mode ?? null;
 }
 
 export function setDraftingReturnPath(target: string) {

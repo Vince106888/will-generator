@@ -69,6 +69,7 @@ These pages are not reachable from the active route map and should be treated as
 - Drafting routes are gated by `apps/web/src/lib/draftingGuard.ts` before render and on `navigate()` calls.
   - Guarded routes: `/drafting/ai-workspace`, `/drafting/ai-summary`, `/drafting/structured-flow`, `/drafting/mapping`, `/drafting/structured-executors`, `/drafting/guardianship`.
   - Post-result routes are not guarded (`/drafting/review-result`, `/drafting/export-options`, `/drafting/signing-guide`, `/drafting/advocate-review`, `/drafting/error`).
+  - Guard also applies to future `/drafting/ai/*` and `/drafting/structured/*` paths (prefix match).
   - On mismatch or unconfirmed state, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, stores the requested route, and redirects to `/entry-choice`.
   - Entry Choice confirmation sets `draftingMode` + `draftingModeConfirmed=true`, then returns to the stored route (if it matches the selected mode).
 
