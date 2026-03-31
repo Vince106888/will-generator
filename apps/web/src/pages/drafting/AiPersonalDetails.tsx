@@ -32,9 +32,7 @@ export default function AiPersonalDetails() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               AI drafting — Step 1 of 6: Personal details
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              AI drafting — Step 1 of 6: Personal details
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Personal details</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Before the AI organizes your wishes, we need to identify you clearly. This ensures your draft is legally
               grounded.

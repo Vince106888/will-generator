@@ -59,9 +59,7 @@ export default function StructuredBeneficiaries() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               Step 6 of 8: Beneficiaries
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              Step 6 of 8: Beneficiaries
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Beneficiaries</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               List everyone you want to receive something. We help you split assets clearly so there are no gaps or
               surprises.

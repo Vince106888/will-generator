@@ -29,9 +29,7 @@ export default function AiProcessing() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               AI drafting — Step 3 of 6: Processing
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              AI drafting — Step 3 of 6: Processing
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Processing</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               We analyze your input, extract key details, and prepare a clear summary for you to review.
             </p>

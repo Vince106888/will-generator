@@ -93,9 +93,7 @@ export default function AiReview() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               AI drafting — Step 6 of 6: Review
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              AI drafting — Step 6 of 6: Review
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Review</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Review the AI draft summary and confirm everything is correct before you proceed.
             </p>

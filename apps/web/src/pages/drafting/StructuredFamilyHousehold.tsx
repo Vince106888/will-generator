@@ -49,9 +49,7 @@ export default function StructuredFamilyHousehold() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               Step 2 of 8: Family and household
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              Step 2 of 8: Family and household
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Family and household</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Share who depends on you and how your household is structured. This helps the will reflect your real
               responsibilities and protects people who rely on you.
@@ -211,6 +209,10 @@ export default function StructuredFamilyHousehold() {
               <HelperCallout
                 title="Can I update later?"
                 body="Yes. You can add or remove dependants before you sign."
+              />
+              <HelperCallout
+                title="How this affects your will"
+                body="Key clauses influenced by family details."
               />
               <Card size="lg" className="space-y-3">
                 <div className="space-y-1.5">

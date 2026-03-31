@@ -53,9 +53,7 @@ export default function AiCorrections() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               AI drafting — Step 5 of 6: Corrections
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              AI drafting — Step 5 of 6: Corrections
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Corrections</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Here is what we understood from your conversation. Review each section, correct anything wrong, and add
               missing details before we generate the formal draft.

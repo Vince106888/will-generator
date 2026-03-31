@@ -32,7 +32,7 @@ export default function StructuredSpecialWishes() {
               Step 7 of 8: Special wishes and residue
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">
-              Step 7 of 8: Special wishes and residue
+              Special wishes and residue
             </h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Use this space for final wishes or instructions not covered elsewhere. Keep them clear and realistic so
@@ -130,6 +130,10 @@ export default function StructuredSpecialWishes() {
               <HelperCallout
                 title="Can I leave this blank?"
                 body="Yes. It is optional. You can add special wishes later if needed."
+              />
+              <HelperCallout
+                title="Examples"
+                body="Sample wording to guide you."
               />
               <Card size="lg" className="space-y-3">
                 <div className="space-y-1.5">

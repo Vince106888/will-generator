@@ -32,9 +32,7 @@ export default function StructuredPersonalDetails() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               Step 1 of 8: Personal details
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              Step 1 of 8: Personal details
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Personal details</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               These details help identify you unambiguously in the will.
             </p>
@@ -152,6 +150,10 @@ export default function StructuredPersonalDetails() {
               <HelperCallout
                 title="Can I update this later?"
                 body="Yes. You can edit these details any time before you sign."
+              />
+              <HelperCallout
+                title="What this affects"
+                body="Where these details appear in your will."
               />
               <Card size="lg" className="space-y-3">
                 <div className="space-y-1.5">
