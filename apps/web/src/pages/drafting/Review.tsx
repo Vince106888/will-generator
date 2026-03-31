@@ -70,7 +70,7 @@ export default function Review() {
         );
       }
     } finally {
-      navigate("/drafting/review-result");
+      navigate("/drafting/export-options");
     }
   };
 
