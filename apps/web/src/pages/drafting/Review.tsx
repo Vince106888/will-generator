@@ -18,6 +18,48 @@ import { navigate } from "../../lib/navigation";
 
 export default function Review() {
   const { data } = useDraftingData();
+  const assetLabels = data.assets
+    .map((asset) => asset.label?.trim() || asset.location?.trim() || asset.notes?.trim() || "")
+    .filter(Boolean);
+  const beneficiaries = data.beneficiaries
+    .map((beneficiary) => beneficiary.name?.trim() || "")
+    .filter(Boolean);
+  const executorName = data.executors?.[0]?.name?.trim() || "";
+  const guardianName = data.guardians?.[0]?.name?.trim() || "";
+  const hasRemainderClause = Boolean(data.remainderClause?.trim());
+  const hasExecutor = Boolean(executorName);
+  const hasBeneficiaries = beneficiaries.length > 0;
+
+  const allocationLines = data.assetAllocations.flatMap((allocation) => {
+    const assetLabel = allocation.assetLabel?.trim();
+    if (!assetLabel) return [];
+    const targets = allocation.allocations
+      .map((target) => target.beneficiary?.trim() || "")
+      .filter(Boolean);
+    if (!targets.length) {
+      return [`${assetLabel} → Not assigned (please confirm)`];
+    }
+    return [`${assetLabel} → ${targets.join(", ")}`];
+  });
+
+  const summaryLines =
+    allocationLines.length > 0
+      ? allocationLines
+      : assetLabels.length > 0
+        ? assetLabels.map((asset) => `${asset} → Not assigned (please confirm)`)
+        : [
+            "House in Kiambu → Wife",
+            "Toyota Prado KDM 456A → Brian (son)",
+            "Rental plots in Machakos → Nia (daughter)",
+            "Remainder assets → Not specified (please confirm)"
+          ];
+
+  const missingItems = [
+    !hasExecutor ? "assign an executor" : null,
+    !hasBeneficiaries ? "add beneficiaries" : null,
+    !hasRemainderClause ? "set a remainder clause" : null
+  ].filter(Boolean) as string[];
+
   const handleGenerateDraft = async () => {
     try {
       const response = await api.post("/api/v1/wills/generate", buildGeneratePayload(data));
@@ -72,12 +114,14 @@ export default function Review() {
                 subtitle="Plain-English overview of what you asked for, with room to edit."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>&bull; House in Kiambu &rarr; Wife</p>
-                  <p>&bull; Toyota Prado KDM 456A &rarr; Brian (son)</p>
-                  <p>&bull; Rental plots in Machakos &rarr; Nia (daughter)</p>
-                  <p className="text-warning">
-                    &bull; Remainder assets &rarr; Not specified (please confirm)
-                  </p>
+                  {summaryLines.map((line) => {
+                    const isWarning = line.includes("Not specified") || line.includes("Not assigned");
+                    return (
+                      <p key={line} className={isWarning ? "text-warning" : ""}>
+                        &bull; {line}
+                      </p>
+                    );
+                  })}
                 </div>
               </SectionCard>
 
@@ -86,10 +130,15 @@ export default function Review() {
                 subtitle="Key people who carry out your wishes and care for minors."
               >
                 <div className="space-y-2 text-[13px]">
-                  <p className="text-ink">&bull; Executor: Grace Wanjiku Mwangi</p>
+                  <p className={executorName ? "text-ink" : "text-warning"}>
+                    &bull; Executor: {executorName || "Not provided"}
+                  </p>
                   <p className="text-muted">&bull; Backup executor: Not provided</p>
                   <p className="text-muted">
-                    &bull; Guardianship: Not applicable (no minor children listed)
+                    &bull; Guardianship:{" "}
+                    {data.hasMinors
+                      ? guardianName || "Not provided"
+                      : "Not applicable (no minor children listed)"}
                   </p>
                 </div>
               </SectionCard>
@@ -107,7 +156,11 @@ export default function Review() {
 
               <WarningBanner
                 title="Warnings to resolve"
-                body="Please assign a remainder clause (who receives assets not listed) and confirm any dependants before signing."
+                body={
+                  missingItems.length
+                    ? `Please ${missingItems.join(", ")} before signing.`
+                    : "Review your draft and confirm details before signing."
+                }
               />
 
               <div className="flex flex-wrap gap-3">
@@ -148,8 +201,8 @@ export default function Review() {
               <ReviewChecklist
                 title="Completeness checks"
                 items={[
-                  { label: "Personal details complete", tone: "success" },
-                  { label: "Remainder clause missing", tone: "warning" }
+                  { label: "Executor selected", tone: hasExecutor ? "success" : "warning" },
+                  { label: "Remainder clause added", tone: hasRemainderClause ? "success" : "warning" }
                 ]}
               />
               <DocumentPreview title="Draft preview" placeholder="Preview will draft" />
