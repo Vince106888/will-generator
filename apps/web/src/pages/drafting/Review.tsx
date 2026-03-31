@@ -107,7 +107,7 @@ export default function Review() {
             body="We generated a full draft. Please confirm the items below and address any warnings before you sign."
           />
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             <div className="space-y-4">
               <SectionCard
                 title="Your instructions summary"

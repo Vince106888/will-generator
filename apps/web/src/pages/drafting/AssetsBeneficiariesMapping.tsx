@@ -181,7 +181,7 @@ export default function AssetsBeneficiariesMapping() {
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             <div className="space-y-4">
               <Card size="lg" className="space-y-3">
                 <div className="space-y-1.5">
