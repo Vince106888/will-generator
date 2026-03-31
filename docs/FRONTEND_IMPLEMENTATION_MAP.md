@@ -72,6 +72,7 @@ These pages are not reachable from the active route map and should be treated as
   - Post-result routes are not guarded (`/drafting/review-result`, `/drafting/export-options`, `/drafting/signing-guide`, `/drafting/advocate-review`, `/drafting/error`).
   - Guard also applies to future `/drafting/ai/*` and `/drafting/structured/*` paths (prefix match).
   - On mismatch or unconfirmed state, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, stores the requested route, and redirects to `/entry-choice`.
+  - Guard never changes `draftingMode`; only explicit confirmation in Entry Choice updates it.
   - Entry Choice confirmation sets `draftingMode` + `draftingModeConfirmed=true`, then returns to the stored route (if it matches the selected mode).
 
 ## Mobile Parity Summary
