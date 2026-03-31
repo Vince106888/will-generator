@@ -67,6 +67,7 @@ These pages are not reachable from the active route map and should be treated as
 - No 404 route; unknown routes redirect to `/`.
 - Query param step logic exists in `lib/navigation.ts` but is unused in active routes.
 - Drafting routes are gated by `apps/web/src/lib/draftingGuard.ts` before render and on `navigate()` calls.
+  - Guard is evaluated in `apps/web/src/App.tsx` route resolution and inside `apps/web/src/lib/navigation.ts`.
   - Guarded routes: `/drafting/ai-workspace`, `/drafting/ai-summary`, `/drafting/structured-flow`, `/drafting/mapping`, `/drafting/structured-executors`, `/drafting/guardianship`.
   - Post-result routes are not guarded (`/drafting/review-result`, `/drafting/export-options`, `/drafting/signing-guide`, `/drafting/advocate-review`, `/drafting/error`).
   - Guard also applies to future `/drafting/ai/*` and `/drafting/structured/*` paths (prefix match).

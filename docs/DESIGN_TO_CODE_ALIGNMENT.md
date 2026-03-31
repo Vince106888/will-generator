@@ -30,10 +30,11 @@ Design Source: `design/pencil-implementation.pen` (see `docs/design/design-sourc
 
 ## Drafting Mode Guard Contract (Routing Layer 1)
 - Guard module: `apps/web/src/lib/draftingGuard.ts`.
+- Guard is invoked by `apps/web/src/App.tsx` before route render and by `apps/web/src/lib/navigation.ts` for programmatic navigation.
 - Guard applies only to AI + Structured drafting routes, not post-result routes.
 - Guard uses explicit route list plus `/drafting/ai/*` and `/drafting/structured/*` prefix matching.
 - Access requires `draftingModeConfirmed=true` and mode match; otherwise guard redirects to `/entry-choice`.
-- On redirect, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, and stores the originally requested route.
+- On redirect, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, and stores the originally requested route (`sessionStorage` key `esheriaDraftingReturnPath`).
 - Entry Choice confirmation sets `draftingMode` + `draftingModeConfirmed=true`, then returns to the stored route if it matches the selected mode.
 
 ## Expected Product Structure vs Code Reality
