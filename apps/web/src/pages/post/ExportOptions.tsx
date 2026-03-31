@@ -37,15 +37,15 @@ export default function ExportOptions() {
       window.location.href = `${api.defaults.baseURL}/api/v1/wills/${willId}/pdf`;
       return;
     }
-      if (data.email) {
-      try {
-        await api.post(`/api/v1/wills/${willId}/lead`, {
-          email: data.email,
-          metadata: { action: "export", format }
-        });
-      } catch {
-      }
-    } else {
+    if (!data.email) {
+      return;
+    }
+    try {
+      await api.post(`/api/v1/wills/${willId}/lead`, {
+        email: data.email,
+        metadata: { action: "export", format }
+      });
+    } catch {
     }
   };
 
