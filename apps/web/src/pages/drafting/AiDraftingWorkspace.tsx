@@ -44,7 +44,7 @@ export default function AiDraftingWorkspace() {
           </>
         ),
         ctaMode: "ai",
-        ctaPath: "/drafting/ai-summary"
+        ctaPath: "/drafting/ai/processing"
       }}
     >
       <div className="pb-24 pt-10">
@@ -120,7 +120,7 @@ export default function AiDraftingWorkspace() {
                           confidence: "medium"
                         }
                       });
-                      navigate("/drafting/ai-summary");
+                      navigate("/drafting/ai/processing");
                     }}
                   >
                     Send
@@ -198,7 +198,7 @@ export default function AiDraftingWorkspace() {
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => navigate("/drafting/ai-summary")}
+                  onClick={() => navigate("/drafting/ai/processing")}
                 >
                   Generate summary
                 </Button>
