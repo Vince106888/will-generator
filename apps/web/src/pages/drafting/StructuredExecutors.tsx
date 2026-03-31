@@ -10,7 +10,19 @@ import { navigate } from "../../lib/navigation";
 import { Info, MessageSquareText, RefreshCcw, UserRound } from "lucide-react";
 
 export default function StructuredExecutors() {
-  useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured");
+  const primaryExecutor = data.executors[0];
+  const backupExecutor = data.executors[1];
+
+  const updateExecutor = (
+    index: number,
+    key: "name" | "relationship" | "phone",
+    value: string
+  ) => {
+    const next = [...data.executors];
+    next[index] = { ...next[index], [key]: value };
+    update({ executors: next });
+  };
 
   return (
     <WorkspaceShell
@@ -27,11 +39,20 @@ export default function StructuredExecutors() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              Step 3 of 8 — Executors
+            </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Executors</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               An executor is the trusted person who carries out your instructions, pays debts, and distributes assets.
               They have a legal duty to act in the best interest of your beneficiaries.
             </p>
+            <div className="space-y-2">
+              <p className="text-[12px] font-semibold text-muted">Step 3 of 8: Executors</p>
+              <div className="h-2 rounded-full border border-border bg-secondary">
+                <div className="h-full w-[37.5%] rounded-full bg-primary" />
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -43,13 +64,31 @@ export default function StructuredExecutors() {
                 </div>
                 <div className="space-y-3">
                   <FieldGroup label="Full legal name">
-                    <Input placeholder="e.g. Grace Wanjiku Mwangi" />
+                    <Input
+                      placeholder="e.g. Grace Wanjiku Mwangi"
+                      value={primaryExecutor?.name ?? ""}
+                      onChange={(event) =>
+                        updateExecutor(0, "name", event.target.value)
+                      }
+                    />
                   </FieldGroup>
                   <FieldGroup label="Relationship to you">
-                    <Input placeholder="e.g. sister, friend" />
+                    <Input
+                      placeholder="e.g. sister, friend"
+                      value={primaryExecutor?.relationship ?? ""}
+                      onChange={(event) =>
+                        updateExecutor(0, "relationship", event.target.value)
+                      }
+                    />
                   </FieldGroup>
                   <FieldGroup label="Phone or email (optional)" hint="Optional">
-                    <Input placeholder="So we can contact them if needed" />
+                    <Input
+                      placeholder="So we can contact them if needed"
+                      value={primaryExecutor?.phone ?? ""}
+                      onChange={(event) =>
+                        updateExecutor(0, "phone", event.target.value)
+                      }
+                    />
                   </FieldGroup>
                 </div>
               </Card>
@@ -63,12 +102,32 @@ export default function StructuredExecutors() {
                 </div>
                 <div className="space-y-3">
                   <FieldGroup label="Full legal name">
-                    <Input placeholder="Optional" />
+                    <Input
+                      placeholder="Optional"
+                      value={backupExecutor?.name ?? ""}
+                      onChange={(event) =>
+                        updateExecutor(1, "name", event.target.value)
+                      }
+                    />
                   </FieldGroup>
                   <FieldGroup label="Relationship to you">
-                    <Input placeholder="Optional" />
+                    <Input
+                      placeholder="Optional"
+                      value={backupExecutor?.relationship ?? ""}
+                      onChange={(event) =>
+                        updateExecutor(1, "relationship", event.target.value)
+                      }
+                    />
                   </FieldGroup>
-                  <Button variant="ghost" size="sm">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      updateExecutor(1, "name", "");
+                      updateExecutor(1, "relationship", "");
+                      updateExecutor(1, "phone", "");
+                    }}
+                  >
                     I do not want a backup
                   </Button>
                 </div>
