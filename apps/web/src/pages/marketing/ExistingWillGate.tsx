@@ -16,8 +16,8 @@ export default function ExistingWillGate() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const nextPath =
     data.draftingMode === "structured"
-      ? "/drafting/structured-flow"
-      : "/drafting/ai-workspace";
+      ? "/drafting/structured/personal-details"
+      : "/drafting/ai/personal-details";
 
   const proceed = (nextExistingWill: typeof data.existingWill) => {
     const nextData = {
