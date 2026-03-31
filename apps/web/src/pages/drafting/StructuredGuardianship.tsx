@@ -193,8 +193,8 @@ export default function StructuredGuardianship() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="sm" onClick={() => navigate("/drafting/review-result")}>
-                Continue to review
+              <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured/assets")}>
+                Continue to assets
               </Button>
               <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-flow")}>
                 Save and return later

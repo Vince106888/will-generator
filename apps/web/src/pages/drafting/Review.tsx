@@ -179,8 +179,8 @@ export default function Review() {
                   onClick={() =>
                     navigate(
                       data.draftingMode === "ai"
-                        ? "/drafting/ai-summary"
-                        : "/drafting/mapping"
+                        ? "/drafting/ai/summary"
+                        : "/drafting/structured/personal-details"
                     )
                   }
                 >

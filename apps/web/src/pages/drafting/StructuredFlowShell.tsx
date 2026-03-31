@@ -83,10 +83,10 @@ export default function StructuredFlowShell() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/mapping")}>
-                  Start assets & beneficiaries
+                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured/personal-details")}>
+                  Start personal details
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-executors")}>
+                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/executors")}>
                   Skip to executors
                 </Button>
               </div>
