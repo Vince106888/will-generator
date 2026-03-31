@@ -1,9 +1,22 @@
 import { DraftingData, loadDraftingData, saveDraftingData } from "./drafting";
 
 const DRAFTING_ROUTE_MODES: Record<string, DraftingData["draftingMode"]> = {
+  "/drafting/ai/personal-details": "ai",
+  "/drafting/ai/input": "ai",
+  "/drafting/ai/processing": "ai",
+  "/drafting/ai/summary": "ai",
+  "/drafting/ai/corrections": "ai",
+  "/drafting/ai/review": "ai",
   "/drafting/ai-workspace": "ai",
   "/drafting/ai-summary": "ai",
   "/drafting/structured-flow": "structured",
+  "/drafting/structured/personal-details": "structured",
+  "/drafting/structured/family": "structured",
+  "/drafting/structured/executors": "structured",
+  "/drafting/structured/guardians": "structured",
+  "/drafting/structured/assets": "structured",
+  "/drafting/structured/beneficiaries": "structured",
+  "/drafting/structured/wishes": "structured",
   "/drafting/mapping": "structured",
   "/drafting/structured-executors": "structured",
   "/drafting/guardianship": "structured"

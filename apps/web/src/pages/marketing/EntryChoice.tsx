@@ -70,7 +70,7 @@ export default function EntryChoice() {
                   };
                   setData(nextData);
                   saveDraftingData(nextData);
-                  navigate(resolveDraftingEntryPath("ai", "/existing-will"));
+                  navigate(resolveDraftingEntryPath("ai", "/drafting/ai/personal-details"));
                 }}
               >
                 Start with AI drafting
@@ -105,7 +105,9 @@ export default function EntryChoice() {
                   };
                   setData(nextData);
                   saveDraftingData(nextData);
-                  navigate(resolveDraftingEntryPath("structured", "/existing-will"));
+                  navigate(
+                    resolveDraftingEntryPath("structured", "/drafting/structured/personal-details")
+                  );
                 }}
               >
                 Start guided form

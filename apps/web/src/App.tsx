@@ -3,11 +3,19 @@ import Landing from "./pages/marketing/Landing";
 import EntryChoice from "./pages/marketing/EntryChoice";
 import ExistingWillGate from "./pages/marketing/ExistingWillGate";
 import AiDraftingWorkspace from "./pages/drafting/AiDraftingWorkspace";
+import AiPersonalDetails from "./pages/drafting/AiPersonalDetails";
+import AiProcessing from "./pages/drafting/AiProcessing";
 import AiExtractionSummary from "./pages/drafting/AiExtractionSummary";
+import AiCorrections from "./pages/drafting/AiCorrections";
+import AiReview from "./pages/drafting/AiReview";
 import StructuredFlowShell from "./pages/drafting/StructuredFlowShell";
+import StructuredPersonalDetails from "./pages/drafting/StructuredPersonalDetails";
+import StructuredFamilyHousehold from "./pages/drafting/StructuredFamilyHousehold";
 import AssetsBeneficiariesMapping from "./pages/drafting/AssetsBeneficiariesMapping";
 import StructuredExecutors from "./pages/drafting/StructuredExecutors";
 import StructuredGuardianship from "./pages/drafting/StructuredGuardianship";
+import StructuredBeneficiaries from "./pages/drafting/StructuredBeneficiaries";
+import StructuredSpecialWishes from "./pages/drafting/StructuredSpecialWishes";
 import Review from "./pages/drafting/Review";
 import ExportOptions from "./pages/post/ExportOptions";
 import SigningGuide from "./pages/post/SigningGuide";
@@ -24,9 +32,22 @@ export default function App() {
     "/": <Landing />,
     "/entry-choice": <EntryChoice />,
     "/existing-will": <ExistingWillGate />,
+    "/drafting/ai/personal-details": <AiPersonalDetails />,
+    "/drafting/ai/input": <AiDraftingWorkspace />,
+    "/drafting/ai/processing": <AiProcessing />,
+    "/drafting/ai/summary": <AiExtractionSummary />,
+    "/drafting/ai/corrections": <AiCorrections />,
+    "/drafting/ai/review": <AiReview />,
     "/drafting/ai-workspace": <AiDraftingWorkspace />,
     "/drafting/ai-summary": <AiExtractionSummary />,
     "/drafting/structured-flow": <StructuredFlowShell />,
+    "/drafting/structured/personal-details": <StructuredPersonalDetails />,
+    "/drafting/structured/family": <StructuredFamilyHousehold />,
+    "/drafting/structured/executors": <StructuredExecutors />,
+    "/drafting/structured/guardians": <StructuredGuardianship />,
+    "/drafting/structured/assets": <AssetsBeneficiariesMapping />,
+    "/drafting/structured/beneficiaries": <StructuredBeneficiaries />,
+    "/drafting/structured/wishes": <StructuredSpecialWishes />,
     "/drafting/mapping": <AssetsBeneficiariesMapping />,
     "/drafting/structured-executors": <StructuredExecutors />,
     "/drafting/guardianship": <StructuredGuardianship />,
