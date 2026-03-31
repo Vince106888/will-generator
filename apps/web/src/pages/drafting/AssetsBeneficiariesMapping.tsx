@@ -8,7 +8,25 @@ import { navigate } from "../../lib/navigation";
 import { AlertTriangle, Info, Link2, Table2 } from "lucide-react";
 
 export default function AssetsBeneficiariesMapping() {
-  useDraftingMode("structured");
+  const { data } = useDraftingMode("structured");
+  const assets = data.assets
+    .filter((asset) => asset.location || asset.notes)
+    .map((asset) => ({
+      label: asset.label || "Asset",
+      detail: asset.location || asset.notes || "Details pending"
+    }));
+  const beneficiaries = data.beneficiaries
+    .map((beneficiary) => beneficiary.name?.trim())
+    .filter(Boolean);
+
+  const fallbackAssets = [
+    { label: "House in Kiambu", detail: "Property" },
+    { label: "Toyota Prado KDM 456A", detail: "Vehicle" },
+    { label: "M-Pesa account", detail: "Cash / Mobile money" }
+  ];
+  const fallbackBeneficiaries = ["Wife", "Brian (son)", "Nia (daughter)"];
+  const assetsList = assets.length ? assets : fallbackAssets;
+  const beneficiariesList = beneficiaries.length ? beneficiaries : fallbackBeneficiaries;
 
   return (
     <WorkspaceShell
@@ -49,18 +67,12 @@ export default function AssetsBeneficiariesMapping() {
                   <p className="text-[13px] text-muted">Add each item you own, even if the description is general.</p>
                 </div>
                 <div className="space-y-2 text-[13px]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-ink">House in Kiambu</span>
-                    <span className="text-[12px] text-muted">Property</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-ink">Toyota Prado KDM 456A</span>
-                    <span className="text-[12px] text-muted">Vehicle</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-ink">M-Pesa account</span>
-                    <span className="text-[12px] text-muted">Cash / Mobile money</span>
-                  </div>
+                  {assetsList.map((asset) => (
+                    <div key={asset.label} className="flex items-center gap-2">
+                      <span className="text-ink">{asset.label}</span>
+                      <span className="text-[12px] text-muted">{asset.detail}</span>
+                    </div>
+                  ))}
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add another asset
@@ -125,9 +137,9 @@ export default function AssetsBeneficiariesMapping() {
                   </p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p>&bull; Wife</p>
-                  <p>&bull; Brian (son)</p>
-                  <p>&bull; Nia (daughter)</p>
+                  {beneficiariesList.map((beneficiary) => (
+                    <p key={beneficiary}>&bull; {beneficiary}</p>
+                  ))}
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add beneficiary

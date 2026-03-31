@@ -9,7 +9,31 @@ import { navigate } from "../../lib/navigation";
 import { AlertTriangle, Info } from "lucide-react";
 
 export default function AiExtractionSummary() {
-  useDraftingMode("ai");
+  const { data } = useDraftingMode("ai");
+  const assets = data.assets
+    .filter((asset) => asset.location || asset.notes)
+    .map((asset) => asset.label || asset.location || asset.notes)
+    .filter(Boolean);
+  const beneficiaries = data.beneficiaries
+    .map((beneficiary) => beneficiary.name?.trim())
+    .filter(Boolean);
+  const executor = data.executors?.[0]?.name?.trim();
+  const guardian = data.guardians?.[0]?.name?.trim();
+  const hasMinors = data.hasMinors;
+
+  const fallbackAssets = [
+    "House in Kiambu",
+    "Rental plots in Machakos (2)",
+    "Toyota vehicle",
+    "Other personal items (not detailed)"
+  ];
+  const fallbackBeneficiaries = [
+    "Wife - receives house",
+    "Brian (son) - receives Toyota",
+    "Nia (daughter) - receives rental plots"
+  ];
+  const assetsList = assets.length ? assets : fallbackAssets;
+  const beneficiariesList = beneficiaries.length ? beneficiaries : fallbackBeneficiaries;
 
   return (
     <WorkspaceShell
@@ -46,7 +70,8 @@ export default function AiExtractionSummary() {
           <Card variant="success" size="md" className="space-y-2">
             <p className="text-[14px] font-semibold text-ink">Draft summary ready</p>
             <p className="text-[13px] leading-[1.5] text-muted">
-              We extracted 4 assets and 3 beneficiaries. Please confirm any missing items before you finalize.
+              We extracted {assetsList.length} assets and {beneficiariesList.length} beneficiaries. Please confirm any
+              missing items before you finalize.
             </p>
           </Card>
 
@@ -58,10 +83,11 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">Review and edit each asset description.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p>&bull; House in Kiambu</p>
-                  <p>&bull; Rental plots in Machakos (2)</p>
-                  <p>&bull; Toyota vehicle</p>
-                  <p className="text-muted">&bull; Other personal items (not detailed)</p>
+                  {assetsList.map((item, index) => (
+                    <p key={`${item}-${index}`} className={index === assetsList.length - 1 ? "text-muted" : ""}>
+                      &bull; {item}
+                    </p>
+                  ))}
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add asset
@@ -74,9 +100,9 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">Confirm names and relationships.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p>&bull; Wife - receives house</p>
-                  <p>&bull; Brian (son) - receives Toyota</p>
-                  <p>&bull; Nia (daughter) - receives rental plots</p>
+                  {beneficiariesList.map((item, index) => (
+                    <p key={`${item}-${index}`}>&bull; {item}</p>
+                  ))}
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/mapping")}>
                   Add beneficiary
@@ -88,10 +114,16 @@ export default function AiExtractionSummary() {
               <Card size="lg" className="space-y-3">
                 <div className="space-y-1.5">
                   <p className="font-display text-xl font-semibold text-ink">Executor</p>
-                  <p className="text-[13px] text-muted">We did not detect an executor yet.</p>
+                  <p className="text-[13px] text-muted">
+                    {executor ? "Executor detected" : "We did not detect an executor yet."}
+                  </p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-ink">
-                  <p className="text-warning">&bull; Required to finalize the will</p>
+                  {executor ? (
+                    <p>&bull; {executor}</p>
+                  ) : (
+                    <p className="text-warning">&bull; Required to finalize the will</p>
+                  )}
                   <p className="text-muted">&bull; You can add a backup executor</p>
                 </div>
                 <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured-executors")}>
@@ -105,7 +137,14 @@ export default function AiExtractionSummary() {
                   <p className="text-[13px] text-muted">Only relevant if you have minor children.</p>
                 </div>
                 <div className="space-y-1.5 text-[13px] text-muted">
-                  <p>&bull; No guardianship details found</p>
+                  <p>
+                    &bull;{" "}
+                    {guardian
+                      ? `Guardian: ${guardian}`
+                      : hasMinors
+                        ? "No guardianship details found"
+                        : "Not required (no minor children listed)"}
+                  </p>
                   <p>&bull; We will explain when this applies</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/drafting/guardianship")}>
