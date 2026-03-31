@@ -7,6 +7,7 @@ tracker:
     - Todo
     - In Progress
   terminal_states:
+    - In Review
     - Done
     - Canceled
     - Cancelled
@@ -85,3 +86,17 @@ Execution requirements:
 - If Linear update fails, stop and report the blocker.
 - For the pilot issue, do not run lint/build unless explicitly required by the ticket.
 - Use `gh` to open a PR; if GitHub auth is missing, report and stop.
+
+Status enforcement (hard rules):
+- Only claim new work from `Todo`.
+- If an issue is already `In Progress`, proceed only if it was previously claimed by Symphony.
+  - Evidence: a prior "Symphony claimed" comment or the assignee is the Symphony operator.
+  - If evidence is missing, stop and report the blocker (do not silently continue).
+- Move to `In Review` immediately after the PR is open/updated and linked in Linear.
+- Once in `In Review`, stop all work on that issue.
+- If an issue is moved back to `Todo` or `In Progress`, it becomes eligible again.
+
+Required visibility:
+- Add a "Symphony claimed" comment when you move the issue to `In Progress`.
+- Add a "PR ready" comment with the PR link before moving to `In Review`.
+- If blocked, leave a `[BLOCKED]` comment with the reason and required dependency.

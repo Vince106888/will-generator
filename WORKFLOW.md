@@ -61,3 +61,11 @@ corepack pnpm build
 - Attach the PR link to the Linear issue (mandatory).
 - Move the Linear issue to `In Review` when implementation is complete.
 - Stop execution when the issue reaches `In Review` (hard stop).
+
+## Symphony Lifecycle Enforcement (Required)
+- Symphony only claims work from `Todo`.
+- Symphony must move claimed work to `In Progress`.
+- Symphony must move completed work to `In Review` and stop there.
+- `In Review` is a terminal execution state for Symphony (even though Linear may move to `Done` later).
+- If work is moved back to `Todo` or `In Progress`, it becomes eligible again.
+- If blocked, Symphony must leave a visible `[BLOCKED]` comment and stop.
