@@ -45,6 +45,7 @@ function Get-WorkflowSummary {
     TerminalStates = @()
     MaxConcurrentAgents = $null
     PollIntervalMs = $null
+    CodexReadTimeoutMs = $null
   }
 
   for ($i = 0; $i -lt $lines.Count; $i++) {
@@ -86,6 +87,12 @@ function Get-WorkflowSummary {
       $value = ($line -split ":", 2)[1].Trim()
       if ($value -match "^\d+$") {
         $summary.PollIntervalMs = [int]$value
+      }
+    }
+    if ($line -like "read_timeout_ms:*") {
+      $value = ($line -split ":", 2)[1].Trim()
+      if ($value -match "^\d+$") {
+        $summary.CodexReadTimeoutMs = [int]$value
       }
     }
   }
@@ -252,6 +259,7 @@ if ($null -ne $workflowSummary) {
   Write-Step "  terminal_states: $([string]::Join(', ', $workflowSummary.TerminalStates))"
   Write-Step "  max_concurrent_agents: $($workflowSummary.MaxConcurrentAgents)"
   Write-Step "  polling.interval_ms: $($workflowSummary.PollIntervalMs)"
+  Write-Step "  codex.read_timeout_ms: $($workflowSummary.CodexReadTimeoutMs)"
 } else {
   Write-Step "Workflow summary: unable to parse front matter."
 }

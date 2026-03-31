@@ -51,6 +51,9 @@ Symphony lifecycle enforcement:
 - Once a PR is linked, Symphony moves issues to `In Review` and stops.
 - `In Review` is treated as a terminal execution state for Symphony.
 
+Timeout tuning (to reduce Codex response timeouts):
+- `WORKFLOW.symphony.md` sets `codex.read_timeout_ms` to 20000ms so Codex has more time to reply during startup.
+
 The workflow sets:
 - `codex` command via `SYMPHONY_CODEX_COMMAND` (defaults to `codex app-server`)
 - `workspace` root via `SYMPHONY_WORKSPACE_ROOT`
