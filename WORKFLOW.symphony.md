@@ -19,11 +19,11 @@ workspace:
 hooks:
   after_create: |
     git clone --depth 1 "$SYMPHONY_SOURCE_REPO_URL" .
-    corepack pnpm install
+    # Skip dependency install for doc-only tasks; run manually if required by the issue.
   before_remove: |
     echo "Workspace cleanup complete."
 agent:
-  max_concurrent_agents: 1
+  max_concurrent_agents: 2
   max_turns: 10
 codex:
   command: "$SYMPHONY_CODEX_COMMAND"
@@ -42,6 +42,8 @@ Repository policy and expectations:
 - Do not push directly to `main`.
 - Keep changes minimal and scoped to the issue.
 - Prefer doc-only changes for the first live run.
+- PR link is mandatory on the Linear issue.
+- Move the issue to `In Review` when done and stop execution (hard stop).
 - If any required env var is missing, stop and report the blocker.
 
 Repo validation commands (pilot):
