@@ -466,10 +466,20 @@ export default function AssetsBeneficiariesMapping() {
               ) : null}
 
               <div className="space-y-2">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured/beneficiaries")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured/beneficiaries")}
+                >
                   Continue to beneficiaries
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-flow")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured-flow")}
+                >
                   Save and return later
                 </Button>
               </div>

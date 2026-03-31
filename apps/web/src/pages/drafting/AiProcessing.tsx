@@ -75,10 +75,20 @@ export default function AiProcessing() {
               />
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/ai/summary")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/ai/summary")}
+                >
                   Continue to summary
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/ai/input")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/ai/input")}
+                >
                   Back to drafting
                 </Button>
               </div>

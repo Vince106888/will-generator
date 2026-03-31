@@ -167,7 +167,7 @@ export default function Review() {
                 <Button
                   variant="primary"
                   size="sm"
-                  className="px-5 py-3 text-[13px]"
+                  className="w-full px-5 py-3 text-[13px] sm:w-auto"
                   onClick={handleGenerateDraft}
                 >
                   Generate draft
@@ -175,7 +175,7 @@ export default function Review() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="px-5 py-3 text-[13px]"
+                  className="w-full px-5 py-3 text-[13px] sm:w-auto"
                   onClick={() =>
                     navigate(
                       data.draftingMode === "ai"

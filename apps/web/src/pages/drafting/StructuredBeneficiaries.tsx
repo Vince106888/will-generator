@@ -144,10 +144,20 @@ export default function StructuredBeneficiaries() {
               />
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured/wishes")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured/wishes")}
+                >
                   Continue to special wishes
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/assets")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured/assets")}
+                >
                   Back to assets
                 </Button>
               </div>

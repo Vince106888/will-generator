@@ -145,10 +145,20 @@ export default function StructuredExecutors() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured/guardians")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured/guardians")}
+                >
                   Continue to guardianship
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-flow")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured-flow")}
+                >
                   Save and return later
                 </Button>
               </div>

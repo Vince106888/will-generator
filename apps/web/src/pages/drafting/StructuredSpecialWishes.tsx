@@ -109,10 +109,20 @@ export default function StructuredSpecialWishes() {
               />
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/review-result")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/review-result")}
+                >
                   Continue to review
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/beneficiaries")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured/beneficiaries")}
+                >
                   Back to beneficiaries
                 </Button>
               </div>

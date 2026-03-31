@@ -134,10 +134,20 @@ export default function AiPersonalDetails() {
               />
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/ai/input")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/ai/input")}
+                >
                   Continue to drafting
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/entry-choice")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/entry-choice")}
+                >
                   Back to entry
                 </Button>
               </div>

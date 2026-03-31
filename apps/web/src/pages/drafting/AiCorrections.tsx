@@ -166,10 +166,20 @@ export default function AiCorrections() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="sm" onClick={() => navigate("/drafting/ai/review")}>
+              <Button
+                variant="primary"
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/drafting/ai/review")}
+              >
                 Generate formal draft
               </Button>
-              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/ai/input")}>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/drafting/ai/input")}
+              >
                 Back to drafting
               </Button>
             </div>
