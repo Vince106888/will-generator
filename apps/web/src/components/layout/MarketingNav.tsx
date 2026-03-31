@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData, type DraftingMode } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData, type DraftingMode } from "../../lib/drafting";
 import { Button } from "../ui/Button";
 import { Container } from "./Container";
 
@@ -21,7 +21,7 @@ export function MarketingNav({
   ctaSize = "sm",
   ctaOnClick
 }: MarketingNavProps) {
-  const { update } = useDraftingData();
+  const { data, setData } = useDraftingData();
 
   return (
     <header className="border-b border-border bg-card">
@@ -57,7 +57,13 @@ export function MarketingNav({
                 return;
               }
               if (ctaMode) {
-                update({ draftingMode: ctaMode, draftingModeConfirmed: true });
+                const nextData = {
+                  ...data,
+                  draftingMode: ctaMode,
+                  draftingModeConfirmed: true
+                };
+                setData(nextData);
+                saveDraftingData(nextData);
               }
               navigate(ctaPath);
             }}

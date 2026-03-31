@@ -1,6 +1,11 @@
+import { getDraftingGuardRedirect } from "./draftingGuard";
+
 export function navigate(to: string) {
-  if (window.location.pathname === to) return;
-  window.history.pushState({}, "", to);
+  const redirect = getDraftingGuardRedirect(to);
+  const target = redirect ?? to;
+  const current = `${window.location.pathname}${window.location.search}`;
+  if (current === target) return;
+  window.history.pushState({}, "", target);
   window.dispatchEvent(new PopStateEvent("popstate"));
   window.scrollTo({ top: 0, behavior: "smooth" });
 }

@@ -202,7 +202,7 @@ export function useDraftingMode(
   const { data, update, setData } = useDraftingData();
 
   useEffect(() => {
-    if (options?.enforce === false) return;
+    if (options?.enforce !== true) return;
     if (data.draftingMode !== mode || data.draftingModeConfirmed !== true) {
       update({ draftingMode: mode, draftingModeConfirmed: true });
     }

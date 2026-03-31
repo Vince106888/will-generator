@@ -16,6 +16,7 @@ import ErrorStates from "./pages/post/ErrorStates";
 import FaqPage from "./pages/marketing/FaqPage";
 import PrivacyTrust from "./pages/marketing/PrivacyTrust";
 import { navigate } from "./lib/navigation";
+import { getDraftingGuardRedirect } from "./lib/draftingGuard";
 
 export default function App() {
   const [path, setPath] = useState(window.location.pathname);
@@ -44,11 +45,19 @@ export default function App() {
     return () => window.removeEventListener("popstate", handlePop);
   }, []);
 
-  const route = routes[path as keyof typeof routes];
+  const guardRedirect = getDraftingGuardRedirect(
+    `${window.location.pathname}${window.location.search}`
+  );
+  const resolvedPath = guardRedirect ?? path;
+  const route = routes[resolvedPath as keyof typeof routes];
 
   useEffect(() => {
+    if (guardRedirect) {
+      navigate(guardRedirect);
+      return;
+    }
     if (!route) navigate("/");
-  }, [route]);
+  }, [guardRedirect, route]);
 
   return route ?? <Landing />;
 }
