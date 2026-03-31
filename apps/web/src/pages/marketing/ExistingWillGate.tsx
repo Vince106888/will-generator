@@ -7,11 +7,11 @@ import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
 import { WarningBanner } from "../../components/ui/PencilPanels";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData } from "../../lib/drafting";
 import { FileText, Info } from "lucide-react";
 
 export default function ExistingWillGate() {
-  const { data, update } = useDraftingData();
+  const { data, setData } = useDraftingData();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const nextPath =
@@ -20,7 +20,13 @@ export default function ExistingWillGate() {
       : "/drafting/ai-workspace";
 
   const proceed = (nextExistingWill: typeof data.existingWill) => {
-    update({ existingWill: nextExistingWill, draftingModeConfirmed: true });
+    const nextData = {
+      ...data,
+      existingWill: nextExistingWill,
+      draftingModeConfirmed: true
+    };
+    setData(nextData);
+    saveDraftingData(nextData);
     navigate(nextPath);
   };
 

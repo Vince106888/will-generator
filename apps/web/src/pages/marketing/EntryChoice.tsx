@@ -5,11 +5,12 @@ import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { Button } from "../../components/ui/Button";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData } from "../../lib/drafting";
+import { resolveDraftingEntryPath } from "../../lib/draftingGuard";
 import { AlertTriangle, Shuffle } from "lucide-react";
 
 export default function EntryChoice() {
-  const { update } = useDraftingData();
+  const { data, setData } = useDraftingData();
 
   return (
     <MarketingShell
@@ -62,8 +63,14 @@ export default function EntryChoice() {
                 variant="primary"
                 size="sm"
                 onClick={() => {
-                  update({ draftingMode: "ai", draftingModeConfirmed: true });
-                  navigate("/existing-will");
+                  const nextData = {
+                    ...data,
+                    draftingMode: "ai",
+                    draftingModeConfirmed: true
+                  };
+                  setData(nextData);
+                  saveDraftingData(nextData);
+                  navigate(resolveDraftingEntryPath("ai", "/existing-will"));
                 }}
               >
                 Start with AI drafting
@@ -91,8 +98,14 @@ export default function EntryChoice() {
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  update({ draftingMode: "structured", draftingModeConfirmed: true });
-                  navigate("/existing-will");
+                  const nextData = {
+                    ...data,
+                    draftingMode: "structured",
+                    draftingModeConfirmed: true
+                  };
+                  setData(nextData);
+                  saveDraftingData(nextData);
+                  navigate(resolveDraftingEntryPath("structured", "/existing-will"));
                 }}
               >
                 Start guided form

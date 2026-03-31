@@ -5,7 +5,7 @@ import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
-import { useDraftingData } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData } from "../../lib/drafting";
 import { AlertTriangle, Eye, HeartHandshake, Lock, Shield } from "lucide-react";
 import heroImage from "../../assets/landing-hero.png";
 
@@ -25,7 +25,7 @@ const trustBadges = [
 ];
 
 export default function Landing() {
-  const { update } = useDraftingData();
+  const { data, setData } = useDraftingData();
 
   return (
     <MarketingShell
@@ -68,7 +68,13 @@ export default function Landing() {
                   size="md"
                   className="w-full justify-center sm:w-auto"
                   onClick={() => {
-                    update({ draftingMode: "ai", draftingModeConfirmed: true });
+                    const nextData = {
+                      ...data,
+                      draftingMode: "ai",
+                      draftingModeConfirmed: true
+                    };
+                    setData(nextData);
+                    saveDraftingData(nextData);
                     navigate("/entry-choice");
                   }}
                 >
@@ -464,7 +470,13 @@ export default function Landing() {
                     variant="primary"
                     size="md"
                     onClick={() => {
-                      update({ draftingMode: "ai", draftingModeConfirmed: true });
+                      const nextData = {
+                        ...data,
+                        draftingMode: "ai",
+                        draftingModeConfirmed: true
+                      };
+                      setData(nextData);
+                      saveDraftingData(nextData);
                       navigate("/entry-choice");
                     }}
                     className="w-full justify-center bg-primary text-paper shadow-soft sm:w-auto"

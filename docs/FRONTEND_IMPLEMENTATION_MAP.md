@@ -1,6 +1,6 @@
 # Frontend Implementation Map
 
-Date: 2026-03-30
+Date: 2026-03-31
 Source: `apps/web/src` and `docs/design/design-source-of-truth.md`
 
 ## Active Route Map (App.tsx)
@@ -66,6 +66,11 @@ These pages are not reachable from the active route map and should be treated as
 - Custom route switch in `App.tsx` based on `window.location.pathname`.
 - No 404 route; unknown routes redirect to `/`.
 - Query param step logic exists in `lib/navigation.ts` but is unused in active routes.
+- Drafting routes are gated by `apps/web/src/lib/draftingGuard.ts` before render and on `navigate()` calls.
+  - Guarded routes: `/drafting/ai-workspace`, `/drafting/ai-summary`, `/drafting/structured-flow`, `/drafting/mapping`, `/drafting/structured-executors`, `/drafting/guardianship`.
+  - Post-result routes are not guarded (`/drafting/review-result`, `/drafting/export-options`, `/drafting/signing-guide`, `/drafting/advocate-review`, `/drafting/error`).
+  - On mismatch or unconfirmed state, guard keeps `draftingMode`, sets `draftingModeConfirmed=false`, stores the requested route, and redirects to `/entry-choice`.
+  - Entry Choice confirmation sets `draftingMode` + `draftingModeConfirmed=true`, then returns to the stored route (if it matches the selected mode).
 
 ## Mobile Parity Summary
 - Current mobile behavior is responsive CSS within the same pages.
@@ -74,6 +79,5 @@ These pages are not reachable from the active route map and should be treated as
 - Mobile variants for AI summary, export options, signing guide, and advocate review are not defined in design sources.
 
 ## Known Route Issues / Alignment Gaps
-- Drafting mode selection is stored locally but not enforced by route guards; AI and structured routes are manually navigated.
 - Structured flow steps do not exist for personal details and family data in active routes.
 - Legacy stepper routes exist but are not in the current active route map.
