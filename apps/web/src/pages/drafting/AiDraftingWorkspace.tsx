@@ -50,6 +50,15 @@ export default function AiDraftingWorkspace() {
       <div className="pb-24 pt-10">
         <Container size="wide">
           <div className="space-y-3">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              AI drafting — Step 2 of 6: Share your notes
+            </p>
+            <div className="space-y-2">
+              <p className="text-[12px] font-semibold text-muted">Step 2 of 6 — Share your notes</p>
+              <div className="h-2 rounded-full border border-border bg-secondary">
+                <div className="h-full w-1/3 rounded-full bg-primary" />
+              </div>
+            </div>
             <h1 className="font-display text-3xl text-ink sm:text-4xl">Draft with AI</h1>
             <p className="max-w-[760px] text-[16px] leading-7 text-muted">
               Share your wishes in plain language. We ask gentle follow‑ups and show a clear summary

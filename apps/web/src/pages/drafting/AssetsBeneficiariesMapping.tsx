@@ -25,11 +25,20 @@ export default function AssetsBeneficiariesMapping() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              Step 5 of 8 — Assets
+            </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Assets and beneficiaries</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               List what you own and link each item to who should receive it. This keeps the draft clear for your executor
               and reduces family disputes.
             </p>
+            <div className="space-y-2">
+              <p className="text-[12px] font-semibold text-muted">Step 5 of 8: Assets</p>
+              <div className="h-2 rounded-full border border-border bg-secondary">
+                <div className="h-full w-[62.5%] rounded-full bg-primary" />
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">

@@ -27,11 +27,20 @@ export default function AiExtractionSummary() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              AI drafting — Step 4 of 6: Extraction summary
+            </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">AI extraction summary</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Here is what we understood from your conversation. Review each section, correct anything wrong, and add
               missing details before we generate the formal draft.
             </p>
+            <div className="space-y-2">
+              <p className="text-[12px] font-semibold text-muted">Step 4 of 6 — Extraction summary</p>
+              <div className="h-2 rounded-full border border-border bg-secondary">
+                <div className="h-full w-2/3 rounded-full bg-primary" />
+              </div>
+            </div>
           </div>
 
           <Card variant="success" size="md" className="space-y-2">
@@ -114,6 +123,7 @@ export default function AiExtractionSummary() {
             <ReviewChecklist
               title="Review checklist"
               items={[
+                { label: "Assets and beneficiaries reviewed", tone: "success" },
                 { label: "Legal names and ID details match", tone: "success" },
                 { label: "Executor and guardian choices confirmed", tone: "warning" }
               ]}

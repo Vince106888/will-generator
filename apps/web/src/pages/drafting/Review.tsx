@@ -11,7 +11,7 @@ import {
   SummaryCard,
   WarningBanner
 } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { buildGeneratePayload, useDraftingData } from "../../lib/drafting";
 import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
@@ -20,42 +20,7 @@ export default function Review() {
   const { data } = useDraftingData();
   const handleGenerateDraft = async () => {
     try {
-      const response = await api.post("/api/v1/wills/generate", {
-        name: data.legalName?.trim() || "Unknown",
-        executor: data.executors?.[0]?.name?.trim() || "",
-        assets: data.assets
-          .map((asset) => {
-            const label = asset.label?.trim();
-            const details = asset.location?.trim();
-            const notes = asset.notes?.trim();
-            if (!details && !notes) return "";
-            if (label && details) return `${label}: ${details}`;
-            return label || details || notes;
-          })
-          .filter(Boolean),
-        beneficiaries: data.beneficiaries
-          .map((beneficiary) => beneficiary.name?.trim() || "")
-          .filter(Boolean),
-        hasMinors: data.hasMinors,
-        multipleHouseholds: data.multipleHouseholds,
-        instructions: {
-          notes: [
-            data.dependantsNotes,
-            data.distributionNotes,
-            data.residuaryWishes,
-            data.specialWishes,
-            data.digitalWishes,
-            data.charitableIntentions,
-            data.executorNotes,
-            data.guardianNotes,
-            data.remainderClause
-          ]
-            .map((item) => item?.trim() || "")
-            .filter(Boolean)
-            .join("\n\n") || undefined,
-          funeralWishes: data.funeralWishes?.trim() || undefined
-        }
-      });
+      const response = await api.post("/api/v1/wills/generate", buildGeneratePayload(data));
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
           STORAGE_KEYS.willResult,
@@ -83,6 +48,9 @@ export default function Review() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-[10px]">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              Step 8 of 8: Review your draft and results
+            </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">
               Review your draft and results
             </h1>
