@@ -17,6 +17,11 @@ For the executable Symphony workflow file (YAML front matter), use:
 - No auto-merge
 - Use small, reversible doc-only changes
 
+## Symphony Mode (Post-Validation)
+- Allow limited concurrency when multiple issues are in `Todo`.
+- Max 2 concurrent agents until further notice.
+- Still one issue per branch/PR; no cross-issue batching.
+
 ## Expected Linear States
 These are the expected states for Symphony-driven work:
 - Todo
@@ -47,3 +52,20 @@ corepack pnpm build
 ## Scope Discipline
 - Do not implement product features unless explicitly required for the issue.
 - Keep changes minimal and focused.
+
+## Symphony Execution Discipline (Hard Requirements)
+- Create a branch per issue (`task/<linear-issue-key>-short-description`).
+- Make small, focused commits (mini commits) tied to the issue.
+- Push the branch to origin.
+- Open or update a PR against `main`.
+- Attach the PR link to the Linear issue (mandatory).
+- Move the Linear issue to `In Review` when implementation is complete.
+- Stop execution when the issue reaches `In Review` (hard stop).
+
+## Symphony Lifecycle Enforcement (Required)
+- Symphony only claims work from `Todo`.
+- Symphony must move claimed work to `In Progress`.
+- Symphony must move completed work to `In Review` and stop there.
+- `In Review` is a terminal execution state for Symphony (even though Linear may move to `Done` later).
+- If work is moved back to `Todo` or `In Progress`, it becomes eligible again.
+- If blocked, Symphony must leave a visible `[BLOCKED]` comment and stop.

@@ -7,6 +7,7 @@ tracker:
     - Todo
     - In Progress
   terminal_states:
+    - In Review
     - Done
     - Canceled
     - Cancelled
@@ -19,11 +20,11 @@ workspace:
 hooks:
   after_create: |
     git clone --depth 1 "$SYMPHONY_SOURCE_REPO_URL" .
-    corepack pnpm install
+    # Skip dependency install for doc-only tasks; run manually if required by the issue.
   before_remove: |
     echo "Workspace cleanup complete."
 agent:
-  max_concurrent_agents: 1
+  max_concurrent_agents: 2
   max_turns: 10
 codex:
   command: "$SYMPHONY_CODEX_COMMAND"
@@ -42,6 +43,8 @@ Repository policy and expectations:
 - Do not push directly to `main`.
 - Keep changes minimal and scoped to the issue.
 - Prefer doc-only changes for the first live run.
+- PR link is mandatory on the Linear issue.
+- Move the issue to `In Review` when done and stop execution (hard stop).
 - If any required env var is missing, stop and report the blocker.
 
 Repo validation commands (pilot):
@@ -83,3 +86,17 @@ Execution requirements:
 - If Linear update fails, stop and report the blocker.
 - For the pilot issue, do not run lint/build unless explicitly required by the ticket.
 - Use `gh` to open a PR; if GitHub auth is missing, report and stop.
+
+Status enforcement (hard rules):
+- Only claim new work from `Todo`.
+- If an issue is already `In Progress`, proceed only if it was previously claimed by Symphony.
+  - Evidence: a prior "Symphony claimed" comment or the assignee is the Symphony operator.
+  - If evidence is missing, stop and report the blocker (do not silently continue).
+- Move to `In Review` immediately after the PR is open/updated and linked in Linear.
+- Once in `In Review`, stop all work on that issue.
+- If an issue is moved back to `Todo` or `In Progress`, it becomes eligible again.
+
+Required visibility:
+- Add a "Symphony claimed" comment when you move the issue to `In Progress`.
+- Add a "PR ready" comment with the PR link before moving to `In Review`.
+- If blocked, leave a `[BLOCKED]` comment with the reason and required dependency.

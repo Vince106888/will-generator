@@ -21,6 +21,64 @@ const envOptional = [
 ];
 
 const expectedProjectSlug = "esheria-wills-cf36a69caf55";
+const workflowPath = "WORKFLOW.symphony.md";
+
+const extractFrontMatter = (text) => {
+  if (!text.startsWith("---")) return null;
+  const endIndex = text.indexOf("\n---", 3);
+  if (endIndex === -1) return null;
+  return text.slice(3, endIndex).trim();
+};
+
+const parseListAfterKey = (lines, startIndex) => {
+  const items = [];
+  for (let i = startIndex + 1; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (!line.startsWith("    - ") && !line.startsWith("  - ")) {
+      if (line.trim() === "") continue;
+      break;
+    }
+    items.push(line.replace(/^\s*-\s*/, "").trim());
+  }
+  return items;
+};
+
+const parseWorkflowConfig = (text) => {
+  const frontMatter = extractFrontMatter(text);
+  if (!frontMatter) return null;
+  const lines = frontMatter.split(/\r?\n/);
+  const config = {
+    projectSlug: null,
+    activeStates: [],
+    terminalStates: [],
+    maxConcurrentAgents: null,
+    pollIntervalMs: null
+  };
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i].trimEnd();
+    const trimmed = line.trim();
+    if (trimmed.startsWith("project_slug:")) {
+      config.projectSlug = trimmed.split(":").slice(1).join(":").trim().replace(/"/g, "");
+    }
+    if (trimmed.startsWith("active_states:")) {
+      config.activeStates = parseListAfterKey(lines, i);
+    }
+    if (trimmed.startsWith("terminal_states:")) {
+      config.terminalStates = parseListAfterKey(lines, i);
+    }
+    if (trimmed.startsWith("max_concurrent_agents:")) {
+      const raw = trimmed.split(":").slice(1).join(":").trim();
+      config.maxConcurrentAgents = Number(raw);
+    }
+    if (trimmed.startsWith("interval_ms:")) {
+      const raw = trimmed.split(":").slice(1).join(":").trim();
+      config.pollIntervalMs = Number(raw);
+    }
+  }
+
+  return config;
+};
 
 const checkCommand = (cmd) => {
   try {
@@ -88,7 +146,6 @@ if (existsSync(envExample)) {
   ok = false;
 }
 
-const workflowPath = "WORKFLOW.symphony.md";
 if (existsSync(workflowPath)) {
   const workflowText = readFileSync(workflowPath, "utf8");
   const hasFrontMatter = workflowText.startsWith("---");
@@ -104,6 +161,29 @@ if (existsSync(workflowPath)) {
 
   if (!hasPrompt) {
     console.log("WARN WORKFLOW.symphony.md missing prompt section label (Issue context)");
+  }
+
+  const workflowConfig = parseWorkflowConfig(workflowText);
+  if (workflowConfig) {
+    console.log("");
+    console.log("Workflow config summary");
+    console.log(`- project_slug: ${workflowConfig.projectSlug || "UNKNOWN"}`);
+    console.log(`- active_states: ${workflowConfig.activeStates.join(", ") || "UNKNOWN"}`);
+    console.log(`- terminal_states: ${workflowConfig.terminalStates.join(", ") || "UNKNOWN"}`);
+    console.log(`- max_concurrent_agents: ${Number.isFinite(workflowConfig.maxConcurrentAgents) ? workflowConfig.maxConcurrentAgents : "UNKNOWN"}`);
+    console.log(`- polling.interval_ms: ${Number.isFinite(workflowConfig.pollIntervalMs) ? workflowConfig.pollIntervalMs : "UNKNOWN"}`);
+
+    if (workflowConfig.projectSlug && workflowConfig.projectSlug !== expectedProjectSlug) {
+      console.log(`WARN workflow project slug differs from expected (${expectedProjectSlug}).`);
+    }
+    if (!workflowConfig.activeStates.includes("Todo")) {
+      console.log("WARN workflow active_states does not include Todo.");
+    }
+    if (!workflowConfig.terminalStates.includes("In Review")) {
+      console.log("WARN workflow terminal_states does not include In Review.");
+    }
+  } else {
+    console.log("WARN unable to parse WORKFLOW.symphony.md front matter for config summary.");
   }
 }
 

@@ -7,6 +7,7 @@ $workflowPath = Join-Path $repoRoot "WORKFLOW.symphony.md"
 $defaultRuntimeRoot = "C:\\Users\\HP\\work\\esherialabs\\esheria-opssec\\tooling\\symphony\\elixir"
 $defaultWorkspaceRoot = "C:\\symphony-workspaces"
 $defaultCodexCommand = "codex app-server"
+$defaultLogRoot = Join-Path $repoRoot "logs\\symphony"
 $requiredEnvKeys = @(
   "LINEAR_API_KEY",
   "GITHUB_TOKEN",
@@ -17,6 +18,79 @@ $gitUsrBin = "C:\\Program Files\\Git\\usr\\bin"
 function Write-Step {
   param([string]$Message)
   Write-Host "[symphony:start] $Message"
+}
+
+function Get-WorkflowSummary {
+  param([string]$Path)
+
+  if (-not (Test-Path $Path)) {
+    return $null
+  }
+
+  $content = Get-Content $Path -Raw
+  if (-not $content.StartsWith("---")) {
+    return $null
+  }
+
+  $endIndex = $content.IndexOf("`n---", 3)
+  if ($endIndex -lt 0) {
+    return $null
+  }
+
+  $frontMatter = $content.Substring(3, $endIndex - 3)
+  $lines = $frontMatter -split "`r?`n"
+  $summary = [ordered]@{
+    ProjectSlug = $null
+    ActiveStates = @()
+    TerminalStates = @()
+    MaxConcurrentAgents = $null
+    PollIntervalMs = $null
+  }
+
+  for ($i = 0; $i -lt $lines.Count; $i++) {
+    $line = $lines[$i].Trim()
+    if ($line -like "project_slug:*") {
+      $summary.ProjectSlug = ($line -split ":", 2)[1].Trim().Trim('"')
+    }
+    if ($line -like "active_states:*") {
+      $items = @()
+      for ($j = $i + 1; $j -lt $lines.Count; $j++) {
+        $candidate = $lines[$j]
+        if ($candidate -notmatch "^\s*-\s+") {
+          if ($candidate.Trim() -eq "") { continue }
+          break
+        }
+        $items += ($candidate -replace "^\s*-\s+", "").Trim()
+      }
+      $summary.ActiveStates = $items
+    }
+    if ($line -like "terminal_states:*") {
+      $items = @()
+      for ($j = $i + 1; $j -lt $lines.Count; $j++) {
+        $candidate = $lines[$j]
+        if ($candidate -notmatch "^\s*-\s+") {
+          if ($candidate.Trim() -eq "") { continue }
+          break
+        }
+        $items += ($candidate -replace "^\s*-\s+", "").Trim()
+      }
+      $summary.TerminalStates = $items
+    }
+    if ($line -like "max_concurrent_agents:*") {
+      $value = ($line -split ":", 2)[1].Trim()
+      if ($value -match "^\d+$") {
+        $summary.MaxConcurrentAgents = [int]$value
+      }
+    }
+    if ($line -like "interval_ms:*") {
+      $value = ($line -split ":", 2)[1].Trim()
+      if ($value -match "^\d+$") {
+        $summary.PollIntervalMs = [int]$value
+      }
+    }
+  }
+
+  return $summary
 }
 
 function Get-CommandPath {
@@ -163,12 +237,37 @@ Write-Step "Using bash from $bashPath"
 Write-Step "Running readiness check"
 & node (Join-Path $repoRoot "scripts\\symphony-readiness.mjs")
 
+if (-not (Test-Path $defaultLogRoot)) {
+  New-Item -ItemType Directory -Path $defaultLogRoot -Force | Out-Null
+}
+
+$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$logFile = Join-Path $defaultLogRoot "symphony-start-$timestamp.log"
+
+$workflowSummary = Get-WorkflowSummary -Path $workflowPath
+if ($null -ne $workflowSummary) {
+  Write-Step "Workflow summary:"
+  Write-Step "  project_slug: $($workflowSummary.ProjectSlug)"
+  Write-Step "  active_states: $([string]::Join(', ', $workflowSummary.ActiveStates))"
+  Write-Step "  terminal_states: $([string]::Join(', ', $workflowSummary.TerminalStates))"
+  Write-Step "  max_concurrent_agents: $($workflowSummary.MaxConcurrentAgents)"
+  Write-Step "  polling.interval_ms: $($workflowSummary.PollIntervalMs)"
+} else {
+  Write-Step "Workflow summary: unable to parse front matter."
+}
+
 Write-Step "Starting Symphony"
 Write-Step "Workflow: $workflowPath"
 Write-Step "Runtime: $runtimeRoot"
 Write-Step "Logs: $logsRoot"
 Write-Step "Workspace root: $workspaceRoot"
 Write-Step "Codex command: $codexCommand"
+Write-Step "Session log: $logFile"
 Write-Step "Press Ctrl+C to stop Symphony"
 
-& escript $launcherPath --i-understand-that-this-will-be-running-without-the-usual-guardrails --logs-root $logsRoot $workflowPath
+try {
+  Start-Transcript -Path $logFile -Force | Out-Null
+  & escript $launcherPath --i-understand-that-this-will-be-running-without-the-usual-guardrails --logs-root $logsRoot $workflowPath
+} finally {
+  Stop-Transcript | Out-Null
+}
