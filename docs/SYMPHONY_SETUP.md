@@ -45,6 +45,12 @@ Runner expectations:
 3. Poll for issues in project `esheria-wills-cf36a69caf55` with status `Todo`.
 4. Create a per-issue workspace and launch Codex in app-server mode.
 
+Symphony lifecycle enforcement:
+- Symphony only claims from `Todo`.
+- Claimed issues move to `In Progress`.
+- Once a PR is linked, Symphony moves issues to `In Review` and stops.
+- `In Review` is treated as a terminal execution state for Symphony.
+
 The workflow sets:
 - `codex` command via `SYMPHONY_CODEX_COMMAND` (defaults to `codex app-server`)
 - `workspace` root via `SYMPHONY_WORKSPACE_ROOT`
@@ -98,6 +104,8 @@ Expected logs (examples):
 - [ ] Log line showing claimed issue ID (for this pilot, `LEX-277`).
 - [ ] Log line showing workspace creation path and `codex app-server` launch.
 - [ ] Log line showing validations kicked off (lint/build) and their outcome.
+ - [ ] Log line showing the workflow summary (project slug, active states, terminal states).
+ - [ ] Log line showing the session log path (`logs\\symphony\\symphony-start-<timestamp>.log`).
 
 Log fragments to match (strings vary by runner):
 - [ ] `Linear auth` or `Authenticated` with `LEX`.
@@ -131,6 +139,7 @@ This script:
 - Uses the shared Symphony runtime from OpsSec by default
 - Runs `scripts/symphony-readiness.mjs`
 - Starts Symphony with logs in the runtime folder
+- Captures a local session log in `logs\\symphony`
 
 ## Pilot Issue Template (Ready-For-Symphony)
 
