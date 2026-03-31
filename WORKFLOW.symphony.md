@@ -28,6 +28,7 @@ agent:
   max_turns: 10
 codex:
   command: "$SYMPHONY_CODEX_COMMAND"
+  read_timeout_ms: 20000
   approval_policy: never
   thread_sandbox: workspace-write
   turn_sandbox_policy:

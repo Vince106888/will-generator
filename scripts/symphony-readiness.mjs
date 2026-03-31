@@ -52,7 +52,8 @@ const parseWorkflowConfig = (text) => {
     activeStates: [],
     terminalStates: [],
     maxConcurrentAgents: null,
-    pollIntervalMs: null
+    pollIntervalMs: null,
+    codexReadTimeoutMs: null
   };
 
   for (let i = 0; i < lines.length; i += 1) {
@@ -74,6 +75,10 @@ const parseWorkflowConfig = (text) => {
     if (trimmed.startsWith("interval_ms:")) {
       const raw = trimmed.split(":").slice(1).join(":").trim();
       config.pollIntervalMs = Number(raw);
+    }
+    if (trimmed.startsWith("read_timeout_ms:")) {
+      const raw = trimmed.split(":").slice(1).join(":").trim();
+      config.codexReadTimeoutMs = Number(raw);
     }
   }
 
@@ -172,6 +177,7 @@ if (existsSync(workflowPath)) {
     console.log(`- terminal_states: ${workflowConfig.terminalStates.join(", ") || "UNKNOWN"}`);
     console.log(`- max_concurrent_agents: ${Number.isFinite(workflowConfig.maxConcurrentAgents) ? workflowConfig.maxConcurrentAgents : "UNKNOWN"}`);
     console.log(`- polling.interval_ms: ${Number.isFinite(workflowConfig.pollIntervalMs) ? workflowConfig.pollIntervalMs : "UNKNOWN"}`);
+    console.log(`- codex.read_timeout_ms: ${Number.isFinite(workflowConfig.codexReadTimeoutMs) ? workflowConfig.codexReadTimeoutMs : "UNKNOWN"}`);
 
     if (workflowConfig.projectSlug && workflowConfig.projectSlug !== expectedProjectSlug) {
       console.log(`WARN workflow project slug differs from expected (${expectedProjectSlug}).`);
