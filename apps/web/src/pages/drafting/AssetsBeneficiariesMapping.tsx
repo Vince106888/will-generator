@@ -30,8 +30,8 @@ export default function AssetsBeneficiariesMapping() {
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Assets and beneficiaries</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
-              List what you own and link each item to who should receive it. This keeps the draft clear for your executor
-              and reduces family disputes.
+              List what you own so nothing important is missed. Short descriptions are fine — you can add more detail
+              later.
             </p>
             <div className="space-y-2">
               <p className="text-[12px] font-semibold text-muted">Step 5 of 8: Assets</p>

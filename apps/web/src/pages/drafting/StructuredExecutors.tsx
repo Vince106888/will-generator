@@ -44,8 +44,8 @@ export default function StructuredExecutors() {
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Executors</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
-              An executor is the trusted person who carries out your instructions, pays debts, and distributes assets.
-              They have a legal duty to act in the best interest of your beneficiaries.
+              Choose someone trustworthy and organized. Executors handle paperwork, pay debts, and distribute assets
+              exactly as you instructed.
             </p>
             <div className="space-y-2">
               <p className="text-[12px] font-semibold text-muted">Step 3 of 8: Executors</p>
