@@ -285,4 +285,27 @@ export class DraftSessionService {
       validity
     };
   }
+
+  async rotateResumeToken(sessionId: string, resumeToken?: string) {
+    const existing = await prisma.draftSession.findUnique({
+      where: { id: sessionId }
+    });
+    if (!existing) return null;
+    if (existing.resumeTokenHash && resumeToken) {
+      const providedHash = hashResumeToken(resumeToken);
+      if (providedHash !== existing.resumeTokenHash) {
+        return { forbidden: true };
+      }
+    } else if (existing.resumeTokenHash && !resumeToken) {
+      return { forbidden: true };
+    }
+
+    const newToken = createResumeToken();
+    const session = await prisma.draftSession.update({
+      where: { id: sessionId },
+      data: { resumeTokenHash: hashResumeToken(newToken) }
+    });
+
+    return { session, resumeToken: newToken };
+  }
 }

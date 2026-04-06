@@ -4,11 +4,22 @@ import { DraftSessionService } from "../services/draftSessionService";
 import {
   draftSessionCreateSchema,
   draftSessionIdParamSchema,
-  draftSessionUpdateSchema
+  draftSessionUpdateSchema,
+  resumeLinkSchema
 } from "../utils/validators";
+import { EmailService } from "../services/emailService";
 
 export const draftSessionsRouter = Router();
 const draftSessionService = new DraftSessionService();
+const emailService = new EmailService();
+
+function buildResumeLink(sessionId: string, token: string) {
+  const baseUrl = process.env.WEB_BASE_URL || "http://localhost:5173";
+  const url = new URL("/drafting/resume", baseUrl);
+  url.searchParams.set("session", sessionId);
+  url.searchParams.set("token", token);
+  return url.toString();
+}
 
 draftSessionsRouter.post("/", async (req, res, next) => {
   try {
@@ -142,6 +153,45 @@ draftSessionsRouter.post("/:id/finalize", async (req, res, next) => {
       validity: result.validity,
       finalizedAt: result.version.createdAt
     });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+draftSessionsRouter.post("/:id/resume-link", async (req, res, next) => {
+  try {
+    const params = draftSessionIdParamSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+    const body = resumeLinkSchema.safeParse(req.body);
+    if (!body.success) {
+      return res.status(400).json({ error: "Invalid input", details: body.error.flatten() });
+    }
+
+    const resumeToken = req.header("x-draft-token") || undefined;
+    const result = await draftSessionService.rotateResumeToken(params.data.id, resumeToken);
+    if (!result) {
+      return res.status(404).json({ error: "Draft session not found" });
+    }
+    if ("forbidden" in result) {
+      return res.status(403).json({ error: "Invalid resume token" });
+    }
+
+    const resumeLink = buildResumeLink(result.session.id, result.resumeToken);
+
+    try {
+      await emailService.sendResumeLink(body.data.email, resumeLink);
+      return res.status(202).json({
+        status: "SENT",
+        resumeLink
+      });
+    } catch (error) {
+      return res.status(503).json({
+        error: "Email service not configured",
+        resumeLink
+      });
+    }
   } catch (error) {
     return next(error);
   }

@@ -18,10 +18,14 @@ import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
 import { useState } from "react";
+import { trackEvent } from "../../lib/analytics";
 
 export default function Review() {
   const { data, session, status } = useDraftingData();
   const [generateError, setGenerateError] = useState<string | null>(null);
+  const [resumeStatus, setResumeStatus] = useState<string | null>(null);
+  const [resumeLink, setResumeLink] = useState<string | null>(null);
+  const [savingResume, setSavingResume] = useState(false);
   const flowLabel = data.draftingMode === "ai" ? "AI drafting" : "Guided drafting";
   const assetLabels = data.assets
     .map((asset) => asset.label?.trim() || asset.location?.trim() || asset.notes?.trim() || "")
@@ -85,9 +89,47 @@ export default function Review() {
           JSON.stringify(response?.data ?? {})
         );
       }
+      trackEvent({
+        event: "draft_finalize",
+        payload: { sessionId: session.sessionId, version: response?.data?.version ?? null }
+      });
       navigate("/drafting/export-options");
     } catch (error) {
       setGenerateError("Unable to generate your draft. Please try again.");
+    }
+  };
+
+  const handleSaveForLater = async () => {
+    setResumeStatus(null);
+    setResumeLink(null);
+    if (!session) {
+      setResumeStatus("Draft session is not ready yet.");
+      return;
+    }
+    if (!data.email) {
+      setResumeStatus("Add an email address so we can send your resume link.");
+      return;
+    }
+    setSavingResume(true);
+    try {
+      const response = await api.post(
+        `/api/v1/draft-sessions/${session.sessionId}/resume-link`,
+        { email: data.email },
+        { headers: { "x-draft-token": session.resumeToken } }
+      );
+      if (response?.data?.resumeLink) {
+        setResumeLink(response.data.resumeLink);
+      }
+      trackEvent({ event: "resume_link_requested", payload: { sessionId: session.sessionId } });
+      setResumeStatus("Resume link ready. Check your email for the link.");
+    } catch (error: any) {
+      const link = error?.response?.data?.resumeLink;
+      if (link) {
+        setResumeLink(link);
+      }
+      setResumeStatus("We could not send email. Use the resume link below.");
+    } finally {
+      setSavingResume(false);
     }
   };
   const editPath =
@@ -213,11 +255,26 @@ export default function Review() {
                   variant="secondary"
                   size="sm"
                   className="w-full px-5 py-3 text-[13px] sm:w-auto"
+                  onClick={handleSaveForLater}
+                  disabled={savingResume}
+                >
+                  {savingResume ? "Saving..." : "Save and resume later"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full px-5 py-3 text-[13px] sm:w-auto"
                   onClick={() => navigate(editPath)}
                 >
                   {editLabel}
                 </Button>
               </div>
+              {resumeStatus ? (
+                <p className="text-[12px] text-muted">{resumeStatus}</p>
+              ) : null}
+              {resumeLink ? (
+                <p className="break-all text-[12px] text-ink">{resumeLink}</p>
+              ) : null}
             </div>
 
             <div className="space-y-4">
