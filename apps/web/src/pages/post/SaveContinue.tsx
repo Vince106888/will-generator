@@ -25,7 +25,7 @@ export default function SaveContinue() {
             <Card size="md" variant="success" className="space-y-2">
               <p className="text-xs font-semibold text-ink">Saved</p>
               <p className="text-xs text-muted">
-                Your progress is saved. We'll email a secure resume link.
+                Your progress is saved. We&apos;ll email a secure resume link.
               </p>
             </Card>
           )}

@@ -5,7 +5,7 @@ import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { Button } from "../../components/ui/Button";
 import { navigate } from "../../lib/navigation";
-import { saveDraftingData, useDraftingData } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { resolveDraftingEntryPath } from "../../lib/draftingGuard";
 import { AlertTriangle, Shuffle } from "lucide-react";
 
@@ -49,8 +49,8 @@ export default function EntryChoice() {
             </div>
             <div className="space-y-3 text-sm text-muted">
               <p className="text-sm text-muted">
-                Example: "I own a home in Kiambu, my spouse should live there, and my daughter gets
-                the car."
+                Example: &quot;I own a home in Kiambu, my spouse should live there, and my daughter gets
+                the car.&quot;
               </p>
               <div className="space-y-2 text-sm leading-6 text-muted">
                 <p>• Paste notes, upload a document, or speak freely</p>
@@ -63,14 +63,14 @@ export default function EntryChoice() {
                 variant="primary"
                 size="sm"
                 onClick={() => {
-                  const nextData = {
+                  const nextData: DraftingData = {
                     ...data,
                     draftingMode: "ai",
                     draftingModeConfirmed: true
                   };
                   setData(nextData);
                   saveDraftingData(nextData);
-                  navigate(resolveDraftingEntryPath("ai", "/existing-will"));
+                  navigate(resolveDraftingEntryPath("ai", "/drafting/ai/personal-details"));
                 }}
               >
                 Start with AI drafting
@@ -98,14 +98,16 @@ export default function EntryChoice() {
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  const nextData = {
+                  const nextData: DraftingData = {
                     ...data,
                     draftingMode: "structured",
                     draftingModeConfirmed: true
                   };
                   setData(nextData);
                   saveDraftingData(nextData);
-                  navigate(resolveDraftingEntryPath("structured", "/existing-will"));
+                  navigate(
+                    resolveDraftingEntryPath("structured", "/drafting/structured/personal-details")
+                  );
                 }}
               >
                 Start guided form
@@ -134,7 +136,7 @@ export default function EntryChoice() {
                 size="sm"
                 onClick={() => navigate("/existing-will")}
               >
-                Start guided form
+                Start review
               </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
                 Preview the steps

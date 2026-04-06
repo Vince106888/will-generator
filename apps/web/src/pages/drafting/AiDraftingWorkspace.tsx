@@ -1,6 +1,7 @@
 // Frame: AI Drafting Workspace (iVFMi)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
@@ -44,12 +45,16 @@ export default function AiDraftingWorkspace() {
           </>
         ),
         ctaMode: "ai",
-        ctaPath: "/drafting/ai-summary"
+        ctaPath: "/drafting/ai/processing"
       }}
     >
       <div className="pb-24 pt-10">
         <Container size="wide">
           <div className="space-y-3">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              AI drafting — Step 2 of 6: Share your notes
+            </p>
+            <AiStepNav currentPath="/drafting/ai/input" />
             <h1 className="font-display text-3xl text-ink sm:text-4xl">Draft with AI</h1>
             <p className="max-w-[760px] text-[16px] leading-7 text-muted">
               Share your wishes in plain language. We ask gentle follow‑ups and show a clear summary
@@ -111,7 +116,7 @@ export default function AiDraftingWorkspace() {
                           confidence: "medium"
                         }
                       });
-                      navigate("/drafting/ai-summary");
+                      navigate("/drafting/ai/processing");
                     }}
                   >
                     Send
@@ -189,7 +194,7 @@ export default function AiDraftingWorkspace() {
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => navigate("/drafting/ai-summary")}
+                  onClick={() => navigate("/drafting/ai/processing")}
                 >
                   Generate summary
                 </Button>

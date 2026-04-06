@@ -25,15 +25,18 @@ export default function StructuredFlowShell() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              Guided will drafting — Overview
+            </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Guided will drafting</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Answer a few focused questions. We explain why each section matters and show your progress clearly. You
               can pause and return at any time.
             </p>
             <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 2 of 9 - Assets & beneficiaries</p>
+              <p className="text-[12px] font-semibold text-muted">6 steps total — start with Personal details</p>
               <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-full rounded-full bg-primary" />
+                <div className="h-full w-[6%] rounded-full bg-primary" />
               </div>
             </div>
           </div>
@@ -80,10 +83,10 @@ export default function StructuredFlowShell() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/mapping")}>
-                  Start assets & beneficiaries
+                <Button variant="primary" size="sm" onClick={() => navigate("/drafting/structured/personal-details")}>
+                  Start personal details
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-executors")}>
+                <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/executors")}>
                   Skip to executors
                 </Button>
               </div>
@@ -97,19 +100,23 @@ export default function StructuredFlowShell() {
                   <span className="text-muted">Personal details</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-ink">2</span>
-                  <span className="text-ink">Assets & beneficiaries</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">3</span>
+                  <span className="font-semibold text-muted">2</span>
                   <span className="text-muted">Executors</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">4</span>
+                  <span className="font-semibold text-muted">3</span>
                   <span className="text-muted">Guardianship</span>
                 </div>
                 <div className="flex items-center gap-2">
+                  <span className="font-semibold text-muted">4</span>
+                  <span className="text-muted">Assets & beneficiaries</span>
+                </div>
+                <div className="flex items-center gap-2">
                   <span className="font-semibold text-muted">5</span>
+                  <span className="text-muted">Special wishes</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-muted">6</span>
                   <span className="text-muted">Review & signing</span>
                 </div>
               </div>

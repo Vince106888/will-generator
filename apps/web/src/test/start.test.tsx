@@ -81,6 +81,6 @@ describe("Review drafting flow", () => {
     expect(payload.instructions.notes).toContain("Keep it simple");
 
     expect(localStorage.getItem("willResult")).not.toBeNull();
-    expect(window.location.pathname).toBe("/drafting/review-result");
+    expect(window.location.pathname).toBe("/drafting/export-options");
   });
 });

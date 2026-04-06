@@ -4,13 +4,27 @@ import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Input } from "../../components/ui/Input";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 import { AlertTriangle, MessageSquareText, ShieldCheck } from "lucide-react";
 
 export default function StructuredGuardianship() {
-  useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured");
+  const primaryGuardian = data.guardians[0];
+  const backupGuardian = data.guardians[1];
+  const hasMinors = data.hasMinors;
+
+  const updateGuardian = (
+    index: number,
+    key: "name" | "relationship",
+    value: string
+  ) => {
+    const next = [...data.guardians];
+    next[index] = { ...next[index], [key]: value };
+    update({ guardians: next });
+  };
 
   return (
     <WorkspaceShell
@@ -27,11 +41,15 @@ export default function StructuredGuardianship() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              Step 3 of 6 — Guardians (if needed)
+            </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Guardianship</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               This section applies only if you have minor children. A guardian would care for them if both parents pass
               away, and the court may confirm the appointment.
             </p>
+            <StructuredStepNav currentPath="/drafting/structured/guardians" />
           </div>
 
           <div className="space-y-4">
@@ -52,16 +70,27 @@ export default function StructuredGuardianship() {
                 <p className="text-[13px] text-muted">This decides whether guardianship applies to you.</p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="secondary" size="sm">
+                <Button
+                  variant={hasMinors ? "secondary" : "primary"}
+                  size="sm"
+                  onClick={() => update({ hasMinors: false })}
+                >
                   No
                 </Button>
-                <Button variant="primary" size="sm">
+                <Button
+                  variant={hasMinors ? "primary" : "secondary"}
+                  size="sm"
+                  onClick={() => update({ hasMinors: true })}
+                >
                   Yes
                 </Button>
               </div>
             </Card>
 
-            <Card size="lg" className="space-y-4">
+            <Card
+              size="lg"
+              className={`space-y-4 ${hasMinors ? "" : "opacity-60"}`}
+            >
               <div className="space-y-1.5">
                 <p className="font-display text-xl font-semibold text-ink">Preferred guardian</p>
                 <p className="text-[13px] text-muted">
@@ -70,15 +99,32 @@ export default function StructuredGuardianship() {
               </div>
               <div className="space-y-3">
                 <FieldGroup label="Full legal name">
-                  <Input placeholder="e.g. Esther Achieng Odhiambo" />
+                  <Input
+                    placeholder="e.g. Esther Achieng Odhiambo"
+                    value={primaryGuardian?.name ?? ""}
+                    onChange={(event) =>
+                      updateGuardian(0, "name", event.target.value)
+                    }
+                    disabled={!hasMinors}
+                  />
                 </FieldGroup>
                 <FieldGroup label="Relationship to child">
-                  <Input placeholder="e.g. aunt, uncle" />
+                  <Input
+                    placeholder="e.g. aunt, uncle"
+                    value={primaryGuardian?.relationship ?? ""}
+                    onChange={(event) =>
+                      updateGuardian(0, "relationship", event.target.value)
+                    }
+                    disabled={!hasMinors}
+                  />
                 </FieldGroup>
               </div>
             </Card>
 
-            <Card size="lg" className="space-y-4">
+            <Card
+              size="lg"
+              className={`space-y-4 ${hasMinors ? "" : "opacity-60"}`}
+            >
               <div className="space-y-1.5">
                 <p className="font-display text-xl font-semibold text-ink">Backup guardian</p>
                 <p className="text-[13px] text-muted">
@@ -87,12 +133,34 @@ export default function StructuredGuardianship() {
               </div>
               <div className="space-y-3">
                 <FieldGroup label="Full legal name">
-                  <Input placeholder="Optional" />
+                  <Input
+                    placeholder="Optional"
+                    value={backupGuardian?.name ?? ""}
+                    onChange={(event) =>
+                      updateGuardian(1, "name", event.target.value)
+                    }
+                    disabled={!hasMinors}
+                  />
                 </FieldGroup>
                 <FieldGroup label="Relationship to child">
-                  <Input placeholder="Optional" />
+                  <Input
+                    placeholder="Optional"
+                    value={backupGuardian?.relationship ?? ""}
+                    onChange={(event) =>
+                      updateGuardian(1, "relationship", event.target.value)
+                    }
+                    disabled={!hasMinors}
+                  />
                 </FieldGroup>
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={!hasMinors}
+                  onClick={() => {
+                    updateGuardian(1, "name", "");
+                    updateGuardian(1, "relationship", "");
+                  }}
+                >
                   I do not want a backup
                 </Button>
               </div>
@@ -121,10 +189,28 @@ export default function StructuredGuardianship() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="sm" onClick={() => navigate("/drafting/review-result")}>
-                Continue to review
+              <Button
+                variant="secondary"
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/drafting/structured/executors")}
+              >
+                Back to executors
               </Button>
-              <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured-flow")}>
+              <Button
+                variant="primary"
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/drafting/structured/assets")}
+              >
+                Continue to assets
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/drafting/structured-flow")}
+              >
                 Save and return later
               </Button>
             </div>

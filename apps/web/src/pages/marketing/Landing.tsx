@@ -5,7 +5,7 @@ import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
-import { saveDraftingData, useDraftingData } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { AlertTriangle, Eye, HeartHandshake, Lock, Shield } from "lucide-react";
 import heroImage from "../../assets/landing-hero.png";
 
@@ -68,7 +68,7 @@ export default function Landing() {
                   size="md"
                   className="w-full justify-center sm:w-auto"
                   onClick={() => {
-                    const nextData = {
+                    const nextData: DraftingData = {
                       ...data,
                       draftingMode: "ai",
                       draftingModeConfirmed: true
@@ -470,7 +470,7 @@ export default function Landing() {
                     variant="primary"
                     size="md"
                     onClick={() => {
-                      const nextData = {
+                      const nextData: DraftingData = {
                         ...data,
                         draftingMode: "ai",
                         draftingModeConfirmed: true

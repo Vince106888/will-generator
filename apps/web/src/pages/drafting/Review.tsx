@@ -1,6 +1,8 @@
-// Frame: Review + Result (0gbAz)
+// Frame: AI Review (WlRtD)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Button } from "../../components/ui/Button";
 import {
   DocumentPreview,
@@ -11,51 +13,66 @@ import {
   SummaryCard,
   WarningBanner
 } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { buildGeneratePayload, useDraftingData } from "../../lib/drafting";
 import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
 
 export default function Review() {
   const { data } = useDraftingData();
+  const flowLabel = data.draftingMode === "ai" ? "AI drafting" : "Guided drafting";
+  const assetLabels = data.assets
+    .map((asset) => asset.label?.trim() || asset.location?.trim() || asset.notes?.trim() || "")
+    .filter(Boolean);
+  const beneficiaries = data.beneficiaries
+    .map((beneficiary) => beneficiary.name?.trim() || "")
+    .filter(Boolean);
+  const assetCount = data.assets.filter((asset) => asset.location || asset.notes).length;
+  const executorName = data.executors?.[0]?.name?.trim() || "";
+  const guardianName = data.guardians?.[0]?.name?.trim() || "";
+  const hasRemainderClause = Boolean(data.remainderClause?.trim());
+  const hasExecutor = Boolean(executorName);
+  const hasBeneficiaries = beneficiaries.length > 0;
+  const hasAssets = assetCount > 0;
+  const hasAllocations = data.assetAllocations.some(
+    (allocation) => allocation.allocations?.length > 0
+  );
+
+  const allocationLines = data.assetAllocations.flatMap((allocation) => {
+    const assetLabel = allocation.assetLabel?.trim();
+    if (!assetLabel) return [];
+    const targets = allocation.allocations
+      .map((target) => target.beneficiary?.trim() || "")
+      .filter(Boolean);
+    if (!targets.length) {
+      return [`${assetLabel} → Not assigned (please confirm)`];
+    }
+    return [`${assetLabel} → ${targets.join(", ")}`];
+  });
+
+  const summaryLines =
+    allocationLines.length > 0
+      ? allocationLines
+      : assetLabels.length > 0
+        ? assetLabels.map((asset) => `${asset} → Not assigned (please confirm)`)
+        : [
+            "House in Kiambu → Wife",
+            "Toyota Prado KDM 456A → Brian (son)",
+            "Rental plots in Machakos → Nia (daughter)",
+            "Remainder assets → Not specified (please confirm)"
+          ];
+
+  const missingItems = [
+    !hasExecutor ? "assign an executor" : null,
+    !hasAssets ? "add assets" : null,
+    !hasBeneficiaries ? "add beneficiaries" : null,
+    !hasAllocations ? "assign assets to beneficiaries" : null,
+    !hasRemainderClause ? "set a remainder clause" : null
+  ].filter(Boolean) as string[];
+
   const handleGenerateDraft = async () => {
     try {
-      const response = await api.post("/api/v1/wills/generate", {
-        name: data.legalName?.trim() || "Unknown",
-        executor: data.executors?.[0]?.name?.trim() || "",
-        assets: data.assets
-          .map((asset) => {
-            const label = asset.label?.trim();
-            const details = asset.location?.trim();
-            const notes = asset.notes?.trim();
-            if (!details && !notes) return "";
-            if (label && details) return `${label}: ${details}`;
-            return label || details || notes;
-          })
-          .filter(Boolean),
-        beneficiaries: data.beneficiaries
-          .map((beneficiary) => beneficiary.name?.trim() || "")
-          .filter(Boolean),
-        hasMinors: data.hasMinors,
-        multipleHouseholds: data.multipleHouseholds,
-        instructions: {
-          notes: [
-            data.dependantsNotes,
-            data.distributionNotes,
-            data.residuaryWishes,
-            data.specialWishes,
-            data.digitalWishes,
-            data.charitableIntentions,
-            data.executorNotes,
-            data.guardianNotes,
-            data.remainderClause
-          ]
-            .map((item) => item?.trim() || "")
-            .filter(Boolean)
-            .join("\n\n") || undefined,
-          funeralWishes: data.funeralWishes?.trim() || undefined
-        }
-      });
+      const response = await api.post("/api/v1/wills/generate", buildGeneratePayload(data));
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
           STORAGE_KEYS.willResult,
@@ -63,9 +80,17 @@ export default function Review() {
         );
       }
     } finally {
-      navigate("/drafting/review-result");
+      navigate("/drafting/export-options");
     }
   };
+  const editPath =
+    data.draftingMode === "ai"
+      ? "/drafting/ai/summary"
+      : "/drafting/structured/assets";
+  const editLabel =
+    data.draftingMode === "ai"
+      ? "Back to AI summary"
+      : "Back to assets & beneficiaries";
 
   return (
     <WorkspaceShell
@@ -83,13 +108,18 @@ export default function Review() {
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-[10px]">
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              Review your draft and results
-            </h1>
-            <p className="text-[16px] leading-[1.6] text-muted">
-              Read through the summary below. We highlight anything missing or
-              legally sensitive before you download or sign.
+            <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
+              {flowLabel} - Step 6 of 6: Review
             </p>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Review</h1>
+            <p className="text-[16px] leading-[1.6] text-muted">
+              Review the summary and confirm everything is correct before you proceed.
+            </p>
+            {data.draftingMode === "ai" ? (
+              <AiStepNav currentPath="/drafting/ai/review" />
+            ) : (
+              <StructuredStepNav currentPath="/drafting/review-result" />
+            )}
           </div>
 
           <SuccessPanel
@@ -97,19 +127,21 @@ export default function Review() {
             body="We generated a full draft. Please confirm the items below and address any warnings before you sign."
           />
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             <div className="space-y-4">
               <SectionCard
                 title="Your instructions summary"
                 subtitle="Plain-English overview of what you asked for, with room to edit."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>&bull; House in Kiambu &rarr; Wife</p>
-                  <p>&bull; Toyota Prado KDM 456A &rarr; Brian (son)</p>
-                  <p>&bull; Rental plots in Machakos &rarr; Nia (daughter)</p>
-                  <p className="text-warning">
-                    &bull; Remainder assets &rarr; Not specified (please confirm)
-                  </p>
+                  {summaryLines.map((line) => {
+                    const isWarning = line.includes("Not specified") || line.includes("Not assigned");
+                    return (
+                      <p key={line} className={isWarning ? "text-warning" : ""}>
+                        &bull; {line}
+                      </p>
+                    );
+                  })}
                 </div>
               </SectionCard>
 
@@ -118,10 +150,15 @@ export default function Review() {
                 subtitle="Key people who carry out your wishes and care for minors."
               >
                 <div className="space-y-2 text-[13px]">
-                  <p className="text-ink">&bull; Executor: Grace Wanjiku Mwangi</p>
+                  <p className={executorName ? "text-ink" : "text-warning"}>
+                    &bull; Executor: {executorName || "Not provided"}
+                  </p>
                   <p className="text-muted">&bull; Backup executor: Not provided</p>
                   <p className="text-muted">
-                    &bull; Guardianship: Not applicable (no minor children listed)
+                    &bull; Guardianship:{" "}
+                    {data.hasMinors
+                      ? guardianName || "Not provided"
+                      : "Not applicable (no minor children listed)"}
                   </p>
                 </div>
               </SectionCard>
@@ -139,14 +176,18 @@ export default function Review() {
 
               <WarningBanner
                 title="Warnings to resolve"
-                body="Please assign a remainder clause (who receives assets not listed) and confirm any dependants before signing."
+                body={
+                  missingItems.length
+                    ? `Please ${missingItems.join(", ")} before signing.`
+                    : "Review your draft and confirm details before signing."
+                }
               />
 
               <div className="flex flex-wrap gap-3">
                 <Button
                   variant="primary"
                   size="sm"
-                  className="px-5 py-3 text-[13px]"
+                  className="w-full px-5 py-3 text-[13px] sm:w-auto"
                   onClick={handleGenerateDraft}
                 >
                   Generate draft
@@ -154,16 +195,10 @@ export default function Review() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="px-5 py-3 text-[13px]"
-                  onClick={() =>
-                    navigate(
-                      data.draftingMode === "ai"
-                        ? "/drafting/ai-summary"
-                        : "/drafting/mapping"
-                    )
-                  }
+                  className="w-full px-5 py-3 text-[13px] sm:w-auto"
+                  onClick={() => navigate(editPath)}
                 >
-                  Edit details
+                  {editLabel}
                 </Button>
               </div>
             </div>
@@ -173,15 +208,21 @@ export default function Review() {
                 title="Draft overview"
                 lines={[
                   `Beneficiaries: ${data.beneficiaries.filter((b) => b.name).length || 3}`,
-                  `Assets: ${data.assets.filter((a) => a.location || a.notes).length || 4}`,
+                  `Assets: ${assetCount || 4}`,
                   `Executors: ${data.executors.filter((e) => e.name).length || 1}`
                 ]}
               />
               <ReviewChecklist
                 title="Completeness checks"
                 items={[
-                  { label: "Personal details complete", tone: "success" },
-                  { label: "Remainder clause missing", tone: "warning" }
+                  { label: "Executor selected", tone: hasExecutor ? "success" : "warning" },
+                  { label: "Assets listed", tone: hasAssets ? "success" : "warning" },
+                  { label: "Beneficiaries added", tone: hasBeneficiaries ? "success" : "warning" },
+                  {
+                    label: "Assets assigned to beneficiaries",
+                    tone: hasAllocations ? "success" : "warning"
+                  },
+                  { label: "Remainder clause added", tone: hasRemainderClause ? "success" : "warning" }
                 ]}
               />
               <DocumentPreview title="Draft preview" placeholder="Preview will draft" />

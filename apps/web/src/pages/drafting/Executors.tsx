@@ -24,7 +24,7 @@ export default function Executors() {
         <Card size="md" variant="info" className="space-y-2">
           <p className="text-xs font-semibold text-ink">Choosing the right person</p>
           <p className="text-xs text-muted">
-            Pick someone organized and willing to handle paperwork. It's often a close family member or trusted friend.
+            Pick someone organized and willing to handle paperwork. It&apos;s often a close family member or trusted friend.
           </p>
         </Card>
       }
