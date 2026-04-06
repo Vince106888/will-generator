@@ -36,9 +36,9 @@ Scope: Move Esheria Wills from frontend-complete prototype to production-grade e
   - `DraftSession` records
   - `WillDraftVersion` records
   - `AdvocateReviewRequest` records
-  - `AnalyticsEvent` model defined (not wired)
+  - `AnalyticsEvent` records (ingested via `/api/v1/analytics/events`)
 - Real PDF generation exists (`pdfkit`, local filesystem output).
-- Real client-server call exists only at final review and lead actions.
+- Real client-server sync exists across drafting, review/finalize, resume, export, and advocate request flows.
 
 ### What is implemented but partial
 - Complexity engine is deterministic but minimal (`hasMinors`, `multipleHouseholds`, asset count threshold).
@@ -50,19 +50,13 @@ Scope: Move Esheria Wills from frontend-complete prototype to production-grade e
 ### What is fake / placeholder / prototype mode
 - AI flow is UI-only; no model integration, no AI orchestration service, no extraction API.
 - Multiple AI screens contain static/fallback content (demo conversation, fallback assets/beneficiaries).
-- Review page contains hardcoded fallback summary lines when capture is incomplete.
-- "Save and resume" promise exists in copy, but implementation is browser-local only (localStorage/sessionStorage).
-- Advocate handoff is modeled as generic lead capture metadata, not true review-request domain workflow.
-- Export tiering (Basic/Premium) is UI/lead event behavior only; no productized fulfillment workflow.
+- Export tiering (Basic/Premium) is UI-only; paid fulfillment workflows are intentionally deferred.
 - Legacy pages/components remain in repo and can be misused as active references.
 
 ### Key blockers to production readiness
-- No canonical draft-session lifecycle (create/update/finalize/resume).
-- No authenticated or signed-anonymous resume strategy.
 - No full schema normalization for structured legal capture and auditability.
 - No robust error model/idempotency semantics.
-- No analytics ingestion path despite model existence.
-- No email delivery workflow (resume links, export fulfillment, advocate notifications).
+- Email delivery depends on SMTP environment configuration.
 - No security posture for PII beyond baseline transport/storage assumptions.
 
 ---
@@ -94,7 +88,7 @@ Scope: Move Esheria Wills from frontend-complete prototype to production-grade e
 
 ### Data / infra / config
 - Prisma schema: `prisma/schema.prisma`
-- API env sample currently only local: `apps/api/.env`
+- API env sample: `.env.example` (includes SMTP + resume link base URL)
 - Web env sample: `apps/web/.env.example`
 - CI only: `.github/workflows/ci.yml`
 
@@ -104,16 +98,16 @@ Scope: Move Esheria Wills from frontend-complete prototype to production-grade e
 
 | Area | Real | Partial | Placeholder / Fake |
 |---|---|---|---|
-| Route handlers | Generate/get/pdf/lead are real | No update/session endpoints | No analytics/advocate workflow routes |
-| Persistence | Prisma create/find for wills and leads | JSON blob model limits queryability | No migration history in repo |
-| Frontend->API wiring | Review generate call + lead calls real | Most steps not server-synced | Save/resume is local-only |
+| Route handlers | Draft sessions, session output, advocate, analytics, health routes are real | Legacy will routes still exist | Paid export fulfillment endpoints missing |
+| Persistence | Sessions, versions, advocate requests, analytics, leads, will profiles | JSON blob model limits queryability | No normalized domain tables yet |
+| Frontend->API wiring | Drafting sync + review/finalize + resume + export + advocate are server-first | Legacy pages still present | Legacy-only pages can still mislead |
 | Complexity scoring | Deterministic function exists | Sparse rules and thresholds | No legal validation of thresholds |
 | Validity checklist | Deterministic static checklist exists | Non-exhaustive | Not law-versioned, not scenario-aware |
 | Draft generation | Deterministic text output exists | Clause structure is basic | Not production-quality legal assembly |
 | AI flow | UI journey exists | Tracks local aiDraftSession metadata | No model invocation/extraction API |
-| Export flow | PDF download endpoint exists | Basic/premium only lead metadata | No tier fulfillment pipeline |
-| Advocate handoff | Lead row can be captured | Metadata-based only | No case/request state machine |
-| Analytics | DB model exists | None wired | No ingestion/event forwarding |
+| Export flow | Session PDF download is real | Paid tiers disabled | No tier fulfillment pipeline |
+| Advocate handoff | First-class review request stored | No scheduling/assignment pipeline | None |
+| Analytics | Ingestion route persists events | Allowlisted events only | No forwarding pipeline |
 
 ---
 
@@ -277,7 +271,7 @@ Base: `/api/v1`
 
 ### Save/resume/email
 - `POST /draft-sessions/:sessionId/resume-link`
-  - Sends or queues resume link email.
+  - Sends resume link email when SMTP is configured, otherwise returns link with error.
 
 ### Health/readiness
 - `GET /health/live`
@@ -303,56 +297,56 @@ Base: `/api/v1`
 | `apps/web/src/pages/drafting/AiProcessing.tsx` | Informational screen only, no processing | Fake system behavior | Trigger real extraction job/status polling |
 | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | Fallback demo assets/beneficiaries | Non-user truth shown as extracted truth | Populate strictly from extraction output or confirmed structured state only |
 | `apps/web/src/pages/drafting/AiCorrections.tsx` | Duplicate/fallback summary behavior | Can propagate fake data confidence | Bind to correction patch endpoint against session |
-| `apps/web/src/pages/drafting/Review.tsx` | Hardcoded fallback summary lines and always navigate on failure | Silent failure can lose trust and state | Remove fake fallback lines; block continue on generation failure with actionable error |
-| `apps/web/src/pages/post/SaveContinue.tsx` | Legacy fake "email resume link" success | Promises non-existent backend feature | Replace with real save/resume endpoint flow or remove route from active surface |
+| `apps/web/src/pages/drafting/Review.tsx` | Legacy fallback summaries | Silent failure can lose trust and state | Backend-truth review with explicit failure states and resume-link request |
+| `apps/web/src/pages/post/SaveContinue.tsx` | Legacy save UI suggested fake send | Promises non-existent backend feature | Legacy page now directs to active Review and does not fake save |
 | `apps/web/src/pages/post/ErrorStates.tsx` | Static examples imply restore support | Unsupported recovery promise | Bind to real error codes and support correlation IDs |
-| `apps/web/src/pages/post/ExportOptions.tsx` | Basic/Premium call `/lead` only | No true fulfillment pipeline | Replace with export request API and fulfillment status |
-| `apps/web/src/pages/post/AdvocateReview.tsx` | Uses generic lead endpoint | No advocate case lifecycle | Replace with advocate-review-request endpoint + status |
-| `apps/web/src/lib/drafting.ts` | localStorage as primary persistence | No durable cross-device resume | Shift to server-first draft session sync with local cache fallback only |
+| `apps/web/src/pages/post/ExportOptions.tsx` | Paid tiers implied by copy | No true fulfillment pipeline | Paid tiers explicitly disabled; free PDF export is real |
+| `apps/web/src/pages/post/AdvocateReview.tsx` | Legacy lead overload | No advocate case lifecycle | Advocate review requests are first-class |
+| `apps/web/src/lib/drafting.ts` | localStorage as primary persistence | No durable cross-device resume | Server-first draft session sync with local cache fallback |
 | `apps/api/src/engines/draftEngine.ts` | Minimal plain-text template | Not production-grade legal drafting | Build clause-oriented deterministic engine with structured inputs |
 | `apps/api/src/engines/validityEngine.ts` | Static list independent of scenario | Under-warns and over-warns | Scenario-aware Kenya validity rule engine |
 | `apps/api/src/engines/complexityEngine.ts` | 3-factor score only | Weak triage quality | Expand weighted factors + explainable outcomes + calibration tests |
-| `apps/api/src/routes/wills.ts` | Limited endpoint surface | Cannot support save/resume lifecycle | Introduce draft-session, export, analytics, advocate routes |
-| `prisma/schema.prisma` | JSON-heavy single-record modeling | Poor traceability/queryability/versioning | Introduce first-class session/version/escalation/output tables |
+| `apps/api/src/routes/wills.ts` | Limited endpoint surface | Cannot support save/resume lifecycle | Draft-session, export, analytics, advocate routes now exist |
+| `prisma/schema.prisma` | JSON-heavy single-record modeling | Poor traceability/queryability/versioning | DraftSession/WillDraftVersion/AdvocateReviewRequest added; normalization pending |
 
 ---
 
 ## 8) Ordered Implementation Phases
 
-### Phase 0 — Foundation hardening
+### Phase 0 - Foundation hardening
 1. Freeze active contracts and deprecate legacy routes/pages from active docs.
 2. Add request ID middleware, structured error model, health/live/ready endpoints.
 3. Add migration workflow and first baseline migration set.
 
-### Phase 1 — Schema + persistence core
+### Phase 1 - Schema + persistence core
 1. Introduce `DraftSession`, `WillDraftVersion`, `AdvocateReviewRequest`, `GeneratedOutput`.
 2. Add backward-compatible adapters to current `WillProfile` where needed.
 3. Add repository/service layer tests against real Prisma test DB.
 
-### Phase 2 — API completion
+### Phase 2 - API completion
 1. Implement draft session create/get/patch/finalize endpoints.
 2. Implement resume-token strategy + validation.
 3. Implement analytics ingestion endpoint.
 
-### Phase 3 — Engine hardening
+### Phase 3 - Engine hardening
 1. Replace minimal draft engine with clause-based deterministic assembly.
 2. Expand complexity model and explainable triage outputs.
 3. Expand validity engine into scenario-aware Kenya checklist output.
 
-### Phase 4 — Frontend-to-backend sync
+### Phase 4 - Frontend-to-backend sync
 1. Move from localStorage-primary to server-primary sync.
 2. Replace fake AI processing/extraction screens with real API-backed states.
 3. Add resilient loading/error/empty states tied to API truth.
 
-### Phase 5 — Save/retrieve/email
+### Phase 5 - Save/retrieve/email
 1. Resume-link endpoint + email provider integration.
 2. Retry/delivery state tracking and user-safe error UX.
 
-### Phase 6 — Advocate handoff + exports
+### Phase 6 - Advocate handoff + exports
 1. Implement advocate request domain workflow.
 2. Implement export request + status endpoints and free/premium branching.
 
-### Phase 7 — Analytics + observability + deploy readiness
+### Phase 7 - Analytics + observability + deploy readiness
 1. Ship analytics events pipeline.
 2. Add production logging/error tracking/uptime.
 3. Add staging/prod deployment workflows and runbooks.
