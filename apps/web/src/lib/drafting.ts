@@ -41,6 +41,24 @@ export type DraftingData = {
     summary: string;
     updatedAt: string;
     confidence: string;
+    interactionId?: string;
+    freeTextNotes?: string;
+    extractionCandidates?: {
+      assets: Array<{ label: string; details?: string; confidence?: number }>;
+      beneficiaries: Array<{ name: string; relationship?: string; confidence?: number }>;
+      executors: Array<{ name: string; relationship?: string; confidence?: number }>;
+      guardians: Array<{ name: string; relationship?: string; confidence?: number }>;
+      specialWishes: Array<{ text: string; confidence?: number }>;
+      notes: string[];
+    };
+    explain?: {
+      topic: string;
+      explanation: string;
+      confidence: number;
+      uncertainty?: string;
+    };
+    abstained?: boolean;
+    uncertainty?: string;
   };
   exportPreferences: {
     format: string;
@@ -105,7 +123,25 @@ export const defaultDraftingData: DraftingData = {
   aiDraftSession: {
     summary: "",
     updatedAt: "",
-    confidence: "medium"
+    confidence: "medium",
+    interactionId: "",
+    freeTextNotes: "",
+    extractionCandidates: {
+      assets: [],
+      beneficiaries: [],
+      executors: [],
+      guardians: [],
+      specialWishes: [],
+      notes: []
+    },
+    explain: {
+      topic: "",
+      explanation: "",
+      confidence: 0,
+      uncertainty: ""
+    },
+    abstained: false,
+    uncertainty: ""
   },
   exportPreferences: {
     format: "pdf",
