@@ -24,9 +24,10 @@ type WillResult = {
 };
 
 export default function Result() {
-  const { data: draftingData } = useDraftingData();
+  const { data: draftingData, session } = useDraftingData();
   const [data, setData] = useState<WillResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.willResult);
@@ -34,29 +35,38 @@ export default function Result() {
       try {
         const parsed = JSON.parse(stored) as WillResult;
         setData(parsed);
-        if (parsed.id) {
-          setLoading(true);
-          api
-            .get(`/api/v1/wills/${parsed.id}`)
-            .then((response) => {
-              const merged = {
-                id: response.data.id ?? parsed.id,
-                draft: response.data.draft ?? parsed.draft,
-                complexity: response.data.complexity ?? parsed.complexity,
-                validity: response.data.validity ?? parsed.validity,
-                metadata: response.data.metadata ?? parsed.metadata
-              } as WillResult;
-              setData(merged);
-              localStorage.setItem(STORAGE_KEYS.willResult, JSON.stringify(merged));
-            })
-            .catch(() => null)
-            .finally(() => setLoading(false));
-        }
       } catch {
         setData(null);
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (!session?.sessionId) {
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    api
+      .get(`/api/v1/wills/session/${session.sessionId}`)
+      .then((response) => {
+        setData((prev) => {
+          const merged = {
+            id: response.data.willId ?? response.data.id ?? prev?.id ?? "",
+            draft: response.data.draft ?? prev?.draft ?? "",
+            complexity: response.data.complexity ?? prev?.complexity,
+            validity: response.data.validity ?? prev?.validity,
+            metadata: prev?.metadata
+          } as WillResult;
+          localStorage.setItem(STORAGE_KEYS.willResult, JSON.stringify(merged));
+          return merged;
+        });
+      })
+      .catch(() => {
+        setError("We could not load the latest generated draft for this session.");
+      })
+      .finally(() => setLoading(false));
+  }, [session?.sessionId]);
 
   const flags = useMemo(() => data?.complexity?.flags ?? [], [data]);
 
@@ -85,6 +95,7 @@ export default function Result() {
             Legacy page retained for archive reference. Use the active Review + Result screen.
           </p>
           {loading && <p className="text-xs text-muted">Refreshing your draft...</p>}
+          {error && <p className="text-xs text-warning">{error}</p>}
         </div>
 
         <Card size="lg" variant="success" className="mt-6 space-y-2">
