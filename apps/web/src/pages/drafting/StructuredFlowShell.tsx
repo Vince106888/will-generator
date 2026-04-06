@@ -34,9 +34,9 @@ export default function StructuredFlowShell() {
               can pause and return at any time.
             </p>
             <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">8 steps total — start with Personal details</p>
+              <p className="text-[12px] font-semibold text-muted">6 steps total — start with Personal details</p>
               <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-[4%] rounded-full bg-primary" />
+                <div className="h-full w-[6%] rounded-full bg-primary" />
               </div>
             </div>
           </div>
@@ -101,30 +101,22 @@ export default function StructuredFlowShell() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-muted">2</span>
-                  <span className="text-muted">Family & dependants</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">3</span>
                   <span className="text-muted">Executors</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">4</span>
+                  <span className="font-semibold text-muted">3</span>
                   <span className="text-muted">Guardianship</span>
                 </div>
                 <div className="flex items-center gap-2">
+                  <span className="font-semibold text-muted">4</span>
+                  <span className="text-muted">Assets & beneficiaries</span>
+                </div>
+                <div className="flex items-center gap-2">
                   <span className="font-semibold text-muted">5</span>
-                  <span className="text-muted">Assets</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">6</span>
-                  <span className="text-muted">Beneficiaries & allocations</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">7</span>
                   <span className="text-muted">Special wishes</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-muted">8</span>
+                  <span className="font-semibold text-muted">6</span>
                   <span className="text-muted">Review & signing</span>
                 </div>
               </div>

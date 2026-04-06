@@ -4,6 +4,7 @@ import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Input } from "../../components/ui/Input";
 import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
@@ -41,19 +42,14 @@ export default function StructuredGuardianship() {
         <div className="space-y-6">
           <div className="space-y-2">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              Step 4 of 8 — Guardians (if needed)
+              Step 3 of 6 — Guardians (if needed)
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Guardianship</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               This section applies only if you have minor children. A guardian would care for them if both parents pass
               away, and the court may confirm the appointment.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 4 of 8: Guardianship</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-1/2 rounded-full bg-primary" />
-              </div>
-            </div>
+            <StructuredStepNav currentPath="/drafting/structured/guardians" />
           </div>
 
           <div className="space-y-4">
@@ -194,6 +190,14 @@ export default function StructuredGuardianship() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Button
+                variant="secondary"
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/drafting/structured/executors")}
+              >
+                Back to executors
+              </Button>
+              <Button
                 variant="primary"
                 size="sm"
                 className="w-full sm:w-auto"
@@ -202,7 +206,7 @@ export default function StructuredGuardianship() {
                 Continue to assets
               </Button>
               <Button
-                variant="secondary"
+                variant="ghost"
                 size="sm"
                 className="w-full sm:w-auto"
                 onClick={() => navigate("/drafting/structured-flow")}

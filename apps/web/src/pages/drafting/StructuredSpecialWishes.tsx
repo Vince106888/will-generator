@@ -4,6 +4,7 @@ import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Textarea } from "../../components/ui/Textarea";
 import { HelperCallout } from "../../components/ui/PencilPanels";
 import { useDraftingMode } from "../../lib/drafting";
@@ -29,7 +30,7 @@ export default function StructuredSpecialWishes() {
         <div className="space-y-6">
           <div className="space-y-2">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              Step 7 of 8: Special wishes and residue
+              Step 5 of 6: Special wishes and residue
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">
               Special wishes and residue
@@ -38,12 +39,7 @@ export default function StructuredSpecialWishes() {
               Use this space for final wishes or instructions not covered elsewhere. Keep them clear and realistic so
               they can be carried out.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 7 of 8 — Special wishes</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-[87.5%] rounded-full bg-primary" />
-              </div>
-            </div>
+            <StructuredStepNav currentPath="/drafting/structured/wishes" />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
@@ -121,9 +117,17 @@ export default function StructuredSpecialWishes() {
                   variant="secondary"
                   size="sm"
                   className="w-full sm:w-auto"
-                  onClick={() => navigate("/drafting/structured/beneficiaries")}
+                  onClick={() => navigate("/drafting/structured/assets")}
                 >
-                  Back to beneficiaries
+                  Back to assets
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured-flow")}
+                >
+                  Save and return later
                 </Button>
               </div>
             </div>

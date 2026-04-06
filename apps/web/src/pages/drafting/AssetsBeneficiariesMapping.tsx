@@ -5,6 +5,7 @@ import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { Textarea } from "../../components/ui/Textarea";
@@ -49,6 +50,10 @@ export default function AssetsBeneficiariesMapping() {
     notes: ""
   });
   const [allocationStatus, setAllocationStatus] = useState<string | null>(null);
+  const [quickBeneficiary, setQuickBeneficiary] = useState({
+    name: "",
+    relationship: ""
+  });
 
   useEffect(() => {
     setAllocationForm((prev) => ({
@@ -118,6 +123,75 @@ export default function AssetsBeneficiariesMapping() {
     });
   };
 
+  const handleQuickBeneficiaryAdd = () => {
+    const name = quickBeneficiary.name.trim();
+    if (!name) {
+      setAllocationStatus("Add a beneficiary name to continue.");
+      return;
+    }
+    const next = [
+      ...data.beneficiaries,
+      {
+        name,
+        relationship: quickBeneficiary.relationship.trim(),
+        phone: "",
+        idType: "",
+        share: ""
+      }
+    ];
+    update({ beneficiaries: next });
+    setAllocationForm((prev) => ({ ...prev, beneficiary: name }));
+    setQuickBeneficiary({ name: "", relationship: "" });
+    setAllocationStatus("Beneficiary added.");
+  };
+
+  const handleQuickAssign = () => {
+    const name = quickBeneficiary.name.trim();
+    if (!name) {
+      setAllocationStatus("Add a beneficiary name to continue.");
+      return;
+    }
+    if (!allocationForm.assetLabel) {
+      setAllocationStatus("Select an asset to assign.");
+      return;
+    }
+    const next = [
+      ...data.beneficiaries,
+      {
+        name,
+        relationship: quickBeneficiary.relationship.trim(),
+        phone: "",
+        idType: "",
+        share: ""
+      }
+    ];
+    const nextAllocations = [...data.assetAllocations];
+    const existingIndex = nextAllocations.findIndex(
+      (allocation) => allocation.assetLabel === allocationForm.assetLabel
+    );
+    const entry = {
+      beneficiary: name,
+      share: allocationForm.share,
+      notes: allocationForm.notes
+    };
+    if (existingIndex >= 0) {
+      const existing = nextAllocations[existingIndex];
+      nextAllocations[existingIndex] = {
+        ...existing,
+        allocations: [...existing.allocations, entry]
+      };
+    } else {
+      nextAllocations.push({
+        assetLabel: allocationForm.assetLabel,
+        allocations: [entry]
+      });
+    }
+    update({ beneficiaries: next, assetAllocations: nextAllocations });
+    setAllocationForm((prev) => ({ ...prev, beneficiary: name, share: "", notes: "" }));
+    setQuickBeneficiary({ name: "", relationship: "" });
+    setAllocationStatus("Beneficiary added and assigned.");
+  };
+
   const handleAddAllocation = () => {
     setAllocationStatus(null);
     if (!allocationForm.assetLabel || !allocationForm.beneficiary) {
@@ -166,19 +240,14 @@ export default function AssetsBeneficiariesMapping() {
         <div className="space-y-6">
           <div className="space-y-2">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              Step 5 of 8 — Assets
+              Step 4 of 6 — Assets
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Assets and beneficiaries</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               List what you own so nothing important is missed. Short descriptions are fine — you can add more detail
               later.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 5 of 8: Assets</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-[62.5%] rounded-full bg-primary" />
-              </div>
-            </div>
+            <StructuredStepNav currentPath="/drafting/structured/assets" />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
@@ -250,6 +319,36 @@ export default function AssetsBeneficiariesMapping() {
                       </p>
                     </div>
                   ))}
+                </div>
+                <div className="space-y-2 rounded-lg border border-dashed border-border bg-secondary p-3">
+                  <p className="text-[12px] font-semibold text-ink">Quick add beneficiary</p>
+                  <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <Input
+                      placeholder="Beneficiary name"
+                      value={quickBeneficiary.name}
+                      onChange={(event) =>
+                        setQuickBeneficiary((prev) => ({ ...prev, name: event.target.value }))
+                      }
+                    />
+                    <Input
+                      placeholder="Relationship (optional)"
+                      value={quickBeneficiary.relationship}
+                      onChange={(event) =>
+                        setQuickBeneficiary((prev) => ({
+                          ...prev,
+                          relationship: event.target.value
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="ghost" size="sm" onClick={handleQuickBeneficiaryAdd}>
+                      Add beneficiary only
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={handleQuickAssign}>
+                      Add and assign
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2 rounded-lg border border-border bg-secondary p-3">
                   <FieldGroup label="Asset">
@@ -470,12 +569,20 @@ export default function AssetsBeneficiariesMapping() {
                   variant="primary"
                   size="sm"
                   className="w-full sm:w-auto"
-                  onClick={() => navigate("/drafting/structured/beneficiaries")}
+                  onClick={() => navigate("/drafting/structured/wishes")}
                 >
-                  Continue to beneficiaries
+                  Continue to special wishes
                 </Button>
                 <Button
                   variant="secondary"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigate("/drafting/structured/guardians")}
+                >
+                  Back to guardianship
+                </Button>
+                <Button
+                  variant="ghost"
                   size="sm"
                   className="w-full sm:w-auto"
                   onClick={() => navigate("/drafting/structured-flow")}

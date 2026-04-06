@@ -4,6 +4,7 @@ import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
 import { HelperCallout } from "../../components/ui/PencilPanels";
@@ -30,18 +31,13 @@ export default function StructuredPersonalDetails() {
         <div className="space-y-6">
           <div className="space-y-2">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              Step 1 of 8: Personal details
+              Step 1 of 6: Personal details
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Personal details</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               These details help identify you unambiguously in the will.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 1 of 8 — Personal details</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-[12.5%] rounded-full bg-primary" />
-              </div>
-            </div>
+            <StructuredStepNav currentPath="/drafting/structured/personal-details" />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
@@ -137,9 +133,9 @@ export default function StructuredPersonalDetails() {
                   variant="primary"
                   size="sm"
                   className="w-full sm:w-auto"
-                  onClick={() => navigate("/drafting/structured/family")}
+                  onClick={() => navigate("/drafting/structured/executors")}
                 >
-                  Continue to family
+                  Continue to executors
                 </Button>
                 <Button
                   variant="secondary"
