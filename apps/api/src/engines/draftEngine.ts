@@ -61,17 +61,6 @@ function buildIdentityClause(input: WillInput): string {
 function buildFamilyContextClause(input: WillInput): string {
   const beneficiariesDetailed = input.metadata?.beneficiariesDetailed ?? [];
   const beneficiaries = (input.beneficiaries ?? []).filter((item) => item.trim());
-  const list = beneficiariesDetailed.length
-    ? beneficiariesDetailed.map((entry) => {
-        const relationship = normalizeLine(entry.relationship);
-        const share = normalizeLine(entry.share);
-        const extras = [relationship ? `relationship: ${relationship}` : "", share ? `share: ${share}` : ""]
-          .filter(Boolean)
-          .join(", ");
-        return extras ? `${entry.name} (${extras})` : entry.name;
-      })
-    : beneficiaries;
-
   const minorChildren = input.metadata?.minorChildren ?? [];
   const lines = [
     beneficiaries.length ? `Named beneficiaries: ${beneficiaries.join(", ")}.` : "No beneficiaries are fully confirmed yet.",
