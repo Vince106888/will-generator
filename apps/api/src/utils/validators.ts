@@ -66,3 +66,16 @@ export const leadSchema = z.object({
 export const willIdParamSchema = z.object({
   id: z.string().uuid()
 });
+
+export const draftSessionIdParamSchema = z.object({
+  id: z.string().uuid()
+});
+
+export const draftSessionCreateSchema = z.object({
+  sourceMode: z.enum(["AI", "STRUCTURED"]),
+  inputSnapshot: z.record(z.any())
+});
+
+export const draftSessionUpdateSchema = z.object({
+  inputSnapshot: z.record(z.any())
+});

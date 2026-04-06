@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import pinoHttp from "pino-http";
 import { willsRouter } from "./routes/wills";
+import { draftSessionsRouter } from "./routes/draftSessions";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/wills", willsRouter);
+app.use("/api/v1/draft-sessions", draftSessionsRouter);
 
 app.use((err: unknown, _req: express.Request, res: express.Response) => {
   console.error(err);
