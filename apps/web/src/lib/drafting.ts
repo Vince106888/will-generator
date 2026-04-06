@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { STORAGE_KEYS } from "./storage";
 import { api } from "./api";
+import { trackEvent } from "./analytics";
 import axios from "axios";
 
 export type DraftingData = {
@@ -342,6 +343,10 @@ export function useDraftingData() {
         setSession(meta);
         setData(normalizeDraftingData(created.inputSnapshot));
         setStatus({ loading: false, lastSyncedAt: created.updatedAt });
+        trackEvent({
+          event: "draft_session_created",
+          payload: { sessionId: created.sessionId, sourceMode: created.sourceMode }
+        });
       } catch (error) {
         if (!isMounted) return;
         const cached = loadDraftingData();
@@ -371,6 +376,10 @@ export function useDraftingData() {
             error: undefined,
             lastSyncedAt: updated.updatedAt
           }));
+          trackEvent({
+            event: "draft_session_updated",
+            payload: { sessionId: session.sessionId, updatedAt: updated.updatedAt }
+          });
         } catch (error) {
           setStatus((prev) => ({
             ...prev,

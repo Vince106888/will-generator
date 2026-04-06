@@ -8,6 +8,7 @@ import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
+import { trackEvent } from "../../lib/analytics";
 
 export default function ExportOptions() {
   const { data, update, session } = useDraftingData();
@@ -59,6 +60,7 @@ export default function ExportOptions() {
     }
     if (format === "pdf") {
       window.location.href = `${api.defaults.baseURL}/api/v1/wills/session/${sessionId}/pdf`;
+      trackEvent({ event: "export_pdf", payload: { sessionId } });
       return;
     }
     setResultError("Paid export tiers are not yet available.");

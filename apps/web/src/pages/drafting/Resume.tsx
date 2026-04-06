@@ -6,6 +6,7 @@ import {
   type DraftSessionMeta
 } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
+import { trackEvent } from "../../lib/analytics";
 import { Container } from "../../components/layout/Container";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
@@ -41,6 +42,7 @@ export default function ResumeDraft() {
         const snapshot = normalizeDraftingData(response.data.inputSnapshot);
         const resumedSnapshot = { ...snapshot, draftingModeConfirmed: true };
         persistDraftingSession(meta, resumedSnapshot);
+        trackEvent({ event: "draft_session_resumed", payload: { sessionId } });
         const mode = resumedSnapshot.draftingMode === "ai" ? "ai" : "structured";
         const destination =
           mode === "ai" ? "/drafting/ai/summary" : "/drafting/structured/personal-details";
