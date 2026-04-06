@@ -17,6 +17,12 @@ vi.mock("../lib/api", () => {
   };
 });
 
+vi.mock("../lib/analytics", () => {
+  return {
+    trackEvent: vi.fn()
+  };
+});
+
 describe("Review drafting flow", () => {
   beforeEach(() => {
     postMock.mockReset();
