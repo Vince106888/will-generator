@@ -19,7 +19,7 @@ app.get("/", (_req, res) => {
 
 app.use("/api/v1/wills", willsRouter);
 
-app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+app.use((err: unknown, _req: express.Request, res: express.Response) => {
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
 });

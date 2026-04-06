@@ -427,7 +427,7 @@ export default function AssetsBeneficiariesMapping() {
                 <div className="space-y-1">
                   <p className="text-[13px] font-semibold text-ink">Tips for describing assets</p>
                   <p className="text-[13px] leading-[1.5] text-muted">
-                    General descriptions are acceptable (for example: "all my vehicles" or "bank accounts at KCB"). More
+                    General descriptions are acceptable (for example: &quot;all my vehicles&quot; or &quot;bank accounts at KCB&quot;). More
                     detail helps your executor.
                   </p>
                 </div>
@@ -536,8 +536,8 @@ export default function AssetsBeneficiariesMapping() {
                   <p className="text-[13px] text-muted">Use when assets are not listed individually.</p>
                 </div>
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>&bull; "Everything else goes equally to my children."</p>
-                  <p>&bull; "Any remaining property goes to my spouse."</p>
+                  <p>&bull; &quot;Everything else goes equally to my children.&quot;</p>
+                  <p>&bull; &quot;Any remaining property goes to my spouse.&quot;</p>
                   <p className="text-muted">You can change this later if needed.</p>
                 </div>
                 <FieldGroup label="Your remainder clause">

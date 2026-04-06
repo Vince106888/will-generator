@@ -24,6 +24,10 @@ module.exports = {
       version: "detect"
     }
   },
+  rules: {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
+  },
   overrides: [
     {
       files: ["apps/api/**/*.ts"],

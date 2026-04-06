@@ -49,8 +49,8 @@ export default function EntryChoice() {
             </div>
             <div className="space-y-3 text-sm text-muted">
               <p className="text-sm text-muted">
-                Example: "I own a home in Kiambu, my spouse should live there, and my daughter gets
-                the car."
+                Example: &quot;I own a home in Kiambu, my spouse should live there, and my daughter gets
+                the car.&quot;
               </p>
               <div className="space-y-2 text-sm leading-6 text-muted">
                 <p>• Paste notes, upload a document, or speak freely</p>

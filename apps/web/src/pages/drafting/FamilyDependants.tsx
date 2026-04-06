@@ -52,7 +52,7 @@ export default function FamilyDependants() {
         <Card size="lg" className="space-y-3">
           <p className="text-xs font-semibold text-ink">Children and dependants</p>
           <p className="text-xs text-muted">
-            Add each child or dependant. We'll ask about guardians if any are minors.
+            Add each child or dependant. We&apos;ll ask about guardians if any are minors.
           </p>
           {data.dependants.map((dependant, index) => (
             <Card key={`dependant-${index}`} size="md" variant="secondary" className="space-y-3">

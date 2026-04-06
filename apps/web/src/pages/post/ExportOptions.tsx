@@ -46,6 +46,7 @@ export default function ExportOptions() {
         metadata: { action: "export", format }
       });
     } catch {
+      console.error("Failed to submit export request.");
     }
   };
 
