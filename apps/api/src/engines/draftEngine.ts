@@ -5,11 +5,6 @@ function normalizeName(value: string | undefined | null) {
   return String(value ?? "").trim();
 }
 
-function normalizeLine(value: string | undefined | null) {
-  const line = String(value ?? "").trim();
-  return line ? line : "";
-}
-
 function formatBullets(lines: string[]) {
   return lines.filter(Boolean).map((line) => `- ${line}`);
 }
@@ -59,7 +54,6 @@ function buildIdentityClause(input: WillInput): string {
 }
 
 function buildFamilyContextClause(input: WillInput): string {
-  const beneficiariesDetailed = input.metadata?.beneficiariesDetailed ?? [];
   const beneficiaries = (input.beneficiaries ?? []).filter((item) => item.trim());
   const minorChildren = input.metadata?.minorChildren ?? [];
   const lines = [
