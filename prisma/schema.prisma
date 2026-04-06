@@ -36,6 +36,20 @@ enum AdvocateReviewStatus {
   CANCELLED
 }
 
+enum AiInteractionType {
+  EXTRACT
+  EXPLAIN
+  SUMMARIZE
+}
+
+enum AiInteractionStatus {
+  ACCEPTED
+  EDITED
+  REJECTED
+  ABSTAINED
+  FAILED_SCHEMA
+}
+
 model WillProfile {
   id           String   @id @default(uuid())
   userId       String?
@@ -70,6 +84,7 @@ model DraftSession {
 
   versions        WillDraftVersion[]
   advocateReviewRequests AdvocateReviewRequest[]
+  aiInteractions AiInteraction[]
 
   @@index([createdAt])
 }
@@ -93,6 +108,32 @@ model WillDraftVersion {
   @@index([willProfileId])
   @@unique([draftSessionId, version])
   advocateReviewRequests AdvocateReviewRequest[]
+  aiInteractions AiInteraction[]
+}
+
+model AiInteraction {
+  id                 String   @id @default(uuid())
+  draftSessionId     String
+  draftSession       DraftSession @relation(fields: [draftSessionId], references: [id])
+  willDraftVersionId String?
+  willDraftVersion   WillDraftVersion? @relation(fields: [willDraftVersionId], references: [id])
+  interactionType    AiInteractionType
+  modelIdentifier    String
+  providerIdentifier String
+  promptVersion      String
+  inputHash          String
+  inputPreview       String?
+  structuredOutput   Json?
+  confidence         Float?
+  abstained          Boolean @default(false)
+  status             AiInteractionStatus
+  userDecision       String?
+  createdAt          DateTime @default(now())
+
+  @@index([draftSessionId])
+  @@index([willDraftVersionId])
+  @@index([interactionType])
+  @@index([createdAt])
 }
 
 model AdvocateReviewRequest {

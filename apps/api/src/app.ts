@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import pinoHttp from "pino-http";
 import { willsRouter } from "./routes/wills";
 import { draftSessionsRouter } from "./routes/draftSessions";
+import { aiRouter } from "./routes/ai";
 import { analyticsRouter } from "./routes/analytics";
 import { healthRouter } from "./routes/health";
 
@@ -22,6 +23,7 @@ app.get("/", (_req, res) => {
 
 app.use("/api/v1/wills", willsRouter);
 app.use("/api/v1/draft-sessions", draftSessionsRouter);
+app.use("/api/v1/ai", aiRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use("/health", healthRouter);
 
