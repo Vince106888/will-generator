@@ -18,4 +18,30 @@ export class LeadService {
       }
     });
   }
+
+  async captureAdvocateReview(input: {
+    draftSessionId: string;
+    willDraftVersionId: string | null;
+    contactName: string | null;
+    contactEmail: string;
+    contactPhone: string | null;
+    notes: string | null;
+  }) {
+    return prisma.advocateReviewRequest.create({
+      data: {
+        draftSessionId: input.draftSessionId,
+        willDraftVersionId: input.willDraftVersionId ?? undefined,
+        contactName: input.contactName ?? undefined,
+        contactEmail: input.contactEmail,
+        contactPhone: input.contactPhone ?? undefined,
+        notes: input.notes ?? undefined
+      }
+    });
+  }
+
+  async getAdvocateReviewRequest(requestId: string, draftSessionId: string) {
+    return prisma.advocateReviewRequest.findFirst({
+      where: { id: requestId, draftSessionId }
+    });
+  }
 }

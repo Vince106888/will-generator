@@ -28,6 +28,14 @@ enum DraftSourceMode {
   STRUCTURED
 }
 
+enum AdvocateReviewStatus {
+  SUBMITTED
+  ACKNOWLEDGED
+  ASSIGNED
+  COMPLETED
+  CANCELLED
+}
+
 model WillProfile {
   id           String   @id @default(uuid())
   userId       String?
@@ -82,6 +90,24 @@ model WillDraftVersion {
   @@index([draftSessionId])
   @@index([willProfileId])
   @@unique([draftSessionId, version])
+}
+
+model AdvocateReviewRequest {
+  id               String   @id @default(uuid())
+  draftSessionId   String
+  draftSession     DraftSession @relation(fields: [draftSessionId], references: [id])
+  willDraftVersionId String?
+  willDraftVersion   WillDraftVersion? @relation(fields: [willDraftVersionId], references: [id])
+  status           AdvocateReviewStatus @default(SUBMITTED)
+  contactName      String?
+  contactEmail     String
+  contactPhone     String?
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([draftSessionId])
+  @@index([willDraftVersionId])
 }
 
 model Lead {

@@ -79,3 +79,19 @@ export const draftSessionCreateSchema = z.object({
 export const draftSessionUpdateSchema = z.object({
   inputSnapshot: z.record(z.any())
 });
+
+export const advocateReviewRequestSchema = z.object({
+  contactName: z.string().min(2).optional(),
+  contactEmail: z.string().email(),
+  contactPhone: z.string().min(5).optional(),
+  notes: z.string().min(2).optional()
+});
+
+export const resumeLinkSchema = z.object({
+  email: z.string().email()
+});
+
+export const analyticsEventSchema = z.object({
+  event: z.string().min(2),
+  payload: z.record(z.any()).optional()
+});
