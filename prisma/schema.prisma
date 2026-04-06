@@ -54,6 +54,7 @@ model WillProfile {
 
   leads        Lead[]
   analytics    AnalyticsEvent[]
+  draftVersions WillDraftVersion[]
 
   @@index([createdAt])
 }
@@ -68,6 +69,7 @@ model DraftSession {
   updatedAt       DateTime @updatedAt
 
   versions        WillDraftVersion[]
+  advocateReviewRequests AdvocateReviewRequest[]
 
   @@index([createdAt])
 }
@@ -90,6 +92,7 @@ model WillDraftVersion {
   @@index([draftSessionId])
   @@index([willProfileId])
   @@unique([draftSessionId, version])
+  advocateReviewRequests AdvocateReviewRequest[]
 }
 
 model AdvocateReviewRequest {
