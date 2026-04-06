@@ -16,6 +16,18 @@ enum WillComplexityLevel {
   HIGH
 }
 
+enum DraftSessionStatus {
+  IN_PROGRESS
+  READY
+  FINALIZED
+  ARCHIVED
+}
+
+enum DraftSourceMode {
+  AI
+  STRUCTURED
+}
+
 model WillProfile {
   id           String   @id @default(uuid())
   userId       String?
@@ -36,6 +48,37 @@ model WillProfile {
   analytics    AnalyticsEvent[]
 
   @@index([createdAt])
+}
+
+model DraftSession {
+  id              String   @id @default(uuid())
+  status          DraftSessionStatus @default(IN_PROGRESS)
+  sourceMode      DraftSourceMode
+  inputSnapshot   Json
+  resumeTokenHash String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  versions        WillDraftVersion[]
+
+  @@index([createdAt])
+}
+
+model WillDraftVersion {
+  id               String   @id @default(uuid())
+  draftSessionId   String
+  draftSession     DraftSession @relation(fields: [draftSessionId], references: [id])
+  version          Int
+  inputSnapshot    Json
+  generatedDraft   String
+  complexityResult Json
+  validityResult   Json
+  isCurrent        Boolean @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([draftSessionId])
+  @@unique([draftSessionId, version])
 }
 
 model Lead {
