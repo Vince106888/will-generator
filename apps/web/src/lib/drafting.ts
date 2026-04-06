@@ -1,5 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { STORAGE_KEYS } from "./storage";
+import { api } from "./api";
+import { trackEvent } from "./analytics";
+import axios from "axios";
 
 export type DraftingData = {
   legalName: string;
@@ -38,6 +41,24 @@ export type DraftingData = {
     summary: string;
     updatedAt: string;
     confidence: string;
+    interactionId?: string;
+    freeTextNotes?: string;
+    extractionCandidates?: {
+      assets: Array<{ label: string; details?: string; confidence?: number }>;
+      beneficiaries: Array<{ name: string; relationship?: string; confidence?: number }>;
+      executors: Array<{ name: string; relationship?: string; confidence?: number }>;
+      guardians: Array<{ name: string; relationship?: string; confidence?: number }>;
+      specialWishes: Array<{ text: string; confidence?: number }>;
+      notes: string[];
+    };
+    explain?: {
+      topic: string;
+      explanation: string;
+      confidence: number;
+      uncertainty?: string;
+    };
+    abstained?: boolean;
+    uncertainty?: string;
   };
   exportPreferences: {
     format: string;
@@ -102,7 +123,25 @@ export const defaultDraftingData: DraftingData = {
   aiDraftSession: {
     summary: "",
     updatedAt: "",
-    confidence: "medium"
+    confidence: "medium",
+    interactionId: "",
+    freeTextNotes: "",
+    extractionCandidates: {
+      assets: [],
+      beneficiaries: [],
+      executors: [],
+      guardians: [],
+      specialWishes: [],
+      notes: []
+    },
+    explain: {
+      topic: "",
+      explanation: "",
+      confidence: 0,
+      uncertainty: ""
+    },
+    abstained: false,
+    uncertainty: ""
   },
   exportPreferences: {
     format: "pdf",
@@ -120,59 +159,137 @@ export const defaultDraftingData: DraftingData = {
 };
 
 const STORAGE_KEY = STORAGE_KEYS.draftingData;
+const SESSION_KEY = STORAGE_KEYS.draftingSession;
+
+export type DraftSessionMeta = {
+  sessionId: string;
+  resumeToken: string;
+  sourceMode: "AI" | "STRUCTURED";
+};
+
+export type DraftSessionStatus = {
+  loading: boolean;
+  error?: string;
+  lastSyncedAt?: string;
+};
+
+export function loadDraftingSessionMeta(): DraftSessionMeta | null {
+  if (typeof window === "undefined") return null;
+  const stored = window.localStorage.getItem(SESSION_KEY);
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored) as DraftSessionMeta;
+  } catch {
+    return null;
+  }
+}
+
+export function saveDraftingSessionMeta(meta: DraftSessionMeta) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(SESSION_KEY, JSON.stringify(meta));
+}
+
+export function clearDraftingSessionMeta() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(SESSION_KEY);
+}
+
+async function createDraftSession(sourceMode: DraftSessionMeta["sourceMode"], inputSnapshot: DraftingData) {
+  const response = await api.post("/api/v1/draft-sessions", {
+    sourceMode,
+    inputSnapshot
+  });
+  return response.data as {
+    sessionId: string;
+    resumeToken: string;
+    sourceMode: DraftSessionMeta["sourceMode"];
+    inputSnapshot: DraftingData;
+    updatedAt: string;
+  };
+}
+
+async function getDraftSession(meta: DraftSessionMeta) {
+  const response = await api.get(`/api/v1/draft-sessions/${meta.sessionId}`, {
+    headers: { "x-draft-token": meta.resumeToken }
+  });
+  return response.data as {
+    sessionId: string;
+    sourceMode: DraftSessionMeta["sourceMode"];
+    inputSnapshot: DraftingData;
+    updatedAt: string;
+  };
+}
+
+async function updateDraftSession(meta: DraftSessionMeta, inputSnapshot: DraftingData) {
+  const response = await api.patch(
+    `/api/v1/draft-sessions/${meta.sessionId}`,
+    { inputSnapshot },
+    { headers: { "x-draft-token": meta.resumeToken } }
+  );
+  return response.data as {
+    sessionId: string;
+    sourceMode: DraftSessionMeta["sourceMode"];
+    inputSnapshot: DraftingData;
+    updatedAt: string;
+  };
+}
+
+export function normalizeDraftingData(raw: DraftingData): DraftingData {
+  const parsed = { ...defaultDraftingData, ...raw } as DraftingData;
+  if (!Array.isArray(parsed.executors) || parsed.executors.length === 0) {
+    parsed.executors = defaultDraftingData.executors;
+  }
+  if (parsed.executors.length < 2) {
+    parsed.executors = [
+      ...parsed.executors,
+      { name: "", relationship: "", phone: "" }
+    ];
+  }
+  if (!Array.isArray(parsed.beneficiaries) || parsed.beneficiaries.length === 0) {
+    parsed.beneficiaries = defaultDraftingData.beneficiaries;
+  }
+  if (!Array.isArray(parsed.assets) || parsed.assets.length === 0) {
+    parsed.assets = defaultDraftingData.assets;
+  }
+  if (!Array.isArray(parsed.guardians) || parsed.guardians.length === 0) {
+    parsed.guardians = defaultDraftingData.guardians;
+  }
+  if (parsed.guardians.length < 2) {
+    parsed.guardians = [
+      ...parsed.guardians,
+      { name: "", relationship: "", phone: "", location: "", notes: "" }
+    ];
+  }
+  if (!Array.isArray(parsed.dependants) || parsed.dependants.length === 0) {
+    parsed.dependants = defaultDraftingData.dependants;
+  }
+  if (!Array.isArray(parsed.assetAllocations)) {
+    parsed.assetAllocations = defaultDraftingData.assetAllocations;
+  }
+  if (!parsed.aiDraftSession) {
+    parsed.aiDraftSession = defaultDraftingData.aiDraftSession;
+  }
+  if (!parsed.exportPreferences) {
+    parsed.exportPreferences = defaultDraftingData.exportPreferences;
+  }
+  if (!parsed.existingWill) {
+    parsed.existingWill = defaultDraftingData.existingWill;
+  }
+  if (!parsed.draftingMode) {
+    parsed.draftingMode = defaultDraftingData.draftingMode;
+  }
+  if (typeof parsed.draftingModeConfirmed !== "boolean") {
+    parsed.draftingModeConfirmed = defaultDraftingData.draftingModeConfirmed;
+  }
+  return parsed;
+}
 
 export function loadDraftingData(): DraftingData {
   if (typeof window === "undefined") return defaultDraftingData;
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (!stored) return defaultDraftingData;
   try {
-    const parsed = { ...defaultDraftingData, ...JSON.parse(stored) } as DraftingData;
-    if (!Array.isArray(parsed.executors) || parsed.executors.length === 0) {
-      parsed.executors = defaultDraftingData.executors;
-    }
-    if (parsed.executors.length < 2) {
-      parsed.executors = [
-        ...parsed.executors,
-        { name: "", relationship: "", phone: "" }
-      ];
-    }
-    if (!Array.isArray(parsed.beneficiaries) || parsed.beneficiaries.length === 0) {
-      parsed.beneficiaries = defaultDraftingData.beneficiaries;
-    }
-    if (!Array.isArray(parsed.assets) || parsed.assets.length === 0) {
-      parsed.assets = defaultDraftingData.assets;
-    }
-    if (!Array.isArray(parsed.guardians) || parsed.guardians.length === 0) {
-      parsed.guardians = defaultDraftingData.guardians;
-    }
-    if (parsed.guardians.length < 2) {
-      parsed.guardians = [
-        ...parsed.guardians,
-        { name: "", relationship: "", phone: "", location: "", notes: "" }
-      ];
-    }
-    if (!Array.isArray(parsed.dependants) || parsed.dependants.length === 0) {
-      parsed.dependants = defaultDraftingData.dependants;
-    }
-    if (!Array.isArray(parsed.assetAllocations)) {
-      parsed.assetAllocations = defaultDraftingData.assetAllocations;
-    }
-    if (!parsed.aiDraftSession) {
-      parsed.aiDraftSession = defaultDraftingData.aiDraftSession;
-    }
-    if (!parsed.exportPreferences) {
-      parsed.exportPreferences = defaultDraftingData.exportPreferences;
-    }
-    if (!parsed.existingWill) {
-      parsed.existingWill = defaultDraftingData.existingWill;
-    }
-    if (!parsed.draftingMode) {
-      parsed.draftingMode = defaultDraftingData.draftingMode;
-    }
-    if (typeof parsed.draftingModeConfirmed !== "boolean") {
-      parsed.draftingModeConfirmed = defaultDraftingData.draftingModeConfirmed;
-    }
-    return parsed;
+    return normalizeDraftingData(JSON.parse(stored));
   } catch {
     return defaultDraftingData;
   }
@@ -183,18 +300,150 @@ export function saveDraftingData(data: DraftingData) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+export function persistDraftingSession(meta: DraftSessionMeta, snapshot: DraftingData) {
+  saveDraftingSessionMeta(meta);
+  saveDraftingData(normalizeDraftingData(snapshot));
+}
+
 export function useDraftingData() {
   const [data, setData] = useState<DraftingData>(() => loadDraftingData());
+  const [session, setSession] = useState<DraftSessionMeta | null>(null);
+  const [status, setStatus] = useState<DraftSessionStatus>({ loading: true });
+  const pendingSync = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestSnapshot = useRef<DraftingData>(data);
 
   useEffect(() => {
     saveDraftingData(data);
+    latestSnapshot.current = data;
   }, [data]);
 
-  const update = useCallback((next: Partial<DraftingData>) => {
-    setData((prev) => ({ ...prev, ...next }));
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrate = async () => {
+      try {
+        setStatus({ loading: true });
+        const storedSession = loadDraftingSessionMeta();
+        if (storedSession) {
+          try {
+            const remote = await getDraftSession(storedSession);
+            if (!isMounted) return;
+            setSession(storedSession);
+            setData(normalizeDraftingData(remote.inputSnapshot));
+            setStatus({ loading: false, lastSyncedAt: remote.updatedAt });
+            return;
+          } catch (error) {
+            if (!isMounted) return;
+            if (axios.isAxiosError(error)) {
+              const statusCode = error.response?.status;
+              if (statusCode === 403 || statusCode === 404) {
+                clearDraftingSessionMeta();
+                if (typeof window !== "undefined") {
+                  window.localStorage.removeItem(STORAGE_KEYS.willResult);
+                }
+                const cached = loadDraftingData();
+                const sourceMode = cached.draftingMode === "ai" ? "AI" : "STRUCTURED";
+                const created = await createDraftSession(sourceMode, cached);
+                if (!isMounted) return;
+                const meta: DraftSessionMeta = {
+                  sessionId: created.sessionId,
+                  resumeToken: created.resumeToken,
+                  sourceMode: created.sourceMode
+                };
+                saveDraftingSessionMeta(meta);
+                setSession(meta);
+                setData(normalizeDraftingData(created.inputSnapshot));
+                setStatus({
+                  loading: false,
+                  lastSyncedAt: created.updatedAt,
+                  error:
+                    "Previous draft session could not be resumed. A new session has been started."
+                });
+                return;
+              }
+            }
+            throw error;
+          }
+        }
+
+        const seedSnapshot = latestSnapshot.current ?? defaultDraftingData;
+        const sourceMode = seedSnapshot.draftingMode === "ai" ? "AI" : "STRUCTURED";
+        const created = await createDraftSession(sourceMode, seedSnapshot);
+        if (!isMounted) return;
+        const meta: DraftSessionMeta = {
+          sessionId: created.sessionId,
+          resumeToken: created.resumeToken,
+          sourceMode: created.sourceMode
+        };
+        saveDraftingSessionMeta(meta);
+        setSession(meta);
+        setData(normalizeDraftingData(created.inputSnapshot));
+        setStatus({ loading: false, lastSyncedAt: created.updatedAt });
+        trackEvent({
+          event: "draft_session_created",
+          payload: { sessionId: created.sessionId, sourceMode: created.sourceMode }
+        });
+      } catch (error) {
+        if (!isMounted) return;
+        const cached = loadDraftingData();
+        setData(cached);
+        setStatus({ loading: false, error: "Unable to sync draft session. Using local cache." });
+      }
+    };
+
+    hydrate();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  return { data, update, setData };
+  const scheduleSync = useCallback(
+    (nextSnapshot: DraftingData) => {
+      if (!session) return;
+      if (pendingSync.current) {
+        clearTimeout(pendingSync.current);
+      }
+      pendingSync.current = setTimeout(async () => {
+        try {
+          const updated = await updateDraftSession(session, nextSnapshot);
+          setStatus((prev) => ({
+            ...prev,
+            error: undefined,
+            lastSyncedAt: updated.updatedAt
+          }));
+          trackEvent({
+            event: "draft_session_updated",
+            payload: { sessionId: session.sessionId, updatedAt: updated.updatedAt }
+          });
+        } catch (error) {
+          setStatus((prev) => ({
+            ...prev,
+            error: "Unable to save changes to the server."
+          }));
+        }
+      }, 400);
+    },
+    [session]
+  );
+
+  useEffect(() => {
+    if (!session) return;
+    scheduleSync(latestSnapshot.current);
+  }, [scheduleSync, session]);
+
+  const update = useCallback(
+    (next: Partial<DraftingData>) => {
+      setData((prev) => {
+        const merged = { ...prev, ...next };
+        scheduleSync(merged);
+        return merged;
+      });
+    },
+    [scheduleSync]
+  );
+
+  return { data, update, setData, session, status };
 }
 
 export function useDraftingMode(

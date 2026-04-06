@@ -18,7 +18,7 @@ test("generates draft with core sections", () => {
   const draft = generateDraft(input);
   expect(draft).toContain("LAST WILL AND TESTAMENT");
   expect(draft).toContain("EXECUTOR");
-  expect(draft).toContain("ASSETS");
-  expect(draft).toContain("BENEFICIARIES");
+  expect(draft).toContain("SPECIFIC GIFTS / ALLOCATIONS");
+  expect(draft).toContain("RESIDUARY ESTATE");
   expect(draft).toContain("Keep it simple");
 });

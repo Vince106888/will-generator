@@ -16,6 +16,40 @@ enum WillComplexityLevel {
   HIGH
 }
 
+enum DraftSessionStatus {
+  IN_PROGRESS
+  READY
+  FINALIZED
+  ARCHIVED
+}
+
+enum DraftSourceMode {
+  AI
+  STRUCTURED
+}
+
+enum AdvocateReviewStatus {
+  SUBMITTED
+  ACKNOWLEDGED
+  ASSIGNED
+  COMPLETED
+  CANCELLED
+}
+
+enum AiInteractionType {
+  EXTRACT
+  EXPLAIN
+  SUMMARIZE
+}
+
+enum AiInteractionStatus {
+  ACCEPTED
+  EDITED
+  REJECTED
+  ABSTAINED
+  FAILED_SCHEMA
+}
+
 model WillProfile {
   id           String   @id @default(uuid())
   userId       String?
@@ -34,8 +68,90 @@ model WillProfile {
 
   leads        Lead[]
   analytics    AnalyticsEvent[]
+  draftVersions WillDraftVersion[]
 
   @@index([createdAt])
+}
+
+model DraftSession {
+  id              String   @id @default(uuid())
+  status          DraftSessionStatus @default(IN_PROGRESS)
+  sourceMode      DraftSourceMode
+  inputSnapshot   Json
+  resumeTokenHash String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  versions        WillDraftVersion[]
+  advocateReviewRequests AdvocateReviewRequest[]
+  aiInteractions AiInteraction[]
+
+  @@index([createdAt])
+}
+
+model WillDraftVersion {
+  id               String   @id @default(uuid())
+  draftSessionId   String
+  draftSession     DraftSession @relation(fields: [draftSessionId], references: [id])
+  willProfileId    String?
+  willProfile      WillProfile? @relation(fields: [willProfileId], references: [id])
+  version          Int
+  inputSnapshot    Json
+  generatedDraft   String
+  complexityResult Json
+  validityResult   Json
+  isCurrent        Boolean @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([draftSessionId])
+  @@index([willProfileId])
+  @@unique([draftSessionId, version])
+  advocateReviewRequests AdvocateReviewRequest[]
+  aiInteractions AiInteraction[]
+}
+
+model AiInteraction {
+  id                 String   @id @default(uuid())
+  draftSessionId     String
+  draftSession       DraftSession @relation(fields: [draftSessionId], references: [id])
+  willDraftVersionId String?
+  willDraftVersion   WillDraftVersion? @relation(fields: [willDraftVersionId], references: [id])
+  interactionType    AiInteractionType
+  modelIdentifier    String
+  providerIdentifier String
+  promptVersion      String
+  inputHash          String
+  inputPreview       String?
+  structuredOutput   Json?
+  confidence         Float?
+  abstained          Boolean @default(false)
+  status             AiInteractionStatus
+  userDecision       String?
+  createdAt          DateTime @default(now())
+
+  @@index([draftSessionId])
+  @@index([willDraftVersionId])
+  @@index([interactionType])
+  @@index([createdAt])
+}
+
+model AdvocateReviewRequest {
+  id               String   @id @default(uuid())
+  draftSessionId   String
+  draftSession     DraftSession @relation(fields: [draftSessionId], references: [id])
+  willDraftVersionId String?
+  willDraftVersion   WillDraftVersion? @relation(fields: [willDraftVersionId], references: [id])
+  status           AdvocateReviewStatus @default(SUBMITTED)
+  contactName      String?
+  contactEmail     String
+  contactPhone     String?
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([draftSessionId])
+  @@index([willDraftVersionId])
 }
 
 model Lead {

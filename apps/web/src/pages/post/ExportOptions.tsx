@@ -1,5 +1,5 @@
 // Frame: Export Options (xUIiv)
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
@@ -8,19 +8,44 @@ import { navigate } from "../../lib/navigation";
 import { useDraftingData } from "../../lib/drafting";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
+import { trackEvent } from "../../lib/analytics";
 
 export default function ExportOptions() {
-  const { data, update } = useDraftingData();
-  const willId = useMemo(() => {
+  const { data, update, session } = useDraftingData();
+  const [resultError, setResultError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const sessionId = session?.sessionId ?? null;
+
+  const latestResult = useMemo(() => {
     if (typeof window === "undefined") return null;
     const stored = window.localStorage.getItem(STORAGE_KEYS.willResult);
     if (!stored) return null;
     try {
-      return (JSON.parse(stored) as { id?: string }).id ?? null;
+      return JSON.parse(stored) as { sessionId?: string; version?: number };
     } catch {
       return null;
     }
   }, []);
+
+  useEffect(() => {
+    if (!sessionId) {
+      setResultError("No active draft session found.");
+      return;
+    }
+    setLoading(true);
+    api
+      .get(`/api/v1/wills/session/${sessionId}`)
+      .then((response) => {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(STORAGE_KEYS.willResult, JSON.stringify(response.data));
+        }
+        setResultError(null);
+      })
+      .catch(() => {
+        setResultError("We could not find a generated draft for this session.");
+      })
+      .finally(() => setLoading(false));
+  }, [sessionId]);
 
   const handleExport = async (format: string) => {
     update({
@@ -29,25 +54,16 @@ export default function ExportOptions() {
         format
       }
     });
-    if (!willId) {
-      navigate("/drafting/review-result");
+    if (!sessionId) {
+      setResultError("No active draft session found.");
       return;
     }
     if (format === "pdf") {
-      window.location.href = `${api.defaults.baseURL}/api/v1/wills/${willId}/pdf`;
+      window.location.href = `${api.defaults.baseURL}/api/v1/wills/session/${sessionId}/pdf`;
+      trackEvent({ event: "export_pdf", payload: { sessionId } });
       return;
     }
-    if (!data.email) {
-      return;
-    }
-    try {
-      await api.post(`/api/v1/wills/${willId}/lead`, {
-        email: data.email,
-        metadata: { action: "export", format }
-      });
-    } catch {
-      console.error("Failed to submit export request.");
-    }
+    setResultError("Paid export tiers are not yet available.");
   };
 
   return (
@@ -65,17 +81,25 @@ export default function ExportOptions() {
               Choose your export option
             </h1>
             <p className="text-[16px] leading-[1.6] text-muted">
-              Download a PDF immediately, or choose a tier that removes the
-              watermark and adds extra signing support. All tiers follow the
-              same legal signing rules.
+              Download a PDF immediately. Paid export tiers are not available yet,
+              so the free PDF is the only option today.
             </p>
+            {loading ? (
+              <p className="text-xs text-muted">Checking latest draft output...</p>
+            ) : null}
+            {resultError ? (
+              <p className="text-xs text-warning">{resultError}</p>
+            ) : null}
+            {latestResult?.version ? (
+              <p className="text-xs text-muted">Latest version: v{latestResult.version}</p>
+            ) : null}
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <SectionCard title="Free" subtitle="KES 0 - watermarked draft">
+            <SectionCard title="Free" subtitle="KES 0 - draft PDF">
               <div className="space-y-2 text-[13px]">
                 <p className="text-ink">&bull; PDF download</p>
-                <p className="text-muted">&bull; Watermarked for draft use</p>
+                <p className="text-muted">&bull; Draft copy for review and signing prep</p>
               </div>
               <Button
                 variant="primary"
@@ -83,7 +107,7 @@ export default function ExportOptions() {
                 className="px-5 py-3 text-[13px]"
                 onClick={() => handleExport("pdf")}
               >
-                Download watermarked PDF
+                Download PDF
               </Button>
             </SectionCard>
 
@@ -94,18 +118,19 @@ export default function ExportOptions() {
                 <p className="text-muted">&bull; Editable for later updates</p>
               </div>
               <Button
-                variant="primary"
+                variant="secondary"
                 size="sm"
                 className="px-5 py-3 text-[13px]"
                 onClick={() => handleExport("basic")}
+                disabled
               >
-                Get Basic
+                Coming soon
               </Button>
             </SectionCard>
 
             <SectionCard
               title="Premium"
-              subtitle="KES 4,000–5,000 - witness service"
+              subtitle="KES 4,000-5,000 - witness service"
             >
               <div className="space-y-2 text-[13px]">
                 <p className="text-ink">&bull; Printed glossy copy</p>
@@ -115,25 +140,26 @@ export default function ExportOptions() {
                 </p>
               </div>
               <Button
-                variant="primary"
+                variant="secondary"
                 size="sm"
                 className="px-5 py-3 text-[13px]"
                 onClick={() => handleExport("premium")}
+                disabled
               >
-                Request Premium
+                Coming soon
               </Button>
             </SectionCard>
           </div>
 
           <HelperCallout
-            title="How to choose a tier"
-            body="All tiers use the same legal content. Choose based on whether you want a clean PDF, Word editing, or witness support."
+            title="Paid tiers status"
+            body="Paid exports are intentionally deferred for this MVP. We will notify users before these tiers go live."
           />
 
           <div className="grid gap-4 lg:grid-cols-2">
             <HelperCallout
-              title="Watermark note"
-              body="The free tier includes a visible watermark to indicate this is a draft. Your legal signing is the same regardless of tier."
+              title="Draft note"
+              body="This PDF is intended as a draft you can review and sign. Keep a copy of your signed will in a safe place."
             />
             <HelperCallout
               title="Premium witness service"

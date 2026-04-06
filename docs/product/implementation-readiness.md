@@ -32,15 +32,16 @@ This repo uses `pnpm`. On Windows, you may need Corepack enabled:
    - `corepack enable`
 2. Install dependencies
    - `pnpm install`
-3. Run checks
+3. Generate Prisma client
+   - `pnpm -C apps/api db:generate`
+4. Run migrations (requires DATABASE_URL)
+   - `pnpm -C apps/api db:migrate`
+5. Run checks
    - `pnpm lint`
    - `pnpm test`
    - `pnpm build`
 
 If your shell blocks scripts, use `cmd` or adjust your PowerShell execution policy.
 
-## Known Environment Issue (This Machine)
-`pnpm` and `corepack` were not available via PowerShell or `cmd` in this environment, so lint/test/build were not executed here. Please run the steps above locally to verify.
-
 ## Next Implementation Step
-Complete Phase 0 and begin Phase 1 (Landing Page v2).
+Complete final hardening and release readiness verification.

@@ -1,6 +1,6 @@
 // file: apps/api/src/services/willService.ts
 import { prisma } from "../db";
-import { generateDraft } from "../engines/draftEngine";
+import { assessDraftConsistency, generateDraft } from "../engines/draftEngine";
 import { computeComplexity } from "../engines/complexityEngine";
 import { getValidityChecklist } from "../engines/validityEngine";
 import { WillInput } from "../types";
@@ -14,9 +14,16 @@ export class WillService {
   }
 
   async generate(input: WillInput, leadEmail?: string) {
+    const consistency = assessDraftConsistency(input);
+    if (consistency.blockingIssues.length > 0) {
+      const error = new Error("Draft consistency blocking issues");
+      (error as Error & { details?: unknown }).details = consistency;
+      throw error;
+    }
+
     const draft = generateDraft(input);
     const complexity = computeComplexity(input);
-    const validity = getValidityChecklist();
+    const validity = getValidityChecklist(input, complexity);
 
     const will = await prisma.willProfile.create({
       data: {
@@ -45,7 +52,10 @@ export class WillService {
         instructions: {
           notes: input.instructions?.notes ?? null,
           funeralWishes: input.instructions?.funeralWishes ?? null,
-          metadata: input.metadata ?? null
+          metadata: {
+            ...(input.metadata ?? {}),
+            draftConsistency: consistency
+          }
         },
         complexity,
         validity,
@@ -69,6 +79,7 @@ export class WillService {
       draft,
       complexity,
       validity,
+      draftConsistency: consistency,
       metadata: input.metadata ?? null
     };
   }
@@ -76,6 +87,14 @@ export class WillService {
   async getById(id: string) {
     return prisma.willProfile.findUnique({
       where: { id }
+    });
+  }
+
+  async getLatestBySession(sessionId: string) {
+    return prisma.willDraftVersion.findFirst({
+      where: { draftSessionId: sessionId, isCurrent: true },
+      orderBy: { version: "desc" },
+      include: { willProfile: true }
     });
   }
 }

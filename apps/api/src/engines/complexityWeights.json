@@ -1,6 +1,14 @@
 {
   "hasMinors": 2,
   "multipleHouseholds": 2,
+  "foreignAssets": 2,
+  "businessInterests": 2,
+  "digitalAssets": 1,
+  "familyConflict": 2,
+  "executorGap": 2,
+  "guardianGap": 2,
   "assetThreshold": 5,
-  "assetWeight": 1
+  "assetWeight": 1,
+  "beneficiaryThreshold": 4,
+  "beneficiaryWeight": 1
 }

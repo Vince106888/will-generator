@@ -48,7 +48,7 @@ test("captures a lead when leadEmail is provided", async () => {
       executor: "John Doe",
       assets: ["House"],
       beneficiaries: ["Alice"],
-      hasMinors: true,
+      hasMinors: false,
       multipleHouseholds: false
     },
     "lead@example.com"
@@ -60,7 +60,7 @@ test("captures a lead when leadEmail is provided", async () => {
       willId: "will-id",
       metadata: {
         source: "generate",
-        hasMinors: true
+        hasMinors: false
       }
     }
   });

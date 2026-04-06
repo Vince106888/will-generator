@@ -1,5 +1,5 @@
 // Frame: Advocate Review (K02wp)
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
@@ -7,11 +7,11 @@ import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
 import { HelperCallout, SectionCard } from "../../components/ui/PencilPanels";
 import { useDraftingData } from "../../lib/drafting";
-import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
+import { trackEvent } from "../../lib/analytics";
 
 export default function AdvocateReview() {
-  const { data, update } = useDraftingData();
+  const { data, update, session } = useDraftingData();
   const [form, setForm] = useState({
     name: data.legalName || "",
     contact: data.email || data.phone || "",
@@ -19,16 +19,15 @@ export default function AdvocateReview() {
   });
   const [status, setStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const willId = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    const stored = window.localStorage.getItem(STORAGE_KEYS.willResult);
-    if (!stored) return null;
-    try {
-      return (JSON.parse(stored) as { id?: string }).id ?? null;
-    } catch {
-      return null;
-    }
-  }, []);
+  const [hasDraft, setHasDraft] = useState(false);
+
+  useEffect(() => {
+    if (!session?.sessionId) return;
+    api
+      .get(`/api/v1/wills/session/${session.sessionId}`)
+      .then(() => setHasDraft(true))
+      .catch(() => setHasDraft(false));
+  }, [session?.sessionId]);
 
   const handleChange = (key: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -43,7 +42,12 @@ export default function AdvocateReview() {
         advocateReview: true
       }
     });
-    if (!willId) {
+    if (!session?.sessionId) {
+      setStatus("No active draft session found. Please restart drafting.");
+      setSubmitting(false);
+      return;
+    }
+    if (!hasDraft) {
       setStatus("Generate a draft first so we can attach it to your review request.");
       setSubmitting(false);
       return;
@@ -54,14 +58,16 @@ export default function AdvocateReview() {
       return;
     }
     try {
-      await api.post(`/api/v1/wills/${willId}/lead`, {
-        email: form.contact,
-        metadata: {
-          source: "advocate-review",
-          name: form.name,
-          notes: form.notes
-        }
-      });
+      await api.post(
+        `/api/v1/wills/session/${session.sessionId}/advocate-review-requests`,
+        {
+          contactName: form.name || undefined,
+          contactEmail: form.contact,
+          notes: form.notes || undefined
+        },
+        { headers: { "x-draft-token": session.resumeToken } }
+      );
+      trackEvent({ event: "advocate_request", payload: { sessionId: session.sessionId } });
       setStatus("Request received. We will contact you within one business day.");
     } catch {
       setStatus("We could not submit your request. Please try again.");

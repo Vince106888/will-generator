@@ -32,7 +32,20 @@ describe("Result page", () => {
       validity: ["Must be signed by the testator", "Must have at least 2 witnesses"]
     };
     localStorage.setItem("willResult", JSON.stringify(stored));
-    getMock.mockResolvedValue({ data: stored });
+    localStorage.setItem(
+      "esheriaDraftingSession",
+      JSON.stringify({ sessionId: "session-id", resumeToken: "token", sourceMode: "AI" })
+    );
+    getMock.mockResolvedValue({
+      data: {
+        sessionId: "session-id",
+        version: 1,
+        draft: stored.draft,
+        complexity: stored.complexity,
+        validity: stored.validity,
+        willId: "will-id"
+      }
+    });
 
     render(<Result />);
 

@@ -45,29 +45,30 @@ Kenya's estate planning workflows are often paper-heavy, inconsistent, and hard 
 
 1. Marketing entry and eligibility guidance.
 2. Guided drafting flow for personal details, family, executors, beneficiaries, assets, distribution, guardianship, and special wishes.
-3. Review and generate a will draft.
+3. Review and generate a will draft from backend truth.
 4. Download PDF output and signing guidance.
-5. Optional lead capture for follow-up and advocate escalation.
+5. Optional advocate review request (first-class handoff).
+6. Save/resume via secure resume links.
 
 ## Current Implementation Status (Truthful Snapshot)
 
 Implemented:
-- Web UI with core drafting flow and marketing pages.
-- Simple routing and step-based navigation in the web app.
-- API endpoints for draft generation, retrieval, PDF output, and lead capture.
+- Web UI with core drafting flow, review, result, export, and advocate request flows.
+- Draft sessions with persisted input snapshots, resume tokens, and resume links.
+- Review/finalize flows tied to backend truth and stored draft versions.
+- PDF output generated from canonical stored drafts.
 - Draft, complexity, and validity engines (baseline logic).
-- Prisma data model for will profiles, leads, and analytics events.
-- Jest tests for API services and routes.
-- Vitest tests for web UI components.
+- Analytics ingestion and health/readiness endpoints.
+- Prisma data model for will profiles, sessions, versions, leads, and analytics events.
+- Jest tests for API services/routes and Vitest tests for web UI components.
 
 Partially implemented / early-stage:
-- Persistence and full data capture (schema is present, UI is still mostly client-side state).
 - Complexity and validity logic is rule-based and minimal.
 - PDF styling and output are foundational but not production-polished.
+- Email delivery is SMTP-ready but depends on environment configuration.
 
 Planned / not yet implemented:
 - Authentication, user accounts, and secure drafts.
-- Advocate escalation workflows and scheduling.
 - Payment or premium tiers.
 - Staging and production deployment automation.
 
@@ -79,9 +80,9 @@ Planned / not yet implemented:
 - `design/`: Visual assets and design references.
 
 Data flow (current):
-- Web captures will input in UI state.
-- API generates draft text, computes complexity/validity, stores a will profile, and optionally captures a lead.
-- PDF output is generated on demand from the stored draft.
+- Web captures structured input and syncs it to a draft session.
+- API stores session snapshots, finalizes into draft versions, and persists the generated output.
+- Result and PDF export are served from the latest generated version.
 
 ## Tech Stack
 
@@ -147,6 +148,20 @@ corepack pnpm symphony:start
 pnpm install
 ```
 
+### Docker (Optional)
+
+Use Docker to run Postgres and optionally the full stack:
+
+```bash
+docker compose up -d db
+```
+
+Run migrations after the database is up:
+
+```bash
+pnpm -C apps/api db:migrate
+```
+
 ### Environment Variables
 
 Copy and update env files as needed:
@@ -158,6 +173,17 @@ Required variables (API):
 - `DATABASE_URL`
 - `API_PORT` (optional, defaults to 4000)
 - `OUTPUT_DIR` (optional, defaults to `./storage`)
+- `WEB_BASE_URL` (optional, defaults to `http://localhost:5173`)
+
+Email variables (resume links):
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `SMTP_PASS`
+- `SMTP_SECURE` (optional, defaults based on port 465)
+- `EMAIL_FROM`
+- `EMAIL_FROM_NAME` (optional)
+- `EMAIL_REPLY_TO` (optional)
 
 Web variables:
 - `VITE_API_BASE_URL` (optional; defaults to `http://localhost:4000` in dev)
@@ -166,6 +192,22 @@ Web variables:
 
 ```bash
 pnpm dev
+```
+
+### Validation (Clean Sequence)
+
+```bash
+pnpm -C apps/api db:generate
+pnpm -C apps/api db:migrate
+pnpm lint
+pnpm test
+pnpm build
+```
+
+Or run the full sequence in one command:
+
+```bash
+pnpm validate
 ```
 
 ### Build
@@ -190,10 +232,16 @@ pnpm test
 
 Base URL: `http://localhost:4000`
 
-- `POST /api/v1/wills/generate` - generate a draft, compute complexity, store a will profile.
-- `GET /api/v1/wills/:id` - fetch a will profile.
-- `GET /api/v1/wills/:id/pdf` - download the generated PDF.
-- `POST /api/v1/wills/:id/lead` - capture a lead for follow-up.
+- `POST /api/v1/draft-sessions` - create a draft session.
+- `GET /api/v1/draft-sessions/:id` - fetch a session snapshot (requires token).
+- `PATCH /api/v1/draft-sessions/:id` - update session snapshot (requires token).
+- `POST /api/v1/draft-sessions/:id/finalize` - generate and persist a draft version.
+- `POST /api/v1/draft-sessions/:id/resume-link` - rotate token and send resume link.
+- `GET /api/v1/wills/session/:id` - fetch the latest generated output for a session.
+- `GET /api/v1/wills/session/:id/pdf` - download the generated PDF for a session.
+- `POST /api/v1/wills/session/:id/advocate-review-requests` - request advocate review.
+- `POST /api/v1/analytics/events` - ingest analytics events.
+- `GET /health/live` and `GET /health/ready` - health checks.
 
 Schemas and validation live in `apps/api/src/utils/validators.ts`.
 
@@ -250,15 +298,18 @@ See `CONTRIBUTING.md` for branching, code style, and contribution guidance.
 
 MVP (current):
 - Guided will drafting UI
-- Draft generation + PDF output
-- Lead capture
+- Draft session persistence + resume links
+- Review/finalize with backend truth
+- PDF output from canonical stored drafts
+- Advocate review request flow
+- Analytics ingestion and health checks
 
 In progress:
-- Data persistence and end-to-end API wiring
 - Complexity/validity logic expansion
+- PDF styling and signing guidance polish
+- Email delivery configuration for production
 
 Deferred:
 - Authenticated accounts
-- Advocate escalation workflows
 - Payments and premium tiers
 - Production-grade CI/CD and monitoring

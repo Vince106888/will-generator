@@ -3,16 +3,23 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Review from "../pages/drafting/Review";
 
-const { postMock } = vi.hoisted(() => ({
-  postMock: vi.fn()
+const { postMock, getMock } = vi.hoisted(() => ({
+  postMock: vi.fn(),
+  getMock: vi.fn()
 }));
 
 vi.mock("../lib/api", () => {
   return {
     api: {
       post: postMock,
-      get: vi.fn()
+      get: getMock
     }
+  };
+});
+
+vi.mock("../lib/analytics", () => {
+  return {
+    trackEvent: vi.fn()
   };
 });
 
@@ -23,14 +30,26 @@ describe("Review drafting flow", () => {
     window.history.replaceState({}, "", "/drafting/review-result");
   });
 
-  it("submits payload from review", async () => {
+  it("finalizes draft session from review", async () => {
     const user = userEvent.setup();
     postMock.mockResolvedValue({
       data: {
         id: "will-id",
+        sessionId: "session-id",
         draft: "draft",
         complexity: { score: 1, level: "LOW", flags: [] },
         validity: ["check"]
+      }
+    });
+    getMock.mockResolvedValue({
+      data: {
+        sessionId: "session-id",
+        sourceMode: "AI",
+        inputSnapshot: {
+          draftingMode: "ai",
+          draftingModeConfirmed: true
+        },
+        updatedAt: new Date().toISOString()
       }
     });
 
@@ -59,26 +78,18 @@ describe("Review drafting flow", () => {
       })
     );
 
+    localStorage.setItem(
+      "esheriaDraftingSession",
+      JSON.stringify({ sessionId: "session-id", resumeToken: "token", sourceMode: "AI" })
+    );
+
     render(<Review />);
 
     await user.click(screen.getAllByRole("button", { name: /generate draft/i })[0]);
 
     await waitFor(() => expect(postMock).toHaveBeenCalledTimes(1));
 
-    const payload = postMock.mock.calls[0][1];
-    expect(payload).toMatchObject({
-      name: "Jane Doe",
-      executor: "John Doe",
-      assets: ["House: Nairobi"],
-      beneficiaries: ["Alice"],
-      hasMinors: true,
-      multipleHouseholds: false,
-      instructions: {
-        funeralWishes: "Private ceremony"
-      }
-    });
-    expect(payload.instructions.notes).toContain("Guardian for minors");
-    expect(payload.instructions.notes).toContain("Keep it simple");
+    expect(postMock.mock.calls[0][0]).toBe("/api/v1/draft-sessions/session-id/finalize");
 
     expect(localStorage.getItem("willResult")).not.toBeNull();
     expect(window.location.pathname).toBe("/drafting/export-options");

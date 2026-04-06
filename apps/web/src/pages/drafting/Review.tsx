@@ -13,13 +13,19 @@ import {
   SummaryCard,
   WarningBanner
 } from "../../components/ui/PencilPanels";
-import { buildGeneratePayload, useDraftingData } from "../../lib/drafting";
+import { useDraftingData } from "../../lib/drafting";
 import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
+import { useState } from "react";
+import { trackEvent } from "../../lib/analytics";
 
 export default function Review() {
-  const { data } = useDraftingData();
+  const { data, session, status } = useDraftingData();
+  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [resumeStatus, setResumeStatus] = useState<string | null>(null);
+  const [resumeLink, setResumeLink] = useState<string | null>(null);
+  const [savingResume, setSavingResume] = useState(false);
   const flowLabel = data.draftingMode === "ai" ? "AI drafting" : "Guided drafting";
   const assetLabels = data.assets
     .map((asset) => asset.label?.trim() || asset.location?.trim() || asset.notes?.trim() || "")
@@ -45,22 +51,17 @@ export default function Review() {
       .map((target) => target.beneficiary?.trim() || "")
       .filter(Boolean);
     if (!targets.length) {
-      return [`${assetLabel} → Not assigned (please confirm)`];
+      return [`${assetLabel} -> Not assigned (please confirm)`];
     }
-    return [`${assetLabel} → ${targets.join(", ")}`];
+    return [`${assetLabel} -> ${targets.join(", ")}`];
   });
 
   const summaryLines =
     allocationLines.length > 0
       ? allocationLines
       : assetLabels.length > 0
-        ? assetLabels.map((asset) => `${asset} → Not assigned (please confirm)`)
-        : [
-            "House in Kiambu → Wife",
-            "Toyota Prado KDM 456A → Brian (son)",
-            "Rental plots in Machakos → Nia (daughter)",
-            "Remainder assets → Not specified (please confirm)"
-          ];
+        ? assetLabels.map((asset) => `${asset} -> Not assigned (please confirm)`)
+        : [];
 
   const missingItems = [
     !hasExecutor ? "assign an executor" : null,
@@ -72,15 +73,66 @@ export default function Review() {
 
   const handleGenerateDraft = async () => {
     try {
-      const response = await api.post("/api/v1/wills/generate", buildGeneratePayload(data));
+      setGenerateError(null);
+      if (!session) {
+        setGenerateError("Draft session is not ready yet. Please wait and try again.");
+        return;
+      }
+      const response = await api.post(
+        `/api/v1/draft-sessions/${session.sessionId}/finalize`,
+        {},
+        { headers: { "x-draft-token": session.resumeToken } }
+      );
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
           STORAGE_KEYS.willResult,
           JSON.stringify(response?.data ?? {})
         );
       }
-    } finally {
+      trackEvent({
+        event: "draft_finalize",
+        payload: { sessionId: session.sessionId, version: response?.data?.version ?? null }
+      });
       navigate("/drafting/export-options");
+    } catch (error) {
+      setGenerateError("Unable to generate your draft. Please try again.");
+    }
+  };
+
+  const handleSaveForLater = async () => {
+    setResumeStatus(null);
+    setResumeLink(null);
+    if (!session) {
+      setResumeStatus("Draft session is not ready yet.");
+      return;
+    }
+    if (!data.email) {
+      setResumeStatus("Add an email address so we can send your resume link.");
+      return;
+    }
+    setSavingResume(true);
+    try {
+      const response = await api.post(
+        `/api/v1/draft-sessions/${session.sessionId}/resume-link`,
+        { email: data.email },
+        { headers: { "x-draft-token": session.resumeToken } }
+      );
+      if (response?.data?.resumeLink) {
+        setResumeLink(response.data.resumeLink);
+      }
+      trackEvent({ event: "resume_link_requested", payload: { sessionId: session.sessionId } });
+      setResumeStatus("Resume link ready. Check your email for the link.");
+    } catch (error: unknown) {
+      const link =
+        error && typeof error === "object" && "response" in error
+          ? (error as { response?: { data?: { resumeLink?: string } } }).response?.data?.resumeLink
+          : undefined;
+      if (link) {
+        setResumeLink(link);
+      }
+      setResumeStatus("We could not send email. Use the resume link below.");
+    } finally {
+      setSavingResume(false);
     }
   };
   const editPath =
@@ -123,9 +175,13 @@ export default function Review() {
           </div>
 
           <SuccessPanel
-            title="Draft ready for review"
-            body="We generated a full draft. Please confirm the items below and address any warnings before you sign."
+            title="Ready to generate"
+            body="Confirm the summary below. We will generate your draft once you continue."
           />
+          {status.error ? <WarningBanner title="Sync issue" body={status.error} /> : null}
+          {generateError ? (
+            <WarningBanner title="Generation failed" body={generateError} />
+          ) : null}
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             <div className="space-y-4">
@@ -134,14 +190,19 @@ export default function Review() {
                 subtitle="Plain-English overview of what you asked for, with room to edit."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  {summaryLines.map((line) => {
-                    const isWarning = line.includes("Not specified") || line.includes("Not assigned");
-                    return (
-                      <p key={line} className={isWarning ? "text-warning" : ""}>
-                        &bull; {line}
-                      </p>
-                    );
-                  })}
+                  {summaryLines.length ? (
+                    summaryLines.map((line) => {
+                      const isWarning =
+                        line.includes("Not specified") || line.includes("Not assigned");
+                      return (
+                        <p key={line} className={isWarning ? "text-warning" : ""}>
+                          &bull; {line}
+                        </p>
+                      );
+                    })
+                  ) : (
+                    <p className="text-muted">&bull; No assets or allocations captured yet.</p>
+                  )}
                 </div>
               </SectionCard>
 
@@ -189,8 +250,18 @@ export default function Review() {
                   size="sm"
                   className="w-full px-5 py-3 text-[13px] sm:w-auto"
                   onClick={handleGenerateDraft}
+                  disabled={status.loading}
                 >
                   Generate draft
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full px-5 py-3 text-[13px] sm:w-auto"
+                  onClick={handleSaveForLater}
+                  disabled={savingResume}
+                >
+                  {savingResume ? "Saving..." : "Save and resume later"}
                 </Button>
                 <Button
                   variant="secondary"
@@ -201,15 +272,21 @@ export default function Review() {
                   {editLabel}
                 </Button>
               </div>
+              {resumeStatus ? (
+                <p className="text-[12px] text-muted">{resumeStatus}</p>
+              ) : null}
+              {resumeLink ? (
+                <p className="break-all text-[12px] text-ink">{resumeLink}</p>
+              ) : null}
             </div>
 
             <div className="space-y-4">
               <SummaryCard
                 title="Draft overview"
                 lines={[
-                  `Beneficiaries: ${data.beneficiaries.filter((b) => b.name).length || 3}`,
-                  `Assets: ${assetCount || 4}`,
-                  `Executors: ${data.executors.filter((e) => e.name).length || 1}`
+                  `Beneficiaries: ${data.beneficiaries.filter((b) => b.name).length}`,
+                  `Assets: ${assetCount}`,
+                  `Executors: ${data.executors.filter((e) => e.name).length}`
                 ]}
               />
               <ReviewChecklist
