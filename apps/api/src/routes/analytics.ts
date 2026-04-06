@@ -29,7 +29,7 @@ analyticsRouter.post("/events", async (req, res, next) => {
     const event = await prisma.analyticsEvent.create({
       data: {
         event: parsed.data.event,
-        payload: parsed.data.payload ?? null
+        payload: parsed.data.payload ?? undefined
       }
     });
 
