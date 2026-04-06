@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../db";
 import { computeComplexity } from "../engines/complexityEngine";
-import { generateDraft } from "../engines/draftEngine";
+import { assessDraftConsistency, generateDraft } from "../engines/draftEngine";
 import { getValidityChecklist } from "../engines/validityEngine";
 import { WillInput } from "../types";
 
@@ -73,12 +73,109 @@ function mapDraftingSnapshotToWillInput(snapshot: Record<string, unknown>): Will
     })
     .filter(Boolean);
 
+  const mappedAssetDetails = assets
+    .map((asset) => {
+      if (!asset || typeof asset !== "object") return null;
+      const item = asset as Record<string, unknown>;
+      const label = String(item.label ?? "").trim();
+      const details = [String(item.location ?? "").trim(), String(item.notes ?? "").trim()]
+        .filter(Boolean)
+        .join("; ");
+      if (!label && !details) return null;
+      const normalized = `${label} ${details}`.toLowerCase();
+      const isBusinessInterest = label.toLowerCase().includes("business") || normalized.includes("shares");
+      const isDigitalAsset = normalized.includes("digital") || normalized.includes("crypto") || normalized.includes("online");
+      const isForeign = normalized.includes("foreign") || normalized.includes("outside kenya");
+      return {
+        label: label || "Asset",
+        details: details || undefined,
+        type: isBusinessInterest
+          ? ("BUSINESS" as const)
+          : isDigitalAsset
+            ? ("DIGITAL" as const)
+            : ("OTHER" as const),
+        isForeign,
+        isBusinessInterest,
+        isDigitalAsset
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
   const mappedBeneficiaries = beneficiaries
     .map((beneficiary) => {
       if (!beneficiary || typeof beneficiary !== "object") return "";
       return String((beneficiary as Record<string, unknown>).name ?? "").trim();
     })
     .filter(Boolean);
+
+  const mappedBeneficiariesDetailed = beneficiaries
+    .map((beneficiary) => {
+      if (!beneficiary || typeof beneficiary !== "object") return null;
+      const item = beneficiary as Record<string, unknown>;
+      const name = String(item.name ?? "").trim();
+      if (!name) return null;
+      const relationship = String(item.relationship ?? "").trim();
+      const share = String(item.share ?? "").trim();
+      return {
+        name,
+        relationship: relationship || undefined,
+        share: share || undefined
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const mappedExecutors = executors
+    .map((executor) => {
+      if (!executor || typeof executor !== "object") return null;
+      const item = executor as Record<string, unknown>;
+      const name = String(item.name ?? "").trim();
+      if (!name) return null;
+      return {
+        name,
+        relationship: String(item.relationship ?? "").trim() || undefined,
+        contact: String(item.phone ?? "").trim() || undefined
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const guardians = Array.isArray(snapshot.guardians) ? snapshot.guardians : [];
+  const mappedGuardians = guardians
+    .map((guardian) => {
+      if (!guardian || typeof guardian !== "object") return null;
+      const item = guardian as Record<string, unknown>;
+      const name = String(item.name ?? "").trim();
+      if (!name) return null;
+      return {
+        name,
+        relationship: String(item.relationship ?? "").trim() || undefined,
+        contact: String(item.phone ?? "").trim() || undefined,
+        notes: String(item.notes ?? "").trim() || undefined
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const dependants = Array.isArray(snapshot.dependants) ? snapshot.dependants : [];
+  const minorChildren = dependants
+    .filter((dependant) => {
+      if (!dependant || typeof dependant !== "object") return false;
+      const ageRaw = String((dependant as Record<string, unknown>).age ?? "").trim();
+      const age = Number(ageRaw);
+      return Number.isFinite(age) && age < 18;
+    })
+    .map((dependant) => String((dependant as Record<string, unknown>).name ?? "").trim())
+    .filter(Boolean);
+
+  const disinheritanceSignals: string[] = [];
+  const freeText = [
+    String(snapshot.distributionNotes ?? ""),
+    String(snapshot.specialWishes ?? ""),
+    String(snapshot.residuaryWishes ?? "")
+  ]
+    .join(" ")
+    .toLowerCase();
+  if (freeText.includes("exclude") || freeText.includes("disinherit") || freeText.includes("do not benefit")) {
+    disinheritanceSignals.push("POSSIBLE_DISINHERITANCE_LANGUAGE");
+  }
 
   const instructionsNotes = [
     snapshot.dependantsNotes,
@@ -114,7 +211,18 @@ function mapDraftingSnapshotToWillInput(snapshot: Record<string, unknown>): Will
       exportPreferences: snapshot.exportPreferences as ExportPreferences,
       existingWill: snapshot.existingWill as ExistingWill,
       aiDraftSession: snapshot.aiDraftSession as AiDraftSession,
-      remainderClause: typeof snapshot.remainderClause === "string" ? snapshot.remainderClause : undefined
+      remainderClause: typeof snapshot.remainderClause === "string" ? snapshot.remainderClause : undefined,
+      executors: mappedExecutors,
+      guardians: mappedGuardians,
+      minorChildren,
+      beneficiariesDetailed: mappedBeneficiariesDetailed,
+      assetDetails: mappedAssetDetails,
+      disinheritanceSignals,
+      specialWishes: [
+        String(snapshot.specialWishes ?? "").trim(),
+        String(snapshot.digitalWishes ?? "").trim(),
+        String(snapshot.charitableIntentions ?? "").trim()
+      ].filter(Boolean)
     },
     country: "Kenya"
   };
@@ -208,9 +316,13 @@ export class DraftSessionService {
     const inputSnapshot = existing.inputSnapshot as Record<string, unknown>;
     const inputSnapshotJson = existing.inputSnapshot as Prisma.InputJsonValue;
     const willInput = mapDraftingSnapshotToWillInput(inputSnapshot);
+    const consistency = assessDraftConsistency(willInput);
+    if (consistency.blockingIssues.length > 0) {
+      return { validationFailed: true as const, consistency };
+    }
     const draft = generateDraft(willInput);
     const complexity = computeComplexity(willInput);
-    const validity = getValidityChecklist();
+    const validity = getValidityChecklist(willInput, complexity);
 
     const latestVersion = await prisma.willDraftVersion.findFirst({
       where: { draftSessionId: sessionId },
@@ -256,7 +368,10 @@ export class DraftSessionService {
           instructions: {
             notes: willInput.instructions?.notes ?? null,
             funeralWishes: willInput.instructions?.funeralWishes ?? null,
-            metadata: willInput.metadata ?? null
+            metadata: {
+              ...(willInput.metadata ?? {}),
+              draftConsistency: consistency
+            }
           },
           complexity,
           validity,
@@ -286,7 +401,8 @@ export class DraftSessionService {
       willProfile: created.willProfile,
       draft,
       complexity,
-      validity
+      validity,
+      draftConsistency: consistency
     };
   }
 

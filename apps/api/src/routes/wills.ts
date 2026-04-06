@@ -33,6 +33,13 @@ willsRouter.post("/generate", async (req, res, next) => {
 
     return res.status(201).json(result);
   } catch (error) {
+    if (error instanceof Error && error.message === "Draft consistency blocking issues") {
+      const details = (error as Error & { details?: unknown }).details;
+      return res.status(422).json({
+        error: "Draft consistency issues must be resolved before generation",
+        draftConsistency: details ?? null
+      });
+    }
     return next(error);
   }
 });

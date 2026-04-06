@@ -140,6 +140,12 @@ draftSessionsRouter.post("/:id/finalize", async (req, res, next) => {
     if ("forbidden" in result) {
       return res.status(403).json({ error: "Invalid resume token" });
     }
+    if ("validationFailed" in result) {
+      return res.status(422).json({
+        error: "Draft consistency issues must be resolved before finalization",
+        draftConsistency: result.consistency
+      });
+    }
 
     return res.status(201).json({
       sessionId: result.session.id,
@@ -151,6 +157,7 @@ draftSessionsRouter.post("/:id/finalize", async (req, res, next) => {
       draft: result.draft,
       complexity: result.complexity,
       validity: result.validity,
+      draftConsistency: result.draftConsistency,
       finalizedAt: result.version.createdAt
     });
   } catch (error) {
@@ -188,7 +195,7 @@ draftSessionsRouter.post("/:id/resume-link", async (req, res, next) => {
       });
     } catch (error) {
       return res.status(503).json({
-        error: "Email service not configured",
+        error: emailService.isConfigured() ? "Email delivery failed" : "Email service not configured",
         resumeLink
       });
     }
