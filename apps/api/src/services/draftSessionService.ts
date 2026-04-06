@@ -330,7 +330,7 @@ export class DraftSessionService {
     });
     const nextVersion = (latestVersion?.version ?? 0) + 1;
 
-    const created = await prisma.$transaction(async (tx) => {
+    const created = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await tx.willDraftVersion.updateMany({
         where: { draftSessionId: sessionId, isCurrent: true },
         data: { isCurrent: false }
