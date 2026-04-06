@@ -54,6 +54,8 @@ export type DraftingData = {
   draftingModeConfirmed: boolean;
 };
 
+export type DraftingMode = DraftingData["draftingMode"];
+
 export const defaultDraftingData: DraftingData = {
   legalName: "",
   idNumber: "",

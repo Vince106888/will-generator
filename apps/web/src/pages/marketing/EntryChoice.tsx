@@ -5,7 +5,7 @@ import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { Button } from "../../components/ui/Button";
 import { navigate } from "../../lib/navigation";
-import { saveDraftingData, useDraftingData } from "../../lib/drafting";
+import { saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { resolveDraftingEntryPath } from "../../lib/draftingGuard";
 import { AlertTriangle, Shuffle } from "lucide-react";
 
@@ -63,7 +63,7 @@ export default function EntryChoice() {
                 variant="primary"
                 size="sm"
                 onClick={() => {
-                  const nextData = {
+                  const nextData: DraftingData = {
                     ...data,
                     draftingMode: "ai",
                     draftingModeConfirmed: true
@@ -98,7 +98,7 @@ export default function EntryChoice() {
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  const nextData = {
+                  const nextData: DraftingData = {
                     ...data,
                     draftingMode: "structured",
                     draftingModeConfirmed: true
