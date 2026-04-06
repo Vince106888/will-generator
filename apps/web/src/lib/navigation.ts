@@ -7,7 +7,13 @@ export function navigate(to: string) {
   if (current === target) return;
   window.history.pushState({}, "", target);
   window.dispatchEvent(new PopStateEvent("popstate"));
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  const isJsdom =
+    typeof window !== "undefined" &&
+    typeof window.navigator?.userAgent === "string" &&
+    window.navigator.userAgent.toLowerCase().includes("jsdom");
+  if (!isJsdom && typeof window.scrollTo === "function") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 export function buildStepUrl(pathname: string, step: number) {
