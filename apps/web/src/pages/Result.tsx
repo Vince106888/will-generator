@@ -69,6 +69,7 @@ export default function Result() {
   }, [session?.sessionId]);
 
   const flags = useMemo(() => data?.complexity?.flags ?? [], [data]);
+  const draftPreview = useMemo(() => data?.draft?.trim() ?? "", [data]);
 
   if (!data) {
     return (
@@ -110,8 +111,15 @@ export default function Result() {
           <div className="space-y-5">
             <Card size="lg" className="space-y-3">
               <p className="text-sm font-semibold text-ink">Draft preview</p>
-              <div className="flex h-[280px] items-center justify-center rounded-xl border border-border bg-card p-6 text-xs text-muted">
-                Draft preview
+              <div className="max-h-[280px] overflow-auto rounded-xl border border-border bg-card p-6 text-xs text-muted">
+                {draftPreview ? (
+                  <pre className="whitespace-pre-wrap font-sans text-xs text-muted">
+                    {draftPreview.slice(0, 1200)}
+                    {draftPreview.length > 1200 ? "..." : ""}
+                  </pre>
+                ) : (
+                  <p>Draft preview is not available yet.</p>
+                )}
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/export-options")}>

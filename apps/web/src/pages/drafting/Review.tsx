@@ -122,8 +122,11 @@ export default function Review() {
       }
       trackEvent({ event: "resume_link_requested", payload: { sessionId: session.sessionId } });
       setResumeStatus("Resume link ready. Check your email for the link.");
-    } catch (error: any) {
-      const link = error?.response?.data?.resumeLink;
+    } catch (error: unknown) {
+      const link =
+        error && typeof error === "object" && "response" in error
+          ? (error as { response?: { data?: { resumeLink?: string } } }).response?.data?.resumeLink
+          : undefined;
       if (link) {
         setResumeLink(link);
       }

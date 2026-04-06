@@ -81,9 +81,8 @@ export default function ExportOptions() {
               Choose your export option
             </h1>
             <p className="text-[16px] leading-[1.6] text-muted">
-              Download a PDF immediately, or choose a tier that removes the
-              watermark and adds extra signing support. All tiers follow the
-              same legal signing rules.
+              Download a PDF immediately. Paid export tiers are not available yet,
+              so the free PDF is the only option today.
             </p>
             {loading ? (
               <p className="text-xs text-muted">Checking latest draft output...</p>
@@ -97,10 +96,10 @@ export default function ExportOptions() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <SectionCard title="Free" subtitle="KES 0 - watermarked draft">
+            <SectionCard title="Free" subtitle="KES 0 - draft PDF">
               <div className="space-y-2 text-[13px]">
                 <p className="text-ink">&bull; PDF download</p>
-                <p className="text-muted">&bull; Watermarked for draft use</p>
+                <p className="text-muted">&bull; Draft copy for review and signing prep</p>
               </div>
               <Button
                 variant="primary"
@@ -108,7 +107,7 @@ export default function ExportOptions() {
                 className="px-5 py-3 text-[13px]"
                 onClick={() => handleExport("pdf")}
               >
-                Download watermarked PDF
+                Download PDF
               </Button>
             </SectionCard>
 
@@ -131,7 +130,7 @@ export default function ExportOptions() {
 
             <SectionCard
               title="Premium"
-              subtitle="KES 4,000–5,000 - witness service"
+              subtitle="KES 4,000-5,000 - witness service"
             >
               <div className="space-y-2 text-[13px]">
                 <p className="text-ink">&bull; Printed glossy copy</p>
@@ -153,14 +152,14 @@ export default function ExportOptions() {
           </div>
 
           <HelperCallout
-            title="How to choose a tier"
-            body="All tiers use the same legal content. Choose based on whether you want a clean PDF, Word editing, or witness support."
+            title="Paid tiers status"
+            body="Paid exports are intentionally deferred for this MVP. We will notify users before these tiers go live."
           />
 
           <div className="grid gap-4 lg:grid-cols-2">
             <HelperCallout
-              title="Watermark note"
-              body="The free tier includes a visible watermark to indicate this is a draft. Your legal signing is the same regardless of tier."
+              title="Draft note"
+              body="This PDF is intended as a draft you can review and sign. Keep a copy of your signed will in a safe place."
             />
             <HelperCallout
               title="Premium witness service"
