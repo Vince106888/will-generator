@@ -2,8 +2,13 @@
 import { Router } from "express";
 import { WillService } from "../services/willService";
 import { LeadService } from "../services/leadService";
-import { ensureWillPdf } from "../engines/outputEngine";
-import { leadSchema, willGenerateSchema, willIdParamSchema } from "../utils/validators";
+import { ensureDraftVersionPdf, ensureWillPdf } from "../engines/outputEngine";
+import {
+  draftSessionIdParamSchema,
+  leadSchema,
+  willGenerateSchema,
+  willIdParamSchema
+} from "../utils/validators";
 
 export const willsRouter = Router();
 
@@ -24,6 +29,61 @@ willsRouter.post("/generate", async (req, res, next) => {
     const result = await willService.generate(input, leadEmail);
 
     return res.status(201).json(result);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+willsRouter.get("/session/:id", async (req, res, next) => {
+  try {
+    const parsed = draftSessionIdParamSchema.safeParse(req.params);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid session id" });
+    }
+
+    const latest = await willService.getLatestBySession(parsed.data.id);
+    if (!latest) {
+      return res.status(404).json({ error: "No generated draft for this session" });
+    }
+
+    return res.json({
+      sessionId: parsed.data.id,
+      version: latest.version,
+      draft: latest.generatedDraft,
+      complexity: latest.complexityResult,
+      validity: latest.validityResult,
+      willId: latest.willProfileId ?? latest.willProfile?.id ?? null
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+willsRouter.get("/session/:id/pdf", async (req, res, next) => {
+  try {
+    const parsed = draftSessionIdParamSchema.safeParse(req.params);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid session id" });
+    }
+
+    const latest = await willService.getLatestBySession(parsed.data.id);
+    if (!latest) {
+      return res.status(404).json({ error: "No generated draft for this session" });
+    }
+
+    const downloadName = `will-${parsed.data.id}-v${latest.version}.pdf`;
+    const filePath = await ensureDraftVersionPdf(
+      latest.generatedDraft,
+      parsed.data.id,
+      latest.version
+    );
+
+    return res.download(filePath, downloadName, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return undefined;
+    });
   } catch (error) {
     return next(error);
   }

@@ -88,3 +88,23 @@ export async function ensureWillPdf(draft: string, willId: string) {
 
   return generatePdfFromDraft(draft, path.basename(pdfPath), path.dirname(pdfPath));
 }
+
+export function getDraftVersionPdfPath(sessionId: string, version: number) {
+  return path.join(getOutputDir(), PDF_SUBDIR, `draft-${sessionId}-v${version}.pdf`);
+}
+
+export async function ensureDraftVersionPdf(draft: string, sessionId: string, version: number) {
+  const pdfPath = getDraftVersionPdfPath(sessionId, version);
+  await fs.promises.mkdir(path.dirname(pdfPath), { recursive: true });
+
+  try {
+    const stat = await fs.promises.stat(pdfPath);
+    if (stat.size > 0) {
+      return pdfPath;
+    }
+  } catch {
+    // File missing or unreadable -> regenerate.
+  }
+
+  return generatePdfFromDraft(draft, path.basename(pdfPath), path.dirname(pdfPath));
+}

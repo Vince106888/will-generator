@@ -220,18 +220,6 @@ export class DraftSessionService {
         data: { isCurrent: false }
       });
 
-      const version = await tx.willDraftVersion.create({
-        data: {
-          draftSessionId: sessionId,
-          version: nextVersion,
-          inputSnapshot,
-          generatedDraft: draft,
-          complexityResult: complexity,
-          validityResult: validity,
-          isCurrent: true
-        }
-      });
-
       const session = await tx.draftSession.update({
         where: { id: sessionId },
         data: { status: "FINALIZED" }
@@ -269,6 +257,19 @@ export class DraftSessionService {
           complexity,
           validity,
           draft
+        }
+      });
+
+      const version = await tx.willDraftVersion.create({
+        data: {
+          draftSessionId: sessionId,
+          willProfileId: willProfile.id,
+          version: nextVersion,
+          inputSnapshot,
+          generatedDraft: draft,
+          complexityResult: complexity,
+          validityResult: validity,
+          isCurrent: true
         }
       });
 

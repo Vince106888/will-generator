@@ -78,4 +78,12 @@ export class WillService {
       where: { id }
     });
   }
+
+  async getLatestBySession(sessionId: string) {
+    return prisma.willDraftVersion.findFirst({
+      where: { draftSessionId: sessionId, isCurrent: true },
+      orderBy: { version: "desc" },
+      include: { willProfile: true }
+    });
+  }
 }
