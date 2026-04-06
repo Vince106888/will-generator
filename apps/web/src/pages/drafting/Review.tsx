@@ -18,11 +18,13 @@ import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
 import { useState } from "react";
+import axios from "axios";
 import { trackEvent } from "../../lib/analytics";
 
 export default function Review() {
   const { data, session, status } = useDraftingData();
   const [generateError, setGenerateError] = useState<string | null>(null);
+  const [serverBlocking, setServerBlocking] = useState<string[]>([]);
   const [resumeStatus, setResumeStatus] = useState<string | null>(null);
   const [resumeLink, setResumeLink] = useState<string | null>(null);
   const [savingResume, setSavingResume] = useState(false);
@@ -34,6 +36,7 @@ export default function Review() {
     .map((beneficiary) => beneficiary.name?.trim() || "")
     .filter(Boolean);
   const assetCount = data.assets.filter((asset) => asset.location || asset.notes).length;
+  const legalName = data.legalName?.trim() || "";
   const executorName = data.executors?.[0]?.name?.trim() || "";
   const guardianName = data.guardians?.[0]?.name?.trim() || "";
   const hasRemainderClause = Boolean(data.remainderClause?.trim());
@@ -43,6 +46,18 @@ export default function Review() {
   const hasAllocations = data.assetAllocations.some(
     (allocation) => allocation.allocations?.length > 0
   );
+  const hasLegalName = Boolean(legalName);
+  const needsGuardian = data.hasMinors;
+  const hasGuardian = !needsGuardian || Boolean(guardianName);
+  const missingBeneficiaryAndRemainder = !hasBeneficiaries && !hasRemainderClause;
+  const assetsWithoutBeneficiaries = hasAssets && !hasBeneficiaries;
+  const blockingIssues = [
+    !hasLegalName ? "Add the testator's full legal name" : null,
+    !hasExecutor ? "Appoint at least one executor" : null,
+    !hasGuardian ? "Name a guardian for minor children" : null,
+    missingBeneficiaryAndRemainder ? "Add beneficiaries or a remainder clause" : null,
+    assetsWithoutBeneficiaries ? "List beneficiaries for the assets you added" : null
+  ].filter(Boolean) as string[];
 
   const allocationLines = data.assetAllocations.flatMap((allocation) => {
     const assetLabel = allocation.assetLabel?.trim();
@@ -63,17 +78,20 @@ export default function Review() {
         ? assetLabels.map((asset) => `${asset} -> Not assigned (please confirm)`)
         : [];
 
-  const missingItems = [
-    !hasExecutor ? "assign an executor" : null,
-    !hasAssets ? "add assets" : null,
-    !hasBeneficiaries ? "add beneficiaries" : null,
-    !hasAllocations ? "assign assets to beneficiaries" : null,
-    !hasRemainderClause ? "set a remainder clause" : null
+  const warningItems = [
+    !hasAssets ? "Add assets or confirm you have none" : null,
+    !hasAllocations && hasAssets ? "Assign assets to beneficiaries where possible" : null,
+    !hasRemainderClause ? "Set a remainder clause to cover anything not listed" : null
   ].filter(Boolean) as string[];
 
   const handleGenerateDraft = async () => {
     try {
       setGenerateError(null);
+      setServerBlocking([]);
+      if (blockingIssues.length > 0) {
+        setGenerateError("Resolve the required items below before generating a draft.");
+        return;
+      }
       if (!session) {
         setGenerateError("Draft session is not ready yet. Please wait and try again.");
         return;
@@ -95,6 +113,15 @@ export default function Review() {
       });
       navigate("/drafting/export-options");
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 422) {
+        const issues = (error.response.data as { draftConsistency?: { blockingIssues?: string[] } })
+          ?.draftConsistency?.blockingIssues;
+        if (issues?.length) {
+          setServerBlocking(issues);
+          setGenerateError("The draft cannot be generated until the blocking issues are resolved.");
+          return;
+        }
+      }
       setGenerateError("Unable to generate your draft. Please try again.");
     }
   };
@@ -175,12 +202,22 @@ export default function Review() {
           </div>
 
           <SuccessPanel
-            title="Ready to generate"
-            body="Confirm the summary below. We will generate your draft once you continue."
+            title={blockingIssues.length > 0 ? "Not ready to generate" : "Ready to generate"}
+            body={
+              blockingIssues.length > 0
+                ? "Complete the required items below. Draft generation is blocked until they are resolved."
+                : "Confirm the summary below. We will generate your draft once you continue."
+            }
           />
           {status.error ? <WarningBanner title="Sync issue" body={status.error} /> : null}
           {generateError ? (
-            <WarningBanner title="Generation failed" body={generateError} />
+            <WarningBanner title="Generation blocked" body={generateError} />
+          ) : null}
+          {serverBlocking.length > 0 ? (
+            <WarningBanner
+              title="Backend validation required"
+              body={`Resolve: ${serverBlocking.join("; ")}`}
+            />
           ) : null}
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
@@ -229,18 +266,21 @@ export default function Review() {
                 subtitle="We flag items that could affect legal validity or clarity."
               >
                 <div className="space-y-2 text-[13px] text-ink">
-                  <p>&bull; You must sign in front of two independent witnesses</p>
-                  <p>&bull; A beneficiary cannot be a witness</p>
-                  <p>&bull; Executor and beneficiary details should match their legal names</p>
+                  <p>&bull; Sign in front of two competent witnesses, in the same sitting</p>
+                  <p>&bull; Witnesses should not be beneficiaries or spouses of beneficiaries</p>
+                  <p>&bull; Use full legal names for testator, executor, and witnesses</p>
+                  <p>&bull; If you cannot sign, use an assisted signature or mark with witnesses present</p>
                 </div>
               </SectionCard>
 
               <WarningBanner
-                title="Warnings to resolve"
+                title={blockingIssues.length ? "Blocking items" : "Warnings to resolve"}
                 body={
-                  missingItems.length
-                    ? `Please ${missingItems.join(", ")} before signing.`
-                    : "Review your draft and confirm details before signing."
+                  blockingIssues.length
+                    ? `Required before generation: ${blockingIssues.join(", ")}.`
+                    : warningItems.length
+                      ? `Please ${warningItems.join(", ")} before signing.`
+                      : "Review your draft and confirm details before signing."
                 }
               />
 
@@ -250,7 +290,7 @@ export default function Review() {
                   size="sm"
                   className="w-full px-5 py-3 text-[13px] sm:w-auto"
                   onClick={handleGenerateDraft}
-                  disabled={status.loading}
+                  disabled={status.loading || blockingIssues.length > 0}
                 >
                   Generate draft
                 </Button>
@@ -292,12 +332,20 @@ export default function Review() {
               <ReviewChecklist
                 title="Completeness checks"
                 items={[
+                  {
+                    label: "Legal name confirmed",
+                    tone: hasLegalName ? "success" : "warning"
+                  },
                   { label: "Executor selected", tone: hasExecutor ? "success" : "warning" },
                   { label: "Assets listed", tone: hasAssets ? "success" : "warning" },
                   { label: "Beneficiaries added", tone: hasBeneficiaries ? "success" : "warning" },
                   {
                     label: "Assets assigned to beneficiaries",
                     tone: hasAllocations ? "success" : "warning"
+                  },
+                  {
+                    label: "Guardian named (if minors)",
+                    tone: hasGuardian ? "success" : "warning"
                   },
                   { label: "Remainder clause added", tone: hasRemainderClause ? "success" : "warning" }
                 ]}
