@@ -14,6 +14,7 @@ import StructuredExecutors from "./pages/drafting/StructuredExecutors";
 import StructuredGuardianship from "./pages/drafting/StructuredGuardianship";
 import StructuredSpecialWishes from "./pages/drafting/StructuredSpecialWishes";
 import Review from "./pages/drafting/Review";
+import ResumeDraft from "./pages/drafting/Resume";
 import ExportOptions from "./pages/post/ExportOptions";
 import SigningGuide from "./pages/post/SigningGuide";
 import AdvocateReview from "./pages/post/AdvocateReview";
@@ -46,6 +47,7 @@ export default function App() {
     "/drafting/mapping": <AssetsBeneficiariesMapping />,
     "/drafting/structured-executors": <StructuredExecutors />,
     "/drafting/guardianship": <StructuredGuardianship />,
+    "/drafting/resume": <ResumeDraft />,
     "/drafting/review-result": <Review />,
     "/drafting/export-options": <ExportOptions />,
     "/drafting/signing-guide": <SigningGuide />,

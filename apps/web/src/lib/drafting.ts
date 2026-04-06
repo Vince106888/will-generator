@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { STORAGE_KEYS } from "./storage";
 import { api } from "./api";
+import axios from "axios";
 
 export type DraftingData = {
   legalName: string;
@@ -123,19 +124,19 @@ export const defaultDraftingData: DraftingData = {
 const STORAGE_KEY = STORAGE_KEYS.draftingData;
 const SESSION_KEY = STORAGE_KEYS.draftingSession;
 
-type DraftSessionMeta = {
+export type DraftSessionMeta = {
   sessionId: string;
   resumeToken: string;
   sourceMode: "AI" | "STRUCTURED";
 };
 
-type DraftSessionStatus = {
+export type DraftSessionStatus = {
   loading: boolean;
   error?: string;
   lastSyncedAt?: string;
 };
 
-function loadDraftingSessionMeta(): DraftSessionMeta | null {
+export function loadDraftingSessionMeta(): DraftSessionMeta | null {
   if (typeof window === "undefined") return null;
   const stored = window.localStorage.getItem(SESSION_KEY);
   if (!stored) return null;
@@ -146,9 +147,14 @@ function loadDraftingSessionMeta(): DraftSessionMeta | null {
   }
 }
 
-function saveDraftingSessionMeta(meta: DraftSessionMeta) {
+export function saveDraftingSessionMeta(meta: DraftSessionMeta) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(meta));
+}
+
+export function clearDraftingSessionMeta() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(SESSION_KEY);
 }
 
 async function createDraftSession(sourceMode: DraftSessionMeta["sourceMode"], inputSnapshot: DraftingData) {
@@ -191,7 +197,7 @@ async function updateDraftSession(meta: DraftSessionMeta, inputSnapshot: Draftin
   };
 }
 
-function normalizeDraftingData(raw: DraftingData): DraftingData {
+export function normalizeDraftingData(raw: DraftingData): DraftingData {
   const parsed = { ...defaultDraftingData, ...raw } as DraftingData;
   if (!Array.isArray(parsed.executors) || parsed.executors.length === 0) {
     parsed.executors = defaultDraftingData.executors;
@@ -257,6 +263,11 @@ export function saveDraftingData(data: DraftingData) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+export function persistDraftingSession(meta: DraftSessionMeta, snapshot: DraftingData) {
+  saveDraftingSessionMeta(meta);
+  saveDraftingData(normalizeDraftingData(snapshot));
+}
+
 export function useDraftingData() {
   const [data, setData] = useState<DraftingData>(() => loadDraftingData());
   const [session, setSession] = useState<DraftSessionMeta | null>(null);
@@ -277,12 +288,45 @@ export function useDraftingData() {
         setStatus({ loading: true });
         const storedSession = loadDraftingSessionMeta();
         if (storedSession) {
-          const remote = await getDraftSession(storedSession);
-          if (!isMounted) return;
-          setSession(storedSession);
-          setData(normalizeDraftingData(remote.inputSnapshot));
-          setStatus({ loading: false, lastSyncedAt: remote.updatedAt });
-          return;
+          try {
+            const remote = await getDraftSession(storedSession);
+            if (!isMounted) return;
+            setSession(storedSession);
+            setData(normalizeDraftingData(remote.inputSnapshot));
+            setStatus({ loading: false, lastSyncedAt: remote.updatedAt });
+            return;
+          } catch (error) {
+            if (!isMounted) return;
+            if (axios.isAxiosError(error)) {
+              const statusCode = error.response?.status;
+              if (statusCode === 403 || statusCode === 404) {
+                clearDraftingSessionMeta();
+                if (typeof window !== "undefined") {
+                  window.localStorage.removeItem(STORAGE_KEYS.willResult);
+                }
+                const cached = loadDraftingData();
+                const sourceMode = cached.draftingMode === "ai" ? "AI" : "STRUCTURED";
+                const created = await createDraftSession(sourceMode, cached);
+                if (!isMounted) return;
+                const meta: DraftSessionMeta = {
+                  sessionId: created.sessionId,
+                  resumeToken: created.resumeToken,
+                  sourceMode: created.sourceMode
+                };
+                saveDraftingSessionMeta(meta);
+                setSession(meta);
+                setData(normalizeDraftingData(created.inputSnapshot));
+                setStatus({
+                  loading: false,
+                  lastSyncedAt: created.updatedAt,
+                  error:
+                    "Previous draft session could not be resumed. A new session has been started."
+                });
+                return;
+              }
+            }
+            throw error;
+          }
         }
 
         const seedSnapshot = latestSnapshot.current ?? defaultDraftingData;

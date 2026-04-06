@@ -21,7 +21,7 @@ export function MarketingNav({
   ctaSize = "sm",
   ctaOnClick
 }: MarketingNavProps) {
-  const { data, setData } = useDraftingData();
+  const { data, setData, status } = useDraftingData();
 
   const scrollToSection = (sectionId: string) => {
     if (typeof window === "undefined") return;
@@ -41,8 +41,9 @@ export function MarketingNav({
   };
 
   return (
-    <header className="border-b border-border bg-card">
-      <Container size="wide" className="flex h-[56px] items-center justify-between gap-4 sm:h-[64px] lg:h-[72px]">
+    <>
+      <header className="border-b border-border bg-card">
+        <Container size="wide" className="flex h-[56px] items-center justify-between gap-4 sm:h-[64px] lg:h-[72px]">
         <button
           type="button"
           onClick={() => navigate("/")}
@@ -92,7 +93,15 @@ export function MarketingNav({
             {ctaLabel}
           </Button>
         </div>
-      </Container>
-    </header>
+        </Container>
+      </header>
+      {status?.error ? (
+        <div className="border-b border-border bg-warning/10">
+          <Container size="wide" className="py-2 text-[12px] text-warning">
+            {status.error}
+          </Container>
+        </div>
+      ) : null}
+    </>
   );
 }
