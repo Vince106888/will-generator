@@ -68,6 +68,8 @@ model WillDraftVersion {
   id               String   @id @default(uuid())
   draftSessionId   String
   draftSession     DraftSession @relation(fields: [draftSessionId], references: [id])
+  willProfileId    String?
+  willProfile      WillProfile? @relation(fields: [willProfileId], references: [id])
   version          Int
   inputSnapshot    Json
   generatedDraft   String
@@ -78,6 +80,7 @@ model WillDraftVersion {
   updatedAt        DateTime @updatedAt
 
   @@index([draftSessionId])
+  @@index([willProfileId])
   @@unique([draftSessionId, version])
 }
 
