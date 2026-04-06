@@ -1,5 +1,6 @@
 // file: apps/api/src/services/draftSessionService.ts
 import crypto from "crypto";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../db";
 import { computeComplexity } from "../engines/complexityEngine";
 import { generateDraft } from "../engines/draftEngine";
@@ -122,10 +123,11 @@ function mapDraftingSnapshotToWillInput(snapshot: Record<string, unknown>): Will
 export class DraftSessionService {
   async createSession(input: DraftSessionCreateInput) {
     const resumeToken = createResumeToken();
+    const snapshot = input.inputSnapshot as Prisma.InputJsonValue;
     const session = await prisma.draftSession.create({
       data: {
         sourceMode: input.sourceMode,
-        inputSnapshot: input.inputSnapshot,
+        inputSnapshot: snapshot,
         resumeTokenHash: hashResumeToken(resumeToken),
         status: "IN_PROGRESS"
       }
@@ -177,11 +179,12 @@ export class DraftSessionService {
       string,
       unknown
     >;
+    const snapshot = mergedSnapshot as Prisma.InputJsonValue;
 
     const session = await prisma.draftSession.update({
       where: { id: sessionId },
       data: {
-        inputSnapshot: mergedSnapshot
+        inputSnapshot: snapshot
       }
     });
 
@@ -203,6 +206,7 @@ export class DraftSessionService {
     }
 
     const inputSnapshot = existing.inputSnapshot as Record<string, unknown>;
+    const inputSnapshotJson = existing.inputSnapshot as Prisma.InputJsonValue;
     const willInput = mapDraftingSnapshotToWillInput(inputSnapshot);
     const draft = generateDraft(willInput);
     const complexity = computeComplexity(willInput);
@@ -265,7 +269,7 @@ export class DraftSessionService {
           draftSessionId: sessionId,
           willProfileId: willProfile.id,
           version: nextVersion,
-          inputSnapshot,
+          inputSnapshot: inputSnapshotJson,
           generatedDraft: draft,
           complexityResult: complexity,
           validityResult: validity,
