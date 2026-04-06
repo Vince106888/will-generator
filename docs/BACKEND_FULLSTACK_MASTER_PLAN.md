@@ -22,11 +22,20 @@ Scope: Move Esheria Wills from frontend-complete prototype to production-grade e
   - `GET /api/v1/draft-sessions/:id`
   - `PATCH /api/v1/draft-sessions/:id`
   - `POST /api/v1/draft-sessions/:id/finalize`
+  - `POST /api/v1/draft-sessions/:id/resume-link`
+  - `GET /api/v1/wills/session/:id`
+  - `GET /api/v1/wills/session/:id/pdf`
+  - `POST /api/v1/wills/session/:id/advocate-review-requests`
+  - `GET /api/v1/wills/session/:id/advocate-review-requests/:requestId`
+  - `POST /api/v1/analytics/events`
+  - `GET /health/live`
+  - `GET /health/ready`
 - Real persistence exists for:
   - `WillProfile` records (JSON-heavy fields)
   - `Lead` records
   - `DraftSession` records
   - `WillDraftVersion` records
+  - `AdvocateReviewRequest` records
   - `AnalyticsEvent` model defined (not wired)
 - Real PDF generation exists (`pdfkit`, local filesystem output).
 - Real client-server call exists only at final review and lead actions.
