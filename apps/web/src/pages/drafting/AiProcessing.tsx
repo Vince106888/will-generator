@@ -1,6 +1,7 @@
 // Frame: AI Processing (0ianx)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { HelperCallout } from "../../components/ui/PencilPanels";
@@ -33,12 +34,7 @@ export default function AiProcessing() {
             <p className="text-[16px] leading-[1.6] text-muted">
               We analyze your input, extract key details, and prepare a clear summary for you to review.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 3 of 6 — Processing</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-1/2 rounded-full bg-primary" />
-              </div>
-            </div>
+            <AiStepNav currentPath="/drafting/ai/processing" />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">

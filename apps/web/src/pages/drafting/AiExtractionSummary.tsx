@@ -1,6 +1,7 @@
 // Frame: AI Extraction Summary (9MjGI)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { HelperCallout, ReviewChecklist } from "../../components/ui/PencilPanels";
@@ -59,12 +60,7 @@ export default function AiExtractionSummary() {
               Here is what we understood from your conversation. Review each section, correct anything wrong, and add
               missing details before we generate the formal draft.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 4 of 6 — Extraction summary</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-2/3 rounded-full bg-primary" />
-              </div>
-            </div>
+            <AiStepNav currentPath="/drafting/ai/summary" />
           </div>
 
           <Card variant="success" size="md" className="space-y-2">

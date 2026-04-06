@@ -1,6 +1,7 @@
 // Frame: AI Drafting Workspace (iVFMi)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Callout } from "../../components/ui/Callout";
@@ -53,12 +54,7 @@ export default function AiDraftingWorkspace() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               AI drafting — Step 2 of 6: Share your notes
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 2 of 6 — Share your notes</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-1/3 rounded-full bg-primary" />
-              </div>
-            </div>
+            <AiStepNav currentPath="/drafting/ai/input" />
             <h1 className="font-display text-3xl text-ink sm:text-4xl">Draft with AI</h1>
             <p className="max-w-[760px] text-[16px] leading-7 text-muted">
               Share your wishes in plain language. We ask gentle follow‑ups and show a clear summary

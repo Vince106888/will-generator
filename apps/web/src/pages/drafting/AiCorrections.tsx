@@ -1,6 +1,7 @@
 // Frame: AI Corrections (fuTos)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { HelperCallout, ReviewChecklist, SuccessPanel, WarningBanner } from "../../components/ui/PencilPanels";
@@ -58,12 +59,7 @@ export default function AiCorrections() {
               Here is what we understood from your conversation. Review each section, correct anything wrong, and add
               missing details before we generate the formal draft.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 5 of 6 — Corrections</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-[83%] rounded-full bg-primary" />
-              </div>
-            </div>
+            <AiStepNav currentPath="/drafting/ai/corrections" />
           </div>
 
           <SuccessPanel

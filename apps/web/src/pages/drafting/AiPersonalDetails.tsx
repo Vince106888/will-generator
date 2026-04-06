@@ -1,6 +1,7 @@
 // Frame: AI Personal Details (0T4RE)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { FieldGroup } from "../../components/drafting/FieldGroup";
@@ -37,12 +38,7 @@ export default function AiPersonalDetails() {
               Before the AI organizes your wishes, we need to identify you clearly. This ensures your draft is legally
               grounded.
             </p>
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold text-muted">Step 1 of 6 — Personal details</p>
-              <div className="h-2 rounded-full border border-border bg-secondary">
-                <div className="h-full w-[16.5%] rounded-full bg-primary" />
-              </div>
-            </div>
+            <AiStepNav currentPath="/drafting/ai/personal-details" />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
