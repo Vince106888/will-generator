@@ -1,5 +1,5 @@
 // Frame: Export Options (xUIiv)
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { Button } from "../../components/ui/Button";
@@ -10,17 +10,41 @@ import { STORAGE_KEYS } from "../../lib/storage";
 import { api } from "../../lib/api";
 
 export default function ExportOptions() {
-  const { data, update } = useDraftingData();
-  const willId = useMemo(() => {
+  const { data, update, session } = useDraftingData();
+  const [resultError, setResultError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const sessionId = session?.sessionId ?? null;
+
+  const latestResult = useMemo(() => {
     if (typeof window === "undefined") return null;
     const stored = window.localStorage.getItem(STORAGE_KEYS.willResult);
     if (!stored) return null;
     try {
-      return (JSON.parse(stored) as { id?: string }).id ?? null;
+      return JSON.parse(stored) as { sessionId?: string; version?: number };
     } catch {
       return null;
     }
   }, []);
+
+  useEffect(() => {
+    if (!sessionId) {
+      setResultError("No active draft session found.");
+      return;
+    }
+    setLoading(true);
+    api
+      .get(`/api/v1/wills/session/${sessionId}`)
+      .then((response) => {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(STORAGE_KEYS.willResult, JSON.stringify(response.data));
+        }
+        setResultError(null);
+      })
+      .catch(() => {
+        setResultError("We could not find a generated draft for this session.");
+      })
+      .finally(() => setLoading(false));
+  }, [sessionId]);
 
   const handleExport = async (format: string) => {
     update({
@@ -29,25 +53,15 @@ export default function ExportOptions() {
         format
       }
     });
-    if (!willId) {
-      navigate("/drafting/review-result");
+    if (!sessionId) {
+      setResultError("No active draft session found.");
       return;
     }
     if (format === "pdf") {
-      window.location.href = `${api.defaults.baseURL}/api/v1/wills/${willId}/pdf`;
+      window.location.href = `${api.defaults.baseURL}/api/v1/wills/session/${sessionId}/pdf`;
       return;
     }
-    if (!data.email) {
-      return;
-    }
-    try {
-      await api.post(`/api/v1/wills/${willId}/lead`, {
-        email: data.email,
-        metadata: { action: "export", format }
-      });
-    } catch {
-      console.error("Failed to submit export request.");
-    }
+    setResultError("Paid export tiers are not yet available.");
   };
 
   return (
@@ -69,6 +83,15 @@ export default function ExportOptions() {
               watermark and adds extra signing support. All tiers follow the
               same legal signing rules.
             </p>
+            {loading ? (
+              <p className="text-xs text-muted">Checking latest draft output...</p>
+            ) : null}
+            {resultError ? (
+              <p className="text-xs text-warning">{resultError}</p>
+            ) : null}
+            {latestResult?.version ? (
+              <p className="text-xs text-muted">Latest version: v{latestResult.version}</p>
+            ) : null}
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
@@ -94,12 +117,13 @@ export default function ExportOptions() {
                 <p className="text-muted">&bull; Editable for later updates</p>
               </div>
               <Button
-                variant="primary"
+                variant="secondary"
                 size="sm"
                 className="px-5 py-3 text-[13px]"
                 onClick={() => handleExport("basic")}
+                disabled
               >
-                Get Basic
+                Coming soon
               </Button>
             </SectionCard>
 
@@ -115,12 +139,13 @@ export default function ExportOptions() {
                 </p>
               </div>
               <Button
-                variant="primary"
+                variant="secondary"
                 size="sm"
                 className="px-5 py-3 text-[13px]"
                 onClick={() => handleExport("premium")}
+                disabled
               >
-                Request Premium
+                Coming soon
               </Button>
             </SectionCard>
           </div>
