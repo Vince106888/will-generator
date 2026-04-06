@@ -148,6 +148,42 @@ corepack pnpm symphony:start
 pnpm install
 ```
 
+For a fast, end-to-end local startup and the pilot test checklist, use:
+
+- `docs/product/local-test-readiness.md`
+
+### One-Command Local Workflow
+
+Docker-first (recommended):
+
+```bash
+pnpm dev:up
+```
+
+Local Postgres fallback:
+
+```bash
+pnpm dev:up:local
+```
+
+Stop containers:
+
+```bash
+pnpm dev:down
+```
+
+Reset containers + volumes (destructive):
+
+```bash
+pnpm dev:reset
+```
+
+Validate locally (generate + migrate + lint + test + build):
+
+```bash
+pnpm dev:check
+```
+
 ### Docker (Optional)
 
 Use Docker to run Postgres and optionally the full stack:
@@ -160,6 +196,12 @@ Run migrations after the database is up:
 
 ```bash
 pnpm -C apps/api db:migrate
+```
+
+Then start the full stack:
+
+```bash
+docker compose up api web
 ```
 
 ### Environment Variables
