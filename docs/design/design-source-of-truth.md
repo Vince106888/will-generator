@@ -1,6 +1,6 @@
 # Design Source of Truth
 
-Date: 2026-03-31  
+Date: 2026-04-06  
 Primary file: `design/pencil-implementation.pen`  
 Archive file: `design/pencil-new.pen` (history only)  
 Active index frame: `IMPLEMENT FROM THESE ONLY — Source of Truth` (id: `iUMph`)
@@ -23,11 +23,9 @@ These are the only frames eligible for implementation:
 - AI Review: `ACTIVE A6 AI Review` (id: `WlRtD`)
 - Structured Flow Shell: `ACTIVE S0 Structured Flow Shell` (id: `fF89o`)
 - Structured Personal Details: `ACTIVE S1 Structured Personal Details` (id: `74ORj`)
-- Structured Family and Household: `ACTIVE S2 Structured Family and Household` (id: `EjguX`)
 - Executors: `ACTIVE S3 Structured Executors` (id: `yb4Yk`)
 - Guardianship: `ACTIVE S4 Structured Guardians` (id: `aSEwT`)
 - Structured Assets: `ACTIVE S5 Structured Assets` (id: `nFFsn`)
-- Structured Beneficiaries: `ACTIVE S6 Structured Beneficiaries` (id: `zXzDB`)
 - Structured Special Wishes: `ACTIVE S7 Structured Special Wishes` (id: `CVyk3`)
 - Review + Result: `ACTIVE R1 Result / Draft Preview` (id: `0gbAz`)
 - Export Options: `ACTIVE R2 Result / Export Options` (id: `xUIiv`)
@@ -45,6 +43,7 @@ These are the only frames eligible for implementation:
 - Mobile Review: `ACTIVE M7 Mobile Review` (id: `KU8Wf`)
 
 ## Recent Updates
+- 2026-04-06: Removed structured family and standalone beneficiaries steps from the active flow; assets + beneficiaries are combined in S5.
 - 2026-03-31: Synced doc to `IMPLEMENT FROM THESE ONLY — Source of Truth` frame list, including full AI and structured flows.
 
 ## Archive / Reference Frames (Do Not Implement)
@@ -61,14 +60,12 @@ Proposed routes and current intended files (update during implementation if need
 - `/drafting/ai/processing` -> `AiProcessing` -> `apps/web/src/pages/drafting/AiProcessing.tsx`
 - `/drafting/ai/summary` -> `AiExtractionSummary` -> `apps/web/src/pages/drafting/AiExtractionSummary.tsx`
 - `/drafting/ai/corrections` -> `AiCorrections` -> `apps/web/src/pages/drafting/AiCorrections.tsx`
-- `/drafting/ai/review` -> `AiReview` -> `apps/web/src/pages/drafting/AiReview.tsx`
+- `/drafting/ai/review` -> `Review` -> `apps/web/src/pages/drafting/Review.tsx`
 - `/drafting/structured-flow` -> `StructuredFlowShell` -> `apps/web/src/pages/drafting/StructuredFlowShell.tsx`
 - `/drafting/structured/personal-details` -> `StructuredPersonalDetails` -> `apps/web/src/pages/drafting/StructuredPersonalDetails.tsx`
-- `/drafting/structured/family` -> `StructuredFamilyHousehold` -> `apps/web/src/pages/drafting/StructuredFamilyHousehold.tsx`
 - `/drafting/structured/executors` -> `StructuredExecutors` -> `apps/web/src/pages/drafting/StructuredExecutors.tsx`
 - `/drafting/structured/guardians` -> `StructuredGuardianship` -> `apps/web/src/pages/drafting/StructuredGuardianship.tsx`
 - `/drafting/structured/assets` -> `AssetsBeneficiariesMapping` -> `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx`
-- `/drafting/structured/beneficiaries` -> `StructuredBeneficiaries` -> `apps/web/src/pages/drafting/StructuredBeneficiaries.tsx`
 - `/drafting/structured/wishes` -> `StructuredSpecialWishes` -> `apps/web/src/pages/drafting/StructuredSpecialWishes.tsx`
 - `/drafting/review-result` -> `Review + Result` -> `apps/web/src/pages/drafting/Review.tsx`
 - `/drafting/export-options` -> `ExportOptions` -> `apps/web/src/pages/post/ExportOptions.tsx`

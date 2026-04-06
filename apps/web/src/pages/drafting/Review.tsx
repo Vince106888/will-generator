@@ -1,6 +1,8 @@
-// Frame: Review + Result (0gbAz)
+// Frame: AI Review (WlRtD)
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
+import { AiStepNav } from "../../components/drafting/AiStepNav";
+import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Button } from "../../components/ui/Button";
 import {
   DocumentPreview,
@@ -18,17 +20,23 @@ import { navigate } from "../../lib/navigation";
 
 export default function Review() {
   const { data } = useDraftingData();
+  const flowLabel = data.draftingMode === "ai" ? "AI drafting" : "Guided drafting";
   const assetLabels = data.assets
     .map((asset) => asset.label?.trim() || asset.location?.trim() || asset.notes?.trim() || "")
     .filter(Boolean);
   const beneficiaries = data.beneficiaries
     .map((beneficiary) => beneficiary.name?.trim() || "")
     .filter(Boolean);
+  const assetCount = data.assets.filter((asset) => asset.location || asset.notes).length;
   const executorName = data.executors?.[0]?.name?.trim() || "";
   const guardianName = data.guardians?.[0]?.name?.trim() || "";
   const hasRemainderClause = Boolean(data.remainderClause?.trim());
   const hasExecutor = Boolean(executorName);
   const hasBeneficiaries = beneficiaries.length > 0;
+  const hasAssets = assetCount > 0;
+  const hasAllocations = data.assetAllocations.some(
+    (allocation) => allocation.allocations?.length > 0
+  );
 
   const allocationLines = data.assetAllocations.flatMap((allocation) => {
     const assetLabel = allocation.assetLabel?.trim();
@@ -56,7 +64,9 @@ export default function Review() {
 
   const missingItems = [
     !hasExecutor ? "assign an executor" : null,
+    !hasAssets ? "add assets" : null,
     !hasBeneficiaries ? "add beneficiaries" : null,
+    !hasAllocations ? "assign assets to beneficiaries" : null,
     !hasRemainderClause ? "set a remainder clause" : null
   ].filter(Boolean) as string[];
 
@@ -73,6 +83,14 @@ export default function Review() {
       navigate("/drafting/export-options");
     }
   };
+  const editPath =
+    data.draftingMode === "ai"
+      ? "/drafting/ai/summary"
+      : "/drafting/structured/assets";
+  const editLabel =
+    data.draftingMode === "ai"
+      ? "Back to AI summary"
+      : "Back to assets & beneficiaries";
 
   return (
     <WorkspaceShell
@@ -91,15 +109,17 @@ export default function Review() {
         <div className="space-y-6">
           <div className="space-y-[10px]">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              Step 8 of 8: Review your draft and results
+              {flowLabel} - Step 6 of 6: Review
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">
-              Review your draft and results
-            </h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Review</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
-              Read through the summary below. We highlight anything missing or
-              legally sensitive before you download or sign.
+              Review the summary and confirm everything is correct before you proceed.
             </p>
+            {data.draftingMode === "ai" ? (
+              <AiStepNav currentPath="/drafting/ai/review" />
+            ) : (
+              <StructuredStepNav currentPath="/drafting/review-result" />
+            )}
           </div>
 
           <SuccessPanel
@@ -176,15 +196,9 @@ export default function Review() {
                   variant="secondary"
                   size="sm"
                   className="w-full px-5 py-3 text-[13px] sm:w-auto"
-                  onClick={() =>
-                    navigate(
-                      data.draftingMode === "ai"
-                        ? "/drafting/ai/summary"
-                        : "/drafting/structured/personal-details"
-                    )
-                  }
+                  onClick={() => navigate(editPath)}
                 >
-                  Edit details
+                  {editLabel}
                 </Button>
               </div>
             </div>
@@ -194,7 +208,7 @@ export default function Review() {
                 title="Draft overview"
                 lines={[
                   `Beneficiaries: ${data.beneficiaries.filter((b) => b.name).length || 3}`,
-                  `Assets: ${data.assets.filter((a) => a.location || a.notes).length || 4}`,
+                  `Assets: ${assetCount || 4}`,
                   `Executors: ${data.executors.filter((e) => e.name).length || 1}`
                 ]}
               />
@@ -202,6 +216,12 @@ export default function Review() {
                 title="Completeness checks"
                 items={[
                   { label: "Executor selected", tone: hasExecutor ? "success" : "warning" },
+                  { label: "Assets listed", tone: hasAssets ? "success" : "warning" },
+                  { label: "Beneficiaries added", tone: hasBeneficiaries ? "success" : "warning" },
+                  {
+                    label: "Assets assigned to beneficiaries",
+                    tone: hasAllocations ? "success" : "warning"
+                  },
                   { label: "Remainder clause added", tone: hasRemainderClause ? "success" : "warning" }
                 ]}
               />

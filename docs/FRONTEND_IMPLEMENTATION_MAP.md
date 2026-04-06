@@ -1,6 +1,6 @@
 # Frontend Implementation Map
 
-Date: 2026-03-31  
+Date: 2026-04-06  
 Source: `apps/web/src` and `docs/design/design-source-of-truth.md`
 
 ## Active Route Map (App.tsx)
@@ -16,21 +16,19 @@ These routes are the only ones currently wired in `apps/web/src/App.tsx`.
 | `/drafting/ai/processing` | AI Processing | `apps/web/src/pages/drafting/AiProcessing.tsx` | `0ianx` | Implemented |
 | `/drafting/ai/summary` | AI Extraction Summary | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | `9MjGI` | Implemented |
 | `/drafting/ai/corrections` | AI Corrections | `apps/web/src/pages/drafting/AiCorrections.tsx` | `fuTos` | Implemented |
-| `/drafting/ai/review` | AI Review | `apps/web/src/pages/drafting/AiReview.tsx` | `WlRtD` | Implemented |
+| `/drafting/ai/review` | Review | `apps/web/src/pages/drafting/Review.tsx` | `WlRtD` | Implemented |
 | `/drafting/ai-workspace` | AI Drafting Workspace (legacy alias) | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | `iVFMi` | Alias |
 | `/drafting/ai-summary` | AI Extraction Summary (legacy alias) | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | `9MjGI` | Alias |
 | `/drafting/structured-flow` | Structured Flow Shell | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | `fF89o` | Implemented |
 | `/drafting/structured/personal-details` | Structured Personal Details | `apps/web/src/pages/drafting/StructuredPersonalDetails.tsx` | `74ORj` | Implemented |
-| `/drafting/structured/family` | Structured Family & Household | `apps/web/src/pages/drafting/StructuredFamilyHousehold.tsx` | `EjguX` | Implemented |
 | `/drafting/structured/executors` | Executors | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | `yb4Yk` | Implemented |
 | `/drafting/structured/guardians` | Guardianship | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | `aSEwT` | Implemented |
 | `/drafting/structured/assets` | Assets | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | `nFFsn` | Implemented |
-| `/drafting/structured/beneficiaries` | Beneficiaries | `apps/web/src/pages/drafting/StructuredBeneficiaries.tsx` | `zXzDB` | Implemented |
 | `/drafting/structured/wishes` | Special Wishes | `apps/web/src/pages/drafting/StructuredSpecialWishes.tsx` | `CVyk3` | Implemented |
 | `/drafting/mapping` | Assets + Beneficiaries Mapping (legacy alias) | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | `nFFsn` | Alias |
 | `/drafting/structured-executors` | Executors (legacy alias) | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | `yb4Yk` | Alias |
 | `/drafting/guardianship` | Guardianship (legacy alias) | `apps/web/src/pages/drafting/StructuredGuardianship.tsx` | `aSEwT` | Alias |
-| `/drafting/review-result` | Review + Result | `apps/web/src/pages/drafting/Review.tsx` | `0gbAz` | Implemented |
+| `/drafting/review-result` | Review + Result (Unified) | `apps/web/src/pages/drafting/Review.tsx` | `0gbAz` | Implemented |
 | `/drafting/export-options` | Export Options | `apps/web/src/pages/post/ExportOptions.tsx` | `xUIiv` | Implemented |
 | `/drafting/signing-guide` | Signing Guide | `apps/web/src/pages/post/SigningGuide.tsx` | `JXSDZ` | Implemented |
 | `/drafting/advocate-review` | Advocate Review | `apps/web/src/pages/post/AdvocateReview.tsx` | `K02wp` | Implemented |
@@ -39,7 +37,7 @@ These routes are the only ones currently wired in `apps/web/src/App.tsx`.
 | `/privacy` | Privacy + Trust | `apps/web/src/pages/marketing/PrivacyTrust.tsx` | `Scsqx` | Implemented |
 
 ## Implemented vs Partial vs Missing (Design Alignment)
-- Implemented: full AI flow (A1–A6), structured steps (S0–S7), result, support.
+- Implemented: full AI flow (A1-A6), structured steps (S0-S5), result, support.
 - Alias routes remain for backward compatibility.
 
 ## Shared Layout / Components

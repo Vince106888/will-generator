@@ -17,7 +17,7 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before drafting co
 | `/drafting/ai/processing` | AI Processing | `0ianx` | `apps/web/src/pages/drafting/AiProcessing.tsx` | refine | Step 3 of 6 |
 | `/drafting/ai/summary` | AI Summary | `9MjGI` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | refine | Step 4 of 6 |
 | `/drafting/ai/corrections` | AI Corrections | `fuTos` | `apps/web/src/pages/drafting/AiCorrections.tsx` | refine | Step 5 of 6 |
-| `/drafting/ai/review` | AI Review | `WlRtD` | `apps/web/src/pages/drafting/AiReview.tsx` | refine | Step 6 of 6 |
+| `/drafting/ai/review` | Review | `WlRtD` | `apps/web/src/pages/drafting/Review.tsx` | refine | Step 6 of 6 |
 | `/drafting/structured-flow` | Structured Flow Shell | `fF89o` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | refine | Overview |
 | `/drafting/structured/personal-details` | Structured Personal Details | `74ORj` | `apps/web/src/pages/drafting/StructuredPersonalDetails.tsx` | refine | Step 1 of 8 |
 | `/drafting/structured/family` | Structured Family and Household | `EjguX` | `apps/web/src/pages/drafting/StructuredFamilyHousehold.tsx` | refine | Step 2 of 8 |
@@ -26,7 +26,7 @@ Drafting mode must be explicitly confirmed on `/entry-choice` before drafting co
 | `/drafting/structured/assets` | Structured Assets | `nFFsn` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | refine | Step 5 of 8 |
 | `/drafting/structured/beneficiaries` | Structured Beneficiaries | `zXzDB` | `apps/web/src/pages/drafting/StructuredBeneficiaries.tsx` | refine | Step 6 of 8 |
 | `/drafting/structured/wishes` | Structured Special Wishes | `CVyk3` | `apps/web/src/pages/drafting/StructuredSpecialWishes.tsx` | refine | Step 7 of 8 |
-| `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | refine | Step 8 of 8 |
+| `/drafting/review-result` | Review + Result | `0gbAz` | `apps/web/src/pages/drafting/Review.tsx` | refine | Step 6 of 6 |
 | `/drafting/export-options` | Export Options | `xUIiv` | `apps/web/src/pages/post/ExportOptions.tsx` | refine | Post result |
 | `/drafting/signing-guide` | Signing Instructions | `JXSDZ` | `apps/web/src/pages/post/SigningGuide.tsx` | refine | Post result |
 | `/drafting/advocate-review` | Advocate Review | `K02wp` | `apps/web/src/pages/post/AdvocateReview.tsx` | refine | Post result |
