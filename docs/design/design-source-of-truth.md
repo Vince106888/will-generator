@@ -43,6 +43,10 @@ These are the only frames eligible for implementation:
 - Mobile Review: `ACTIVE M7 Mobile Review` (id: `KU8Wf`)
 
 ## Recent Updates
+- 2026-04-08: Removed the "Use AI to organize my will" CTA button from the landing page implementation to align homepage actions.
+- 2026-04-08: Stacked the landing page trust badges (Kenyan succession guidance, witness rules, private by default) into a single column.
+- 2026-04-08: Removed the "Review an existing will" card from the entry-choice page.
+- 2026-04-08: Entry-choice preview buttons now route into the AI sample workspace and the structured flow overview instead of the FAQ.
 - 2026-04-06: Removed structured family and standalone beneficiaries steps from the active flow; assets + beneficiaries are combined in S5.
 - 2026-03-31: Synced doc to `IMPLEMENT FROM THESE ONLY — Source of Truth` frame list, including full AI and structured flows.
 
