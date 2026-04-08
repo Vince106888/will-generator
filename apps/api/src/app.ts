@@ -33,6 +33,7 @@ app.use((
   res: express.Response,
   _next: express.NextFunction
 ) => {
+  void _next;
   console.error(err);
   const isProd = process.env.NODE_ENV === "production";
   const details = err instanceof Error ? err.message : undefined;
