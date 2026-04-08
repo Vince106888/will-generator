@@ -329,8 +329,20 @@ export function useDraftingData() {
           try {
             const remote = await getDraftSession(storedSession);
             if (!isMounted) return;
+            const cached = loadDraftingData();
+            const remoteSnapshot = remote.inputSnapshot as Partial<DraftingData>;
+            const mergedSnapshot: DraftingData = {
+              ...cached,
+              ...remoteSnapshot,
+              draftingMode:
+                remoteSnapshot.draftingMode ?? cached.draftingMode,
+              draftingModeConfirmed:
+                typeof remoteSnapshot.draftingModeConfirmed === "boolean"
+                  ? remoteSnapshot.draftingModeConfirmed
+                  : cached.draftingModeConfirmed
+            };
             setSession(storedSession);
-            setData(normalizeDraftingData(remote.inputSnapshot));
+            setData(normalizeDraftingData(mergedSnapshot));
             setStatus({ loading: false, lastSyncedAt: remote.updatedAt });
             return;
           } catch (error) {
