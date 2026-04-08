@@ -47,6 +47,7 @@ These are the only frames eligible for implementation:
 - 2026-04-08: Stacked the landing page trust badges (Kenyan succession guidance, witness rules, private by default) into a single column.
 - 2026-04-08: Removed the "Review an existing will" card from the entry-choice page.
 - 2026-04-08: Entry-choice preview buttons now route into the AI sample workspace and the structured flow overview instead of the FAQ.
+- 2026-04-08: Added a dedicated How It Works page derived from the landing section; no new design frame yet.
 - 2026-04-06: Removed structured family and standalone beneficiaries steps from the active flow; assets + beneficiaries are combined in S5.
 - 2026-03-31: Synced doc to `IMPLEMENT FROM THESE ONLY — Source of Truth` frame list, including full AI and structured flows.
 
@@ -59,6 +60,7 @@ Proposed routes and current intended files (update during implementation if need
 - `/` -> `Landing` -> `apps/web/src/pages/marketing/Landing.tsx`
 - `/entry-choice` -> `EntryChoice` -> `apps/web/src/pages/marketing/EntryChoice.tsx`
 - `/existing-will` -> `ExistingWillGate` -> `apps/web/src/pages/marketing/ExistingWillGate.tsx`
+- `/how-it-works` -> `HowItWorks` -> `apps/web/src/pages/marketing/HowItWorks.tsx` (derived from Landing section)
 - `/drafting/ai/personal-details` -> `AiPersonalDetails` -> `apps/web/src/pages/drafting/AiPersonalDetails.tsx`
 - `/drafting/ai/input` -> `AiDraftingWorkspace` -> `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx`
 - `/drafting/ai/processing` -> `AiProcessing` -> `apps/web/src/pages/drafting/AiProcessing.tsx`
