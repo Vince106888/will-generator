@@ -23,23 +23,6 @@ export function MarketingNav({
 }: MarketingNavProps) {
   const { data, setData, status } = useDraftingData();
 
-  const scrollToSection = (sectionId: string) => {
-    if (typeof window === "undefined") return;
-    const target = document.getElementById(sectionId);
-    if (!target) return;
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const handleSectionNav = (sectionId: string) => {
-    if (typeof window === "undefined") return;
-    if (window.location.pathname === "/") {
-      scrollToSection(sectionId);
-      return;
-    }
-    navigate("/");
-    window.setTimeout(() => scrollToSection(sectionId), 160);
-  };
-
   return (
     <>
       <header className="border-b border-border bg-card">
@@ -56,7 +39,7 @@ export function MarketingNav({
           <button
             type="button"
             className="hover:text-ink"
-            onClick={() => handleSectionNav("how-it-works")}
+            onClick={() => navigate("/how-it-works")}
           >
             How it works
           </button>

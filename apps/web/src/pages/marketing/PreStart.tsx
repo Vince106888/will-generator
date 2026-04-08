@@ -114,7 +114,7 @@ export default function PreStart() {
             <Button variant="primary" size="sm" onClick={() => navigate("/entry-choice")}>
               Go to entry choice
             </Button>
-            <Button variant="secondary" size="sm" onClick={() => navigate("/")}>
+            <Button variant="secondary" size="sm" onClick={() => navigate("/how-it-works")}>
               See how it works
             </Button>
           </div>
