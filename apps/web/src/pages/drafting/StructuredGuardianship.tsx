@@ -11,7 +11,7 @@ import { navigate } from "../../lib/navigation";
 import { AlertTriangle, MessageSquareText, ShieldCheck } from "lucide-react";
 
 export default function StructuredGuardianship() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured", { enforce: true });
   const primaryGuardian = data.guardians[0];
   const backupGuardian = data.guardians[1];
   const hasMinors = data.hasMinors;

@@ -14,7 +14,7 @@ import { navigate } from "../../lib/navigation";
 import { AlertTriangle, Info, Link2, Table2 } from "lucide-react";
 
 export default function AssetsBeneficiariesMapping() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured", { enforce: true });
   const assets = data.assets
     .filter((asset) => asset.location || asset.notes)
     .map((asset) => ({

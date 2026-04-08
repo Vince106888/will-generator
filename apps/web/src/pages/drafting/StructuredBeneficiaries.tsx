@@ -10,7 +10,7 @@ import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function StructuredBeneficiaries() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured", { enforce: true });
 
   const updateBeneficiary = (
     index: number,

@@ -12,7 +12,7 @@ import { useDraftingMode } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 
 export default function StructuredPersonalDetails() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured", { enforce: true });
 
   return (
     <WorkspaceShell
