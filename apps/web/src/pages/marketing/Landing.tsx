@@ -5,7 +5,6 @@ import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
-import { saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { AlertTriangle, Eye, HeartHandshake, Lock, Shield } from "lucide-react";
 import heroImage from "../../assets/landing-hero.png";
 
@@ -25,8 +24,6 @@ const trustBadges = [
 ];
 
 export default function Landing() {
-  const { data, setData } = useDraftingData();
-
   return (
     <MarketingShell
       nav={{
