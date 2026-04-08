@@ -20,6 +20,7 @@ import { navigate } from "../../lib/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { trackEvent } from "../../lib/analytics";
+import { describeApiError } from "../../lib/apiErrors";
 
 export default function Review() {
   const { data, session, status } = useDraftingData();
@@ -122,7 +123,9 @@ export default function Review() {
           return;
         }
       }
-      setGenerateError("Unable to generate your draft. Please try again.");
+      const info = describeApiError(error, "Draft generation");
+      console.error("[draft-session] finalize failed", info, error);
+      setGenerateError(info.message);
     }
   };
 
@@ -150,6 +153,8 @@ export default function Review() {
       trackEvent({ event: "resume_link_requested", payload: { sessionId: session.sessionId } });
       setResumeStatus("Resume link ready. Check your email for the link.");
     } catch (error: unknown) {
+      const info = describeApiError(error, "Resume link request");
+      console.error("[draft-session] resume link failed", info, error);
       const link =
         error && typeof error === "object" && "response" in error
           ? (error as { response?: { data?: { resumeLink?: string } } }).response?.data?.resumeLink

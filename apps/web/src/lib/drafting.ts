@@ -3,6 +3,7 @@ import { STORAGE_KEYS } from "./storage";
 import { api } from "./api";
 import { trackEvent } from "./analytics";
 import axios from "axios";
+import { describeApiError } from "./apiErrors";
 
 export type DraftingData = {
   legalName: string;
@@ -386,8 +387,13 @@ export function useDraftingData() {
       } catch (error) {
         if (!isMounted) return;
         const cached = loadDraftingData();
+        const info = describeApiError(error, "Draft session sync");
+        console.error("[draft-session] initial sync failed", info, error);
         setData(cached);
-        setStatus({ loading: false, error: "Unable to sync draft session. Using local cache." });
+        setStatus({
+          loading: false,
+          error: `${info.message} Draft generation is blocked until sync succeeds.`
+        });
       }
     };
 
@@ -417,9 +423,11 @@ export function useDraftingData() {
             payload: { sessionId: session.sessionId, updatedAt: updated.updatedAt }
           });
         } catch (error) {
+          const info = describeApiError(error, "Draft session update");
+          console.error("[draft-session] update failed", info, error);
           setStatus((prev) => ({
             ...prev,
-            error: "Unable to save changes to the server."
+            error: info.message
           }));
         }
       }, 400);
