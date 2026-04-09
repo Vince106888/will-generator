@@ -1,8 +1,8 @@
 export const PROMPT_REGISTRY = {
   extract: {
-    version: "extract_v1",
+    version: "extract_v2",
     purpose:
-      "Extract candidate structured fields (assets, beneficiaries, executors, guardians, wishes) from free text."
+      "Extract structured facts, missing info, ambiguity warnings, and next questions from free text."
   },
   explain: {
     version: "explain_v1",
