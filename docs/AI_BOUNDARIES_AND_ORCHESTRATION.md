@@ -1,4 +1,4 @@
-# AI Boundaries and Orchestration
+ï»¿# AI Boundaries and Orchestration
 
 Date: 2026-03-30
 
@@ -33,13 +33,14 @@ Date: 2026-03-30
 - If AI output conflicts with user edits, user edits win.
 
 ## Trust and Disclaimers
-- Always display: “This is not legal advice” and “You must review before signing.”
+- Always display: "This is not legal advice" and "You must review before signing."
 - Explicitly state that AI summaries may be incomplete.
 - No sensitive identifiers (ID scans, account numbers) should be accepted in AI prompts.
 
 ## Current Reality
-- No AI model integration exists in the repo today.
-- AI pages are UI-only placeholders.
+- AI extraction uses a local Ollama model (default qwen3:8b, fallback qwen3:4b) with JSON-only structured output.
+- Extraction outputs include summary, extracted facts, missing information, ambiguity warnings, complexity signals, and next questions.
+- The deterministic draft engine remains the only source of truth for final will generation.
 
 ## Future Orchestration Direction
 - Use a dedicated AI service with versioned prompts and audited outputs.
