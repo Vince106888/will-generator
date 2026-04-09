@@ -3,6 +3,8 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../../db";
 import { DraftSessionService } from "../draftSessionService";
 import { LocalStubAiProvider } from "./providers/localStubProvider";
+import { OllamaAiProvider } from "./providers/ollamaProvider";
+import { AiProviderUnavailableError } from "./providerErrors";
 import { extractionCandidateSchema, explainResponseSchema, summarizeResponseSchema } from "./schemas";
 import { AiProvider } from "./types";
 
@@ -12,7 +14,10 @@ function readAiConfig() {
   return {
     enabled: process.env.AI_ASSIST_ENABLED === "true",
     allowStub: process.env.AI_ALLOW_LOCAL_STUB === "true",
-    confidenceThreshold: Number(process.env.AI_CONFIDENCE_THRESHOLD ?? DEFAULT_CONFIDENCE_THRESHOLD)
+    confidenceThreshold: Number(process.env.AI_CONFIDENCE_THRESHOLD ?? DEFAULT_CONFIDENCE_THRESHOLD),
+    provider: (process.env.AI_PROVIDER ?? "").trim().toLowerCase(),
+    ollamaBaseUrl: process.env.OLLAMA_BASE_URL ?? "http://localhost:11434",
+    ollamaModel: process.env.OLLAMA_MODEL ?? "qwen3:8b"
   };
 }
 
@@ -25,12 +30,52 @@ function buildPreview(value: string) {
   return value.length > 240 ? `${value.slice(0, 237)}...` : value;
 }
 
+function resolveAiProvider(config: ReturnType<typeof readAiConfig>): {
+  provider?: AiProvider;
+  unavailableReason?: string;
+} {
+  if (config.provider === "ollama") {
+    if (!config.ollamaBaseUrl || !config.ollamaModel) {
+      return { unavailableReason: "Ollama base URL or model is not configured." };
+    }
+    return {
+      provider: new OllamaAiProvider({ baseUrl: config.ollamaBaseUrl, model: config.ollamaModel })
+    };
+  }
+
+  if (config.provider === "local_stub") {
+    if (!config.allowStub) {
+      return { unavailableReason: "Local stub provider is disabled by configuration." };
+    }
+    return { provider: new LocalStubAiProvider() };
+  }
+
+  if (config.allowStub && !config.provider) {
+    return { provider: new LocalStubAiProvider() };
+  }
+
+  if (!config.provider) {
+    return { unavailableReason: "No AI provider configured." };
+  }
+
+  return { unavailableReason: `Unknown AI_PROVIDER value: ${config.provider}` };
+}
+
 export class AiService {
   private readonly draftSessionService = new DraftSessionService();
-  private readonly provider: AiProvider;
+  private readonly provider?: AiProvider;
+  private readonly providerUnavailableReason?: string;
 
   constructor(provider?: AiProvider) {
-    this.provider = provider ?? new LocalStubAiProvider();
+    if (provider) {
+      this.provider = provider;
+      return;
+    }
+
+    const config = readAiConfig();
+    const resolved = resolveAiProvider(config);
+    this.provider = resolved.provider;
+    this.providerUnavailableReason = resolved.unavailableReason;
   }
 
   private async ensureSessionAccess(draftSessionId: string, resumeToken?: string) {
@@ -84,8 +129,8 @@ export class AiService {
     if (!config.enabled) {
       return { disabled: true as const };
     }
-    if (!config.allowStub) {
-      return { unavailable: true as const };
+    if (!this.provider) {
+      return { unavailable: true as const, reason: this.providerUnavailableReason };
     }
 
     const sessionAccess = await this.ensureSessionAccess(input.draftSessionId, input.resumeToken);
@@ -93,10 +138,18 @@ export class AiService {
       return sessionAccess;
     }
 
-    const response = await this.provider.extract({
-      freeText: input.freeText,
-      context: input.inputSnapshot
-    });
+    let response;
+    try {
+      response = await this.provider.extract({
+        freeText: input.freeText,
+        context: input.inputSnapshot
+      });
+    } catch (error) {
+      if (error instanceof AiProviderUnavailableError) {
+        return { providerUnavailable: true as const, reason: error.message };
+      }
+      throw error;
+    }
 
     const parsed = extractionCandidateSchema.safeParse(response.output);
     const schemaValid = parsed.success;
@@ -149,8 +202,8 @@ export class AiService {
     if (!config.enabled) {
       return { disabled: true as const };
     }
-    if (!config.allowStub) {
-      return { unavailable: true as const };
+    if (!this.provider) {
+      return { unavailable: true as const, reason: this.providerUnavailableReason };
     }
 
     const sessionAccess = await this.ensureSessionAccess(input.draftSessionId, input.resumeToken);
@@ -158,7 +211,15 @@ export class AiService {
       return sessionAccess;
     }
 
-    const response = await this.provider.explain({ topic: input.topic, context: input.context });
+    let response;
+    try {
+      response = await this.provider.explain({ topic: input.topic, context: input.context });
+    } catch (error) {
+      if (error instanceof AiProviderUnavailableError) {
+        return { providerUnavailable: true as const, reason: error.message };
+      }
+      throw error;
+    }
     const parsed = explainResponseSchema.safeParse(response.output);
     const schemaValid = parsed.success;
     const belowThreshold = response.confidence < config.confidenceThreshold;
@@ -205,8 +266,8 @@ export class AiService {
     if (!config.enabled) {
       return { disabled: true as const };
     }
-    if (!config.allowStub) {
-      return { unavailable: true as const };
+    if (!this.provider) {
+      return { unavailable: true as const, reason: this.providerUnavailableReason };
     }
 
     const sessionAccess = await this.ensureSessionAccess(input.draftSessionId, input.resumeToken);
@@ -214,7 +275,15 @@ export class AiService {
       return sessionAccess;
     }
 
-    const response = await this.provider.summarize({ freeText: input.freeText });
+    let response;
+    try {
+      response = await this.provider.summarize({ freeText: input.freeText });
+    } catch (error) {
+      if (error instanceof AiProviderUnavailableError) {
+        return { providerUnavailable: true as const, reason: error.message };
+      }
+      throw error;
+    }
     const parsed = summarizeResponseSchema.safeParse(response.output);
     const schemaValid = parsed.success;
     const belowThreshold = response.confidence < config.confidenceThreshold;

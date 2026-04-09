@@ -67,13 +67,27 @@ export class LocalStubAiProvider implements AiProvider {
     }));
 
     const output = {
-      assets,
-      beneficiaries,
-      executors,
-      guardians,
-      specialWishes: [],
-      notes: [
-        "Structured candidates are suggestions only. User confirmation is required before deterministic drafting."
+      summary: "Stub extraction summary based on provided notes.",
+      extracted: {
+        personalDetails: {},
+        familyStructure: { children: [], dependants: [] },
+        executors,
+        guardians,
+        assets,
+        beneficiaries,
+        residue: { beneficiaries: [] },
+        specialWishes: []
+      },
+      missingInformation: [
+        "Confirm executor contact details and backup executor.",
+        "Confirm beneficiaries and specific asset allocations."
+      ],
+      ambiguityWarnings: [],
+      complexitySignals: [],
+      confidence,
+      recommendedNextQuestions: [
+        "Which beneficiaries should receive specific assets?",
+        "Are there minors who need guardians?"
       ]
     };
 

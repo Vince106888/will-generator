@@ -17,6 +17,12 @@ Base: `/api/v1/wills`
 - `GET /:id/pdf`: generate or return PDF for WillProfile
 - `POST /:id/lead`: capture lead for a will
 
+Base: `/api/v1/ai`
+- `POST /extract`: bounded AI extraction (structured JSON only)
+- `POST /explain`: plain-language field explanations (non-legal)
+- `POST /summarize`: summary of user notes for review
+- `PATCH /interactions/:id/decision`: user decision audit trail
+
 ## Current Engines (Existing)
 - Draft engine: `generateDraft` builds a plain-text will (minimal, template-based)
 - Complexity engine: score based on minors, multiple households, asset count
@@ -33,14 +39,13 @@ Base: `/api/v1/wills`
 - No update endpoint for drafts; only generate and get-by-id
 - No list or search endpoints
 - No analytics/event ingestion endpoints (model exists only)
-- No AI orchestration endpoints
 - Validity checklist is non-exhaustive and not Kenya-law complete
 - No explicit complexity triage output to advocate review routing
 - No storage layer for draft sessions beyond WillProfile record
 
 ## Deterministic vs AI Boundary (Backend)
 - Deterministic: validity checklist, complexity scoring, signing rules
-- AI: should only generate summaries or structured extraction and must not change legal rules
+- AI: structured extraction and summaries only; must not change legal rules or generate final drafts
 
 ## MVP Direction (Recommended)
 1. Define canonical API contracts for structured draft data

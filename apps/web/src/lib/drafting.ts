@@ -45,12 +45,64 @@ export type DraftingData = {
     interactionId?: string;
     freeTextNotes?: string;
     extractionCandidates?: {
-      assets: Array<{ label: string; details?: string; confidence?: number }>;
-      beneficiaries: Array<{ name: string; relationship?: string; confidence?: number }>;
-      executors: Array<{ name: string; relationship?: string; confidence?: number }>;
-      guardians: Array<{ name: string; relationship?: string; confidence?: number }>;
-      specialWishes: Array<{ text: string; confidence?: number }>;
-      notes: string[];
+      summary: string;
+      extracted: {
+        personalDetails: {
+          fullName?: string;
+          maritalStatus?: string;
+          spouseName?: string;
+          domicile?: string;
+          notes?: string;
+        };
+        familyStructure: {
+          hasMinors?: boolean;
+          children: Array<{
+            name: string;
+            relationship?: string;
+            age?: string;
+            notes?: string;
+            confidence?: number;
+          }>;
+          dependants: Array<{
+            name: string;
+            relationship?: string;
+            notes?: string;
+            confidence?: number;
+          }>;
+        };
+        executors: Array<{ name: string; relationship?: string; notes?: string; confidence?: number }>;
+        guardians: Array<{ name: string; relationship?: string; notes?: string; confidence?: number }>;
+        assets: Array<{
+          label: string;
+          details?: string;
+          category?: string;
+          isForeign?: boolean;
+          confidence?: number;
+        }>;
+        beneficiaries: Array<{
+          name: string;
+          relationship?: string;
+          share?: string;
+          notes?: string;
+          confidence?: number;
+        }>;
+        residue: {
+          notes?: string;
+          beneficiaries: Array<{
+            name: string;
+            relationship?: string;
+            share?: string;
+            notes?: string;
+            confidence?: number;
+          }>;
+        };
+        specialWishes: Array<{ text: string; confidence?: number }>;
+      };
+      missingInformation: string[];
+      ambiguityWarnings: string[];
+      complexitySignals: string[];
+      confidence: number;
+      recommendedNextQuestions: string[];
     };
     explain?: {
       topic: string;
@@ -128,12 +180,22 @@ export const defaultDraftingData: DraftingData = {
     interactionId: "",
     freeTextNotes: "",
     extractionCandidates: {
-      assets: [],
-      beneficiaries: [],
-      executors: [],
-      guardians: [],
-      specialWishes: [],
-      notes: []
+      summary: "",
+      extracted: {
+        personalDetails: {},
+        familyStructure: { children: [], dependants: [] },
+        executors: [],
+        guardians: [],
+        assets: [],
+        beneficiaries: [],
+        residue: { beneficiaries: [] },
+        specialWishes: []
+      },
+      missingInformation: [],
+      ambiguityWarnings: [],
+      complexitySignals: [],
+      confidence: 0,
+      recommendedNextQuestions: []
     },
     explain: {
       topic: "",
@@ -365,7 +427,12 @@ export function useDraftingData() {
                 };
                 saveDraftingSessionMeta(meta);
                 setSession(meta);
-                setData(normalizeDraftingData(created.inputSnapshot));
+                setData(
+                  normalizeDraftingData({
+                    ...created.inputSnapshot,
+                    ...latestSnapshot.current
+                  })
+                );
                 setStatus({
                   loading: false,
                   lastSyncedAt: created.updatedAt,
@@ -390,7 +457,12 @@ export function useDraftingData() {
         };
         saveDraftingSessionMeta(meta);
         setSession(meta);
-        setData(normalizeDraftingData(created.inputSnapshot));
+        setData(
+          normalizeDraftingData({
+            ...created.inputSnapshot,
+            ...latestSnapshot.current
+          })
+        );
         setStatus({ loading: false, lastSyncedAt: created.updatedAt });
         trackEvent({
           event: "draft_session_created",

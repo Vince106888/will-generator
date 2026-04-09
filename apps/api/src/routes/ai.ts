@@ -30,7 +30,10 @@ aiRouter.post("/extract", async (req, res, next) => {
       return res.status(503).json({ error: "AI assist is currently disabled" });
     }
     if ("unavailable" in result) {
-      return res.status(503).json({ error: "AI provider is not configured" });
+      return res.status(503).json({ error: "AI provider is not configured", details: result.reason });
+    }
+    if ("providerUnavailable" in result) {
+      return res.status(503).json({ error: "AI provider is unavailable", details: result.reason });
     }
     if ("notFound" in result) {
       return res.status(404).json({ error: "Draft session not found" });
@@ -67,7 +70,10 @@ aiRouter.post("/explain", async (req, res, next) => {
       return res.status(503).json({ error: "AI assist is currently disabled" });
     }
     if ("unavailable" in result) {
-      return res.status(503).json({ error: "AI provider is not configured" });
+      return res.status(503).json({ error: "AI provider is not configured", details: result.reason });
+    }
+    if ("providerUnavailable" in result) {
+      return res.status(503).json({ error: "AI provider is unavailable", details: result.reason });
     }
     if ("notFound" in result) {
       return res.status(404).json({ error: "Draft session not found" });
@@ -103,7 +109,10 @@ aiRouter.post("/summarize", async (req, res, next) => {
       return res.status(503).json({ error: "AI assist is currently disabled" });
     }
     if ("unavailable" in result) {
-      return res.status(503).json({ error: "AI provider is not configured" });
+      return res.status(503).json({ error: "AI provider is not configured", details: result.reason });
+    }
+    if ("providerUnavailable" in result) {
+      return res.status(503).json({ error: "AI provider is unavailable", details: result.reason });
     }
     if ("notFound" in result) {
       return res.status(404).json({ error: "Draft session not found" });
