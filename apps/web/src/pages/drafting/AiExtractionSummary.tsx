@@ -12,21 +12,23 @@ export default function AiExtractionSummary() {
   const { data, update, session } = useDraftingData();
   const candidates = data.aiDraftSession.extractionCandidates;
   const abstained = Boolean(data.aiDraftSession.abstained);
+  const extracted = candidates?.extracted;
+  const confidence = candidates?.confidence;
 
   const applyCandidates = async () => {
-    const mappedAssets = (candidates?.assets ?? []).map((asset) => ({
+    const mappedAssets = (extracted?.assets ?? []).map((asset) => ({
       label: asset.label,
       location: asset.details ?? "",
       notes: ""
     }));
-    const mappedBeneficiaries = (candidates?.beneficiaries ?? []).map((beneficiary) => ({
+    const mappedBeneficiaries = (extracted?.beneficiaries ?? []).map((beneficiary) => ({
       name: beneficiary.name,
       relationship: beneficiary.relationship ?? "",
       phone: "",
       idType: "",
       share: ""
     }));
-    const mappedExecutors = (candidates?.executors ?? []).slice(0, 2).map((executor) => ({
+    const mappedExecutors = (extracted?.executors ?? []).slice(0, 2).map((executor) => ({
       name: executor.name,
       relationship: executor.relationship ?? "",
       phone: ""
@@ -35,7 +37,7 @@ export default function AiExtractionSummary() {
       mappedExecutors[0] ?? { name: "", relationship: "", phone: "" },
       mappedExecutors[1] ?? { name: "", relationship: "", phone: "" }
     ];
-    const mappedGuardians = (candidates?.guardians ?? []).slice(0, 2).map((guardian) => ({
+    const mappedGuardians = (extracted?.guardians ?? []).slice(0, 2).map((guardian) => ({
       name: guardian.name,
       relationship: guardian.relationship ?? "",
       phone: "",
@@ -53,7 +55,8 @@ export default function AiExtractionSummary() {
       executors: normalizedExecutors,
       guardians: normalizedGuardians,
       specialWishes:
-        candidates?.specialWishes?.map((item) => item.text).join("\n") || data.specialWishes,
+        extracted?.specialWishes?.map((item) => item.text).join("\n") || data.specialWishes,
+      residuaryWishes: extracted?.residue?.notes ?? data.residuaryWishes,
       aiDraftSession: {
         ...data.aiDraftSession,
         abstained: false
@@ -81,7 +84,7 @@ export default function AiExtractionSummary() {
         <div className="space-y-6">
           <div className="space-y-2">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              AI drafting — Step 4 of 6: Candidate summary
+              AI drafting - Step 4 of 6: Candidate summary
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Structured extraction candidates</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
@@ -102,12 +105,63 @@ export default function AiExtractionSummary() {
 
           <div className="grid gap-4 lg:grid-cols-2">
             <Card size="lg" className="space-y-3">
-              <p className="font-display text-xl font-semibold text-ink">Assets candidates</p>
-              {(candidates?.assets ?? []).length ? (
+              <p className="font-display text-xl font-semibold text-ink">Extraction summary</p>
+              {candidates?.summary ? (
+                <p className="text-[13px] text-ink">{candidates.summary}</p>
+              ) : (
+                <p className="text-[13px] text-muted">No summary provided.</p>
+              )}
+              <p className="text-[12px] text-muted">
+                Confidence: {typeof confidence === "number" ? `${Math.round(confidence * 100)}%` : "n/a"}
+              </p>
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Missing information</p>
+              {(candidates?.missingInformation ?? []).length ? (
                 <div className="space-y-2 text-[13px] text-ink">
-                  {(candidates?.assets ?? []).map((asset, index) => (
+                  {(candidates?.missingInformation ?? []).map((item) => (
+                    <p key={item}>&bull; {item}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No missing details flagged.</p>
+              )}
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Ambiguity warnings</p>
+              {(candidates?.ambiguityWarnings ?? []).length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {(candidates?.ambiguityWarnings ?? []).map((item) => (
+                    <p key={item}>&bull; {item}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No ambiguity warnings flagged.</p>
+              )}
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Complexity signals</p>
+              {(candidates?.complexitySignals ?? []).length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {(candidates?.complexitySignals ?? []).map((item) => (
+                    <p key={item}>&bull; {item}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No complexity signals flagged.</p>
+              )}
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Assets candidates</p>
+              {(extracted?.assets ?? []).length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {(extracted?.assets ?? []).map((asset, index) => (
                     <p key={`${asset.label}-${index}`}>
-                      • {asset.label} {asset.confidence ? `(conf: ${Math.round(asset.confidence * 100)}%)` : ""}
+                      &bull; {asset.label} {asset.confidence ? `(conf: ${Math.round(asset.confidence * 100)}%)` : ""}
                     </p>
                   ))}
                 </div>
@@ -118,11 +172,11 @@ export default function AiExtractionSummary() {
 
             <Card size="lg" className="space-y-3">
               <p className="font-display text-xl font-semibold text-ink">Beneficiary candidates</p>
-              {(candidates?.beneficiaries ?? []).length ? (
+              {(extracted?.beneficiaries ?? []).length ? (
                 <div className="space-y-2 text-[13px] text-ink">
-                  {(candidates?.beneficiaries ?? []).map((beneficiary, index) => (
+                  {(extracted?.beneficiaries ?? []).map((beneficiary, index) => (
                     <p key={`${beneficiary.name}-${index}`}>
-                      • {beneficiary.name} {beneficiary.relationship ? `(${beneficiary.relationship})` : ""}
+                      &bull; {beneficiary.name} {beneficiary.relationship ? `(${beneficiary.relationship})` : ""}
                       {beneficiary.confidence ? ` (conf: ${Math.round(beneficiary.confidence * 100)}%)` : ""}
                     </p>
                   ))}
@@ -134,11 +188,11 @@ export default function AiExtractionSummary() {
 
             <Card size="lg" className="space-y-3">
               <p className="font-display text-xl font-semibold text-ink">Executor candidates</p>
-              {(candidates?.executors ?? []).length ? (
+              {(extracted?.executors ?? []).length ? (
                 <div className="space-y-2 text-[13px] text-ink">
-                  {(candidates?.executors ?? []).map((executor, index) => (
+                  {(extracted?.executors ?? []).map((executor, index) => (
                     <p key={`${executor.name}-${index}`}>
-                      • {executor.name} {executor.relationship ? `(${executor.relationship})` : ""}
+                      &bull; {executor.name} {executor.relationship ? `(${executor.relationship})` : ""}
                       {executor.confidence ? ` (conf: ${Math.round(executor.confidence * 100)}%)` : ""}
                     </p>
                   ))}
@@ -149,20 +203,42 @@ export default function AiExtractionSummary() {
             </Card>
 
             <Card size="lg" className="space-y-3">
-              <p className="font-display text-xl font-semibold text-ink">Guardian / wishes candidates</p>
+              <p className="font-display text-xl font-semibold text-ink">Guardian and wishes candidates</p>
               <div className="space-y-2 text-[13px] text-ink">
-                {(candidates?.guardians ?? []).map((guardian, index) => (
+                {(extracted?.guardians ?? []).map((guardian, index) => (
                   <p key={`${guardian.name}-${index}`}>
-                    • Guardian: {guardian.name} {guardian.relationship ? `(${guardian.relationship})` : ""}
+                    &bull; Guardian: {guardian.name} {guardian.relationship ? `(${guardian.relationship})` : ""}
                   </p>
                 ))}
-                {(candidates?.specialWishes ?? []).map((wish, index) => (
-                  <p key={`${wish.text}-${index}`}>• Wish: {wish.text}</p>
+                {(extracted?.specialWishes ?? []).map((wish, index) => (
+                  <p key={`${wish.text}-${index}`}>&bull; Wish: {wish.text}</p>
                 ))}
-                {!((candidates?.guardians ?? []).length || (candidates?.specialWishes ?? []).length) ? (
-                  <p className="text-muted">No guardian/wishes suggestions.</p>
+                {!((extracted?.guardians ?? []).length || (extracted?.specialWishes ?? []).length) ? (
+                  <p className="text-muted">No guardian or wishes suggestions.</p>
                 ) : null}
               </div>
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Residue and remainder</p>
+              {extracted?.residue?.notes ? (
+                <p className="text-[13px] text-ink">{extracted.residue.notes}</p>
+              ) : (
+                <p className="text-[13px] text-muted">No remainder clause notes suggested.</p>
+              )}
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Suggested next questions</p>
+              {(candidates?.recommendedNextQuestions ?? []).length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {(candidates?.recommendedNextQuestions ?? []).map((item) => (
+                    <p key={item}>&bull; {item}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No follow-up questions suggested.</p>
+              )}
             </Card>
           </div>
 
