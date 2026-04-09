@@ -8,7 +8,7 @@ import { navigate } from "../../lib/navigation";
 import { Asterisk, Clock3 } from "lucide-react";
 
 export default function StructuredFlowShell() {
-  useDraftingMode("structured");
+  useDraftingMode("structured", { enforce: true });
 
   return (
     <WorkspaceShell

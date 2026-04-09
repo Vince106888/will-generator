@@ -27,7 +27,18 @@ app.use("/api/v1/ai", aiRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use("/health", healthRouter);
 
-app.use((err: unknown, _req: express.Request, res: express.Response) => {
+app.use((
+  err: unknown,
+  _req: express.Request,
+  res: express.Response,
+  _next: express.NextFunction
+) => {
+  void _next;
   console.error(err);
-  res.status(500).json({ error: "Internal server error" });
+  const isProd = process.env.NODE_ENV === "production";
+  const details = err instanceof Error ? err.message : undefined;
+  res.status(500).json({
+    error: "Internal server error",
+    ...(isProd ? {} : { details })
+  });
 });

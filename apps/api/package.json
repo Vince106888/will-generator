@@ -8,6 +8,7 @@
     "db:migrate": "prisma migrate dev --schema ../../prisma/schema.prisma",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
+    "pretest": "pnpm db:generate",
     "test": "jest --config jest.config.cjs",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings=0"
   },

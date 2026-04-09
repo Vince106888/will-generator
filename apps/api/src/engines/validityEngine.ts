@@ -2,7 +2,7 @@
 import { ComplexityResult, ValidityResult, WillInput } from "../types";
 
 export function getValidityChecklist(
-  input?: Pick<WillInput, "hasMinors" | "multipleHouseholds" | "metadata">,
+  input?: Pick<WillInput, "hasMinors" | "multipleHouseholds" | "metadata" | "beneficiaries" | "executor" | "name">,
   complexity?: ComplexityResult
 ): ValidityResult {
   const hasMinors = Boolean(input?.hasMinors);
@@ -12,7 +12,10 @@ export function getValidityChecklist(
     complexity?.flags.includes("FOREIGN_ASSETS");
   const guardianGap = complexity?.flags.includes("GUARDIAN_GAP") ||
     (hasMinors && !(input?.metadata?.guardians?.[0]?.name ?? "").trim());
-  const executorGap = complexity?.flags.includes("EXECUTOR_GAP");
+  const executorGap = complexity?.flags.includes("EXECUTOR_GAP") || !(input?.executor ?? "").trim();
+  const beneficiaryGap = (input?.beneficiaries ?? []).filter((name) => name.trim()).length === 0;
+  const nameGap = !(input?.name ?? "").trim() || (input?.name ?? "").trim().toLowerCase() === "unknown";
+  const remainderGap = !(input?.metadata?.remainderClause ?? "").trim();
 
   const checklist: ValidityResult["checklist"] = [
     {
@@ -39,8 +42,11 @@ export function getValidityChecklist(
 
   const warnings: string[] = [];
   const executionGuidance: string[] = [
-    "Use full legal names for testator and witnesses on the execution page.",
-    "Date signatures clearly and keep pages together in final signed copy.",
+    "Use full legal names for the testator and witnesses on the execution page.",
+    "Date signatures clearly and keep pages together in the final signed copy.",
+    "All parties should sign in the same sitting; do not pre-sign pages.",
+    "Avoid beneficiaries serving as witnesses to prevent validity disputes.",
+    "If the testator cannot sign, use an assisted signature or mark in front of witnesses.",
     "Do not rely on draft text alone; validity depends on proper execution formalities."
   ];
   const storageGuidance: string[] = [
@@ -49,6 +55,15 @@ export function getValidityChecklist(
     "Review and update the will after major life events (marriage, divorce, births, major asset changes)."
   ];
   const advocateReviewReasons: string[] = [];
+
+  if (nameGap) {
+    warnings.push("Legal name appears missing or unclear; the signed will should include the testator's full legal name.");
+  }
+
+  if (beneficiaryGap && remainderGap) {
+    warnings.push("No beneficiaries or residuary clause are clearly stated; update before signing.");
+    advocateReviewReasons.push("Missing beneficiary or residuary instructions.");
+  }
 
   if (guardianGap) {
     warnings.push("Minor children are indicated but guardian details appear incomplete.");

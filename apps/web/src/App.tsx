@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Landing from "./pages/marketing/Landing";
 import EntryChoice from "./pages/marketing/EntryChoice";
 import ExistingWillGate from "./pages/marketing/ExistingWillGate";
+import HowItWorks from "./pages/marketing/HowItWorks";
 import AiDraftingWorkspace from "./pages/drafting/AiDraftingWorkspace";
 import AiPersonalDetails from "./pages/drafting/AiPersonalDetails";
 import AiProcessing from "./pages/drafting/AiProcessing";
@@ -30,6 +31,7 @@ export default function App() {
     "/": <Landing />,
     "/entry-choice": <EntryChoice />,
     "/existing-will": <ExistingWillGate />,
+    "/how-it-works": <HowItWorks />,
     "/drafting/ai/personal-details": <AiPersonalDetails />,
     "/drafting/ai/input": <AiDraftingWorkspace />,
     "/drafting/ai/processing": <AiProcessing />,

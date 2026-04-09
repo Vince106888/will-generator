@@ -5,7 +5,6 @@ import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Callout } from "../../components/ui/Callout";
 import { navigate } from "../../lib/navigation";
-import { saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { AlertTriangle, Eye, HeartHandshake, Lock, Shield } from "lucide-react";
 import heroImage from "../../assets/landing-hero.png";
 
@@ -25,8 +24,6 @@ const trustBadges = [
 ];
 
 export default function Landing() {
-  const { data, setData } = useDraftingData();
-
   return (
     <MarketingShell
       nav={{
@@ -67,29 +64,12 @@ export default function Landing() {
                   variant="secondary"
                   size="md"
                   className="w-full justify-center sm:w-auto"
-                  onClick={() => {
-                    const nextData: DraftingData = {
-                      ...data,
-                      draftingMode: "ai",
-                      draftingModeConfirmed: true
-                    };
-                    setData(nextData);
-                    saveDraftingData(nextData);
-                    navigate("/entry-choice");
-                  }}
-                >
-                  Use AI to organize my will
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="md"
-                  className="w-full justify-center sm:w-auto"
                   onClick={() => navigate("/existing-will")}
                 >
                   Review an existing will
                 </Button>
               </div>
-              <div className="flex flex-wrap items-center gap-3 text-[12px] text-primary">
+              <div className="flex flex-col items-start gap-2 text-[12px] text-primary">
                 {trustBadges.map((badge) => (
                   <span
                     key={badge.label}
@@ -466,23 +446,6 @@ export default function Landing() {
                   }
                 </p>
                 <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => {
-                      const nextData: DraftingData = {
-                        ...data,
-                        draftingMode: "ai",
-                        draftingModeConfirmed: true
-                      };
-                      setData(nextData);
-                      saveDraftingData(nextData);
-                      navigate("/entry-choice");
-                    }}
-                    className="w-full justify-center bg-primary text-paper shadow-soft sm:w-auto"
-                  >
-                    Use AI to organize my will
-                  </Button>
                   <Button
                     variant="secondary"
                     size="md"

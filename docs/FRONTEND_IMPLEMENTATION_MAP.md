@@ -11,6 +11,7 @@ These routes are the only ones currently wired in `apps/web/src/App.tsx`.
 | `/` | Landing | `apps/web/src/pages/marketing/Landing.tsx` | `DhkvM` | Implemented |
 | `/entry-choice` | Entry Choice | `apps/web/src/pages/marketing/EntryChoice.tsx` | `V6ysS` | Implemented |
 | `/existing-will` | Existing Will Gate | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | `Fd207` | Implemented |
+| `/how-it-works` | How It Works | `apps/web/src/pages/marketing/HowItWorks.tsx` | Derived from `DhkvM` | Implemented |
 | `/drafting/ai/personal-details` | AI Personal Details | `apps/web/src/pages/drafting/AiPersonalDetails.tsx` | `0T4RE` | Implemented |
 | `/drafting/ai/input` | AI Drafting Workspace | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | `iVFMi` | Implemented |
 | `/drafting/ai/processing` | AI Processing | `apps/web/src/pages/drafting/AiProcessing.tsx` | `0ianx` | Implemented |

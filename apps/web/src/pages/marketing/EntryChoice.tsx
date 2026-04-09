@@ -38,7 +38,7 @@ export default function EntryChoice() {
           </p>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Card size="lg" className="space-y-4">
             <div className="space-y-2">
               <p className="text-lg font-semibold text-ink">Use AI to organize my will</p>
@@ -75,7 +75,20 @@ export default function EntryChoice() {
               >
                 Start with AI drafting
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const nextData: DraftingData = {
+                    ...data,
+                    draftingMode: "ai",
+                    draftingModeConfirmed: true
+                  };
+                  setData(nextData);
+                  saveDraftingData(nextData);
+                  navigate(resolveDraftingEntryPath("ai", "/drafting/ai/input"));
+                }}
+              >
                 See a sample conversation
               </Button>
             </div>
@@ -112,37 +125,25 @@ export default function EntryChoice() {
               >
                 Start guided form
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const nextData: DraftingData = {
+                    ...data,
+                    draftingMode: "structured",
+                    draftingModeConfirmed: true
+                  };
+                  setData(nextData);
+                  saveDraftingData(nextData);
+                  navigate(resolveDraftingEntryPath("structured", "/drafting/structured-flow"));
+                }}
+              >
                 Preview the steps
               </Button>
             </div>
           </Card>
 
-          <Card size="lg" className="space-y-4">
-            <div className="space-y-2">
-              <p className="text-lg font-semibold text-ink">Review an existing will</p>
-              <p className="text-sm text-muted">
-                If you already have a signed will, start here.
-              </p>
-            </div>
-            <div className="space-y-2 text-sm leading-6 text-muted">
-              <p>• We explain codicil vs replacement in plain English</p>
-              <p>• Upload a PDF or clear photos of your will</p>
-              <p>• You stay in control before anything is final</p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => navigate("/existing-will")}
-              >
-                Start review
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/faq")}>
-                Preview the steps
-              </Button>
-            </div>
-          </Card>
         </div>
 
         <div className="mt-6">

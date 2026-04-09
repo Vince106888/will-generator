@@ -25,6 +25,9 @@ Source of truth: `design/pencil-implementation.pen`
    - Realm continuity enforcement
    - API contract ownership and response shapes
 
+## Local Run and Test Guide
+See `docs/product/local-test-readiness.md` for step-by-step run instructions and the local test checklist.
+
 ## How To Run Tests (Local)
 This repo uses `pnpm`. On Windows, you may need Corepack enabled:
 

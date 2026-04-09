@@ -11,7 +11,7 @@ import { navigate } from "../../lib/navigation";
 import { Info, MessageSquareText, RefreshCcw, UserRound } from "lucide-react";
 
 export default function StructuredExecutors() {
-  const { data, update } = useDraftingMode("structured");
+  const { data, update } = useDraftingMode("structured", { enforce: true });
   const primaryExecutor = data.executors[0];
   const backupExecutor = data.executors[1];
 
