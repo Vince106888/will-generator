@@ -27,7 +27,6 @@ type AzureChatResponse = {
 };
 
 const DEFAULT_TIMEOUT_MS = 20000;
-const DEFAULT_TEMPERATURE = 0.2;
 
 const EXTRACTION_SYSTEM_PROMPT = [
   "You are a bounded AI extraction assistant for will drafting.",
@@ -73,7 +72,14 @@ const SUMMARIZE_SYSTEM_PROMPT = [
 ].join("\n");
 
 function normalizeEndpoint(baseUrl: string) {
-  return baseUrl.replace(/\/+$/, "");
+  const trimmed = baseUrl.replace(/\/+$/, "");
+  if (trimmed.endsWith("/openai/v1")) {
+    return trimmed.slice(0, -"/openai/v1".length);
+  }
+  if (trimmed.endsWith("/openai")) {
+    return trimmed.slice(0, -"/openai".length);
+  }
+  return trimmed;
 }
 
 function buildChatCompletionsUrl(config: AzureModelConfig) {
@@ -200,12 +206,14 @@ export class AzureOpenAiProvider implements AiProvider {
       messages: [
         { role: "system", content: EXTRACTION_SYSTEM_PROMPT },
         { role: "user", content: userPrompt }
-      ],
-      temperature: Number.isFinite(this.config.temperature) ? this.config.temperature : DEFAULT_TEMPERATURE
+      ]
     };
 
     if (Number.isFinite(this.config.maxTokens)) {
       payload.max_tokens = this.config.maxTokens;
+    }
+    if (Number.isFinite(this.config.temperature)) {
+      payload.temperature = this.config.temperature;
     }
     if (this.config.responseFormat === "json_object") {
       payload.response_format = { type: "json_object" };
@@ -251,12 +259,14 @@ export class AzureOpenAiProvider implements AiProvider {
       messages: [
         { role: "system", content: EXPLAIN_SYSTEM_PROMPT },
         { role: "user", content: userPrompt }
-      ],
-      temperature: Number.isFinite(this.config.temperature) ? this.config.temperature : DEFAULT_TEMPERATURE
+      ]
     };
 
     if (Number.isFinite(this.config.maxTokens)) {
       payload.max_tokens = this.config.maxTokens;
+    }
+    if (Number.isFinite(this.config.temperature)) {
+      payload.temperature = this.config.temperature;
     }
     if (this.config.responseFormat === "json_object") {
       payload.response_format = { type: "json_object" };
@@ -296,12 +306,14 @@ export class AzureOpenAiProvider implements AiProvider {
       messages: [
         { role: "system", content: SUMMARIZE_SYSTEM_PROMPT },
         { role: "user", content: input.freeText }
-      ],
-      temperature: Number.isFinite(this.config.temperature) ? this.config.temperature : DEFAULT_TEMPERATURE
+      ]
     };
 
     if (Number.isFinite(this.config.maxTokens)) {
       payload.max_tokens = this.config.maxTokens;
+    }
+    if (Number.isFinite(this.config.temperature)) {
+      payload.temperature = this.config.temperature;
     }
     if (this.config.responseFormat === "json_object") {
       payload.response_format = { type: "json_object" };
