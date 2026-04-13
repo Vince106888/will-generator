@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../db";
 import { DraftSessionService } from "../draftSessionService";
+import { AzureModelConfig, AzureOpenAiProvider } from "./providers/azureProvider";
 import { LocalStubAiProvider } from "./providers/localStubProvider";
 import { OllamaAiProvider } from "./providers/ollamaProvider";
 import { AiProviderUnavailableError } from "./providerErrors";
@@ -16,6 +17,7 @@ function readAiConfig() {
     allowStub: process.env.AI_ALLOW_LOCAL_STUB === "true",
     confidenceThreshold: Number(process.env.AI_CONFIDENCE_THRESHOLD ?? DEFAULT_CONFIDENCE_THRESHOLD),
     provider: (process.env.AI_PROVIDER ?? "").trim().toLowerCase(),
+    azureModelConfigRaw: process.env.AZURE_MODEL_CONFIG,
     ollamaBaseUrl: process.env.OLLAMA_BASE_URL ?? "http://localhost:11434",
     ollamaModel: process.env.OLLAMA_MODEL ?? "qwen3:8b"
   };
@@ -30,10 +32,99 @@ function buildPreview(value: string) {
   return value.length > 240 ? `${value.slice(0, 237)}...` : value;
 }
 
+function parseAzureModelConfig(raw: string | undefined): { config?: AzureModelConfig; error?: string } {
+  if (!raw) {
+    return { error: "AZURE_MODEL_CONFIG is not set." };
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return { error: "AZURE_MODEL_CONFIG must be valid JSON." };
+  }
+
+  if (!parsed || typeof parsed !== "object") {
+    return { error: "AZURE_MODEL_CONFIG must be a JSON object." };
+  }
+
+  const record = parsed as Record<string, unknown>;
+  const readString = (...keys: string[]) => {
+    for (const key of keys) {
+      const value = record[key];
+      if (typeof value === "string" && value.trim()) {
+        return value.trim();
+      }
+    }
+    return undefined;
+  };
+
+  const urlCandidate =
+    readString("chatCompletionsUrl", "chatCompletionsURL", "completionsUrl", "url") ?? undefined;
+  const looksLikeFullUrl = urlCandidate?.includes("/openai/") || urlCandidate?.includes("/chat/completions");
+
+  const endpoint = looksLikeFullUrl
+    ? undefined
+    : readString("endpoint", "baseUrl", "resourceEndpoint", "resourceEndpointUrl") ?? urlCandidate;
+  const deployment = readString("deployment", "deploymentName", "deploymentId", "modelDeployment");
+  const apiVersion = readString("apiVersion", "api_version", "version");
+  const apiKey = readString("apiKey", "api_key", "key", "token");
+  const model = readString("model", "modelName");
+
+  if (!apiKey) {
+    return { error: "AZURE_MODEL_CONFIG is missing an apiKey." };
+  }
+
+  const chatCompletionsUrl = looksLikeFullUrl ? urlCandidate : undefined;
+  if (!chatCompletionsUrl && (!endpoint || !deployment || !apiVersion)) {
+    return {
+      error:
+        "AZURE_MODEL_CONFIG requires endpoint, deployment, and apiVersion (or a full chatCompletionsUrl)."
+    };
+  }
+
+  const toNumber = (value: unknown) => {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string" && value.trim()) {
+      const parsedNumber = Number(value);
+      return Number.isFinite(parsedNumber) ? parsedNumber : undefined;
+    }
+    return undefined;
+  };
+
+  const timeoutRaw = record.timeoutMs ?? record.timeout_ms;
+  const maxTokensRaw = record.maxTokens ?? record.max_tokens;
+  const temperatureRaw = record.temperature;
+  const responseFormat = readString("responseFormat", "response_format");
+
+  const config: AzureModelConfig = {
+    apiKey,
+    endpoint,
+    deployment,
+    apiVersion,
+    model,
+    chatCompletionsUrl,
+    timeoutMs: toNumber(timeoutRaw),
+    maxTokens: toNumber(maxTokensRaw),
+    temperature: toNumber(temperatureRaw),
+    responseFormat: responseFormat === "json_object" ? "json_object" : undefined
+  };
+
+  return { config };
+}
+
 function resolveAiProvider(config: ReturnType<typeof readAiConfig>): {
   provider?: AiProvider;
   unavailableReason?: string;
 } {
+  if (config.provider === "azure") {
+    const parsed = parseAzureModelConfig(config.azureModelConfigRaw);
+    if (!parsed.config) {
+      return { unavailableReason: parsed.error ?? "Azure model config is invalid." };
+    }
+    return { provider: new AzureOpenAiProvider(parsed.config) };
+  }
+
   if (config.provider === "ollama") {
     if (!config.ollamaBaseUrl || !config.ollamaModel) {
       return { unavailableReason: "Ollama base URL or model is not configured." };
@@ -47,10 +138,6 @@ function resolveAiProvider(config: ReturnType<typeof readAiConfig>): {
     if (!config.allowStub) {
       return { unavailableReason: "Local stub provider is disabled by configuration." };
     }
-    return { provider: new LocalStubAiProvider() };
-  }
-
-  if (config.allowStub && !config.provider) {
     return { provider: new LocalStubAiProvider() };
   }
 
