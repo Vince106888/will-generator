@@ -38,7 +38,7 @@ Date: 2026-03-30
 - No sensitive identifiers (ID scans, account numbers) should be accepted in AI prompts.
 
 ## Current Reality
-- AI extraction uses a local Ollama model (default qwen3:8b, fallback qwen3:4b) with JSON-only structured output.
+- AI extraction runs via a hosted provider configured through `AZURE_MODEL_CONFIG`.
 - Extraction outputs include summary, extracted facts, missing information, ambiguity warnings, complexity signals, and next questions.
 - The deterministic draft engine remains the only source of truth for final will generation.
 

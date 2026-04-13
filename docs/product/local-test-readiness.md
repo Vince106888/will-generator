@@ -11,6 +11,7 @@ Root `.env` (API + services):
 - `WEB_BASE_URL` (default `http://localhost:5173`)
 - `AI_ASSIST_ENABLED` (keep `false` for local testing)
 - `AI_ALLOW_LOCAL_STUB` (keep `false` unless explicitly testing local stub paths)
+- `AZURE_MODEL_CONFIG` (required only if AI assist is enabled)
 
 Web `apps/web/.env`:
 - `VITE_API_BASE_URL` (default `http://localhost:4000`)

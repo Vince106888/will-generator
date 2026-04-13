@@ -48,4 +48,4 @@ Persist every AI interaction with:
 
 ## Model posture
 
-Initial profile is a small OSS instruct class for assistive tasks only. Provider boundary remains model-agnostic for swap to hosted or self-hosted inference later.
+Hosted provider configured via `AZURE_MODEL_CONFIG` for bounded assist tasks only. Provider boundary remains model-agnostic for future swaps.
