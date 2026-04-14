@@ -56,7 +56,8 @@ function describeRole(role: PersonRole | undefined, fallback: string) {
 
 function buildIdentityClause(input: WillInput): string {
   const country = input.country ?? "Kenya";
-  const name = normalizeName(input.name) || "[TESTATOR NAME REQUIRED]";
+  const rawName = normalizeName(input.name);
+  const name = !rawName || rawName.toLowerCase() === "unknown" ? "[TESTATOR NAME REQUIRED]" : rawName;
   const intro =
     name === "[TESTATOR NAME REQUIRED]"
       ? "I, [TESTATOR NAME REQUIRED], make this draft as my intended Last Will and Testament."

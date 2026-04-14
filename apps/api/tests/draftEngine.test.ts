@@ -48,7 +48,7 @@ test("handles sparse input with cautious fallback wording", () => {
     multipleHouseholds: false
   });
 
-  expect(draft).toContain("I, Unknown, make this draft as my Last Will and Testament");
+  expect(draft).toContain("I, [TESTATOR NAME REQUIRED], make this draft as my intended Last Will and Testament.");
   expect(draft).toContain("An Executor has not yet been clearly identified");
   expect(draft).toContain("Beneficiary names are still being confirmed");
   expect(draft).toContain("APPENDIX A: EXECUTION GUIDANCE (KENYA)");
