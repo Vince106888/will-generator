@@ -6,6 +6,7 @@ This guide is the fastest way to run Esheria Wills locally for pilot-style testi
 
 Root `.env` (API + services):
 - `DATABASE_URL` (required)
+  - Local default: `postgresql://postgres:postgres@localhost:5432/esheria_wills`
 - `API_PORT` (default `4000`)
 - `OUTPUT_DIR` (default `./storage`)
 - `WEB_BASE_URL` (default `http://localhost:5173`)
@@ -17,6 +18,17 @@ Web `apps/web/.env`:
 - `VITE_API_BASE_URL` (default `http://localhost:4000`)
 
 Email configuration is optional for local testing. If email is not configured, resume link requests still return a usable link in the API response.
+
+Note: if `apps/api/.env` exists, it is loaded first when running `pnpm -C apps/api ...`. Keep it aligned with the root `.env` or remove it to avoid port mismatches.
+
+## AI Assist Local Verification (Optional)
+
+To exercise the AI extraction UI locally:
+
+- Set `AI_ASSIST_ENABLED=true`
+- Use one of:
+  - `AI_PROVIDER=local_stub` + `AI_ALLOW_LOCAL_STUB=true` for deterministic local output, or
+  - `AI_PROVIDER=azure` with a valid `AZURE_MODEL_CONFIG`
 
 ## Docker Path (Fastest)
 
@@ -32,6 +44,7 @@ Email configuration is optional for local testing. If email is not configured, r
 ## Non-Docker Path (Local Postgres)
 
 1. Start Postgres locally and set `DATABASE_URL` in `.env`.
+   - Ensure the database exists (example: `createdb esheria_wills`).
 2. Install dependencies
    - `pnpm dev:up:local`
 5. Open
@@ -46,6 +59,11 @@ Email configuration is optional for local testing. If email is not configured, r
 ## Validation Command
 
 - `pnpm dev:check`
+
+## Migration Notes
+
+- `pnpm -C apps/api db:migrate` runs `prisma migrate deploy` (non-interactive, deterministic).
+- Use `pnpm -C apps/api db:migrate:dev` only when creating new migrations.
 
 ## Sample Scenarios (Run First)
 

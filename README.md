@@ -198,6 +198,8 @@ Run migrations after the database is up:
 pnpm -C apps/api db:migrate
 ```
 
+`db:migrate` runs `prisma migrate deploy` (non-interactive). Use `pnpm -C apps/api db:migrate:dev` only when you are actively creating new migrations.
+
 Then start the full stack:
 
 ```bash
@@ -213,6 +215,7 @@ Copy and update env files as needed:
 
 Required variables (API):
 - `DATABASE_URL`
+  - Local default (Docker or local Postgres): `postgresql://postgres:postgres@localhost:5432/esheria_wills`
 - `API_PORT` (optional, defaults to 4000)
 - `OUTPUT_DIR` (optional, defaults to `./storage`)
 - `WEB_BASE_URL` (optional, defaults to `http://localhost:5173`)
