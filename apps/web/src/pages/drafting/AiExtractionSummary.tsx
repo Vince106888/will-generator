@@ -1,19 +1,28 @@
+import { useEffect } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { WarningBanner } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { loadDraftingData, useDraftingData } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 import { api } from "../../lib/api";
 
 export default function AiExtractionSummary() {
-  const { data, update, session } = useDraftingData();
+  const { data, update, session, setData } = useDraftingData();
   const candidates = data.aiDraftSession.extractionCandidates;
   const abstained = Boolean(data.aiDraftSession.abstained);
   const extracted = candidates?.extracted;
   const confidence = candidates?.confidence;
+
+  useEffect(() => {
+    if (candidates?.summary) return;
+    const stored = loadDraftingData();
+    if (stored.aiDraftSession?.extractionCandidates?.summary) {
+      setData(stored);
+    }
+  }, [candidates?.summary, setData]);
 
   const applyCandidates = async () => {
     const mappedAssets = (extracted?.assets ?? []).map((asset) => ({

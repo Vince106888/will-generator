@@ -528,6 +528,7 @@ export function useDraftingData() {
     (next: Partial<DraftingData>) => {
       setData((prev) => {
         const merged = { ...prev, ...next };
+        saveDraftingData(merged);
         scheduleSync(merged);
         return merged;
       });

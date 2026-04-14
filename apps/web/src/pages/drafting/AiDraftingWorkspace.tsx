@@ -151,7 +151,8 @@ export default function AiDraftingWorkspace() {
         { headers: { "x-draft-token": session.resumeToken } }
       );
 
-      update({
+      const nextSnapshot = {
+        ...data,
         aiDraftSession: {
           ...data.aiDraftSession,
           freeTextNotes: freeText,
@@ -181,7 +182,8 @@ export default function AiDraftingWorkspace() {
           abstained: extract.data.abstained,
           uncertainty: extract.data.uncertainty ?? ""
         }
-      });
+      };
+      update(nextSnapshot);
 
       navigate("/drafting/ai/summary");
     } catch (err) {

@@ -66,6 +66,25 @@ export class LocalStubAiProvider implements AiProvider {
       confidence
     }));
 
+    const ambiguityWarnings: string[] = [];
+    if (/(share|split|divide|equally)/i.test(text) && !/\d+\s*%/i.test(text)) {
+      ambiguityWarnings.push("Allocation shares are mentioned without explicit percentages.");
+    }
+    if (/(not sure|maybe|unsure|unclear)/i.test(text)) {
+      ambiguityWarnings.push("Some instructions are stated as uncertain or tentative.");
+    }
+
+    const complexitySignals: string[] = [];
+    if (/(foreign|uganda|tanzania|rwanda|outside kenya)/i.test(text)) {
+      complexitySignals.push("Foreign or cross-border assets mentioned.");
+    }
+    if (/(business|company|shares|partnership)/i.test(text)) {
+      complexitySignals.push("Business interests may require advocate review.");
+    }
+    if (/(multiple households|second family|another spouse)/i.test(text)) {
+      complexitySignals.push("Multiple households or dependancy structures indicated.");
+    }
+
     const output = {
       summary: "Stub extraction summary based on provided notes.",
       extracted: {
@@ -82,8 +101,8 @@ export class LocalStubAiProvider implements AiProvider {
         "Confirm executor contact details and backup executor.",
         "Confirm beneficiaries and specific asset allocations."
       ],
-      ambiguityWarnings: [],
-      complexitySignals: [],
+      ambiguityWarnings,
+      complexitySignals,
       confidence,
       recommendedNextQuestions: [
         "Which beneficiaries should receive specific assets?",
