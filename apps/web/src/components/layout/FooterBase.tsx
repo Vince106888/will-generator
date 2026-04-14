@@ -5,7 +5,7 @@ export function FooterBase() {
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-[280px] space-y-2">
             <p className="font-display text-[18px] font-semibold text-ink">
-              Esheria Wills
+              Draft Will Document
             </p>
             <p className="text-[12px] text-muted">
               Guided will drafting for Kenyan families.
@@ -29,7 +29,7 @@ export function FooterBase() {
         </div>
         <div className="my-5 h-px w-full bg-border" />
         <div className="flex flex-col gap-2 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Esheria Wills</span>
+          <span>© 2026 Will Drafting Platform</span>
           <span>Kenya-first digital will drafting.</span>
         </div>
       </div>
