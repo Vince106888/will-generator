@@ -9,6 +9,18 @@ function formatBullets(lines: string[]) {
   return lines.filter(Boolean).map((line) => `- ${line}`);
 }
 
+function sentenceCase(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  return `${trimmed.charAt(0).toUpperCase()}${trimmed.slice(1)}`;
+}
+
+function joinNatural(values: string[]) {
+  if (values.length <= 1) return values[0] ?? "";
+  if (values.length === 2) return `${values[0]} and ${values[1]}`;
+  return `${values.slice(0, -1).join(", ")}, and ${values[values.length - 1]}`;
+}
+
 function getPrimaryExecutor(input: WillInput) {
   const metadataExecutors = input.metadata?.executors ?? [];
   const primaryFromMetadata = normalizeName(metadataExecutors[0]?.name);
@@ -45,26 +57,34 @@ function describeRole(role: PersonRole | undefined, fallback: string) {
 function buildIdentityClause(input: WillInput): string {
   const country = input.country ?? "Kenya";
   const name = normalizeName(input.name) || "[TESTATOR NAME REQUIRED]";
+  const intro =
+    name === "[TESTATOR NAME REQUIRED]"
+      ? "I, [TESTATOR NAME REQUIRED], make this draft as my intended Last Will and Testament."
+      : `I, ${name}, make this draft as my Last Will and Testament under the laws of ${country}.`;
+
   return [
-    "SECTION 1: TESTATOR IDENTITY",
-    `I, ${name}, declare this to be my Last Will and Testament made voluntarily under the laws of ${country}.`,
-    "I affirm that I am of sound mind and acting freely.",
-    "I revoke all prior wills and codicils made by me to the extent they are inconsistent with this will."
+    "SECTION 1: DECLARATION AND REVOCATION",
+    intro,
+    "I confirm that I am acting voluntarily and with the intention that this document should govern the administration and distribution of my estate.",
+    "I revoke all earlier wills and codicils made by me, except to the extent any later properly executed document changes this draft."
   ].join("\n");
 }
 
 function buildFamilyContextClause(input: WillInput): string {
   const beneficiaries = (input.beneficiaries ?? []).filter((item) => item.trim());
   const minorChildren = input.metadata?.minorChildren ?? [];
+
   const lines = [
-    beneficiaries.length ? `Named beneficiaries: ${beneficiaries.join(", ")}.` : "No beneficiaries are fully confirmed yet.",
+    beneficiaries.length
+      ? `The following beneficiaries are currently named: ${joinNatural(beneficiaries)}.`
+      : "Beneficiary names are still being confirmed and should be completed before execution.",
     input.hasMinors
       ? minorChildren.length
-        ? `Minor children identified: ${minorChildren.join(", ")}.`
-        : "Minor children are indicated; names should be confirmed."
-      : "No minor children are indicated.",
+        ? `Minor children currently identified: ${joinNatural(minorChildren)}.`
+        : "This draft indicates minor children, but their names should be confirmed."
+      : "No minor children are currently recorded in this draft.",
     input.multipleHouseholds
-      ? "Multiple household context noted; ensure beneficiary allocations are precise."
+      ? "A multiple-household context is noted; allocations should be reviewed carefully to reduce ambiguity."
       : ""
   ].filter(Boolean);
 
@@ -77,25 +97,25 @@ function buildExecutorClause(input: WillInput): string {
   const metadataExecutors = input.metadata?.executors ?? [];
 
   return [
-    "SECTION 3: EXECUTOR APPOINTMENT",
+    "SECTION 3: APPOINTMENT OF PERSONAL REPRESENTATIVES",
     primaryExecutor
-      ? `I appoint ${describeRole(metadataExecutors[0], primaryExecutor)} as the Executor of this will.`
-      : "Executor not yet confirmed. This draft must be updated before signing.",
+      ? `I appoint ${describeRole(metadataExecutors[0], primaryExecutor)} as Executor to administer my estate and carry out this draft.`
+      : "An Executor has not yet been clearly identified. This must be completed before signing.",
     alternateExecutor
-      ? `If the primary Executor cannot or will not serve, I appoint ${describeRole(
+      ? `If the primary Executor is unwilling or unable to act, I appoint ${describeRole(
           metadataExecutors[1],
           alternateExecutor
-        )} as Alternate Executor.`
-      : "No alternate Executor is currently named.",
-    "My Executor should settle debts and expenses, collect assets, and distribute the estate according to this will."
+        )} as alternate Executor.`
+      : "No alternate Executor is currently listed in this draft.",
+    "The Executor should settle enforceable liabilities, preserve estate assets, and distribute the estate in accordance with this document and applicable law."
   ].join("\n");
 }
 
 function buildGuardianClause(input: WillInput): string {
   if (!input.hasMinors) {
     return [
-      "SECTION 4: GUARDIANSHIP (IF MINORS)",
-      "No minor children have been identified from the provided information, so no guardian clause is activated in this draft."
+      "SECTION 4: GUARDIANSHIP FOR MINOR CHILDREN",
+      "No active guardianship appointment is included because minor children are not currently indicated."
     ].join("\n");
   }
 
@@ -106,19 +126,19 @@ function buildGuardianClause(input: WillInput): string {
   const minorsText = minors.length ? `for the following minors: ${minors.join(", ")}` : "for my minor children";
 
   return [
-    "SECTION 4: GUARDIANSHIP (IF MINORS)",
+    "SECTION 4: GUARDIANSHIP FOR MINOR CHILDREN",
     guardian
       ? `If at my death any of my children are minors, I appoint ${describeRole(
           guardians[0],
           guardian
         )} to act as guardian ${minorsText}.`
-      : "Minor children are indicated but no guardian has been clearly appointed yet.",
+      : "Minor children are indicated, but no guardian has yet been clearly appointed.",
     alternateGuardian
       ? `If the primary guardian cannot act, I appoint ${describeRole(
           guardians[1],
           alternateGuardian
         )} as alternate guardian.`
-      : "No alternate guardian is currently named."
+      : "No alternate guardian is currently listed."
   ].join("\n");
 }
 
@@ -129,7 +149,7 @@ function buildSpecificGiftsClause(input: WillInput): string {
 
   if (!allocations.length) {
     const fallbackLines = (input.assets ?? []).map(
-      (asset) => `- ${asset}: to be administered by the Executor for distribution to named beneficiaries.`
+      (asset) => `- ${sentenceCase(asset)}: to be administered by the Executor for distribution based on the confirmed beneficiary instructions.`
     );
     const assetDetailLines = assetDetails
       .map((asset) => {
@@ -141,18 +161,20 @@ function buildSpecificGiftsClause(input: WillInput): string {
     const lines = fallbackLines.length ? fallbackLines : assetDetailLines;
 
     return [
-      "SECTION 5: SPECIFIC GIFTS / ALLOCATIONS",
-      lines.length ? lines.join("\n") : "- No specific gifts were captured yet.",
+      "SECTION 5: GIFTS AND DISTRIBUTION",
+      lines.length
+        ? lines.join("\n")
+        : "- No specific gifts are currently listed. Add assets or allocations if you want detailed distribution instructions.",
       beneficiaries.length
-        ? `Named beneficiaries: ${beneficiaries.join(", ")}.`
-        : "No beneficiaries clearly listed yet."
+        ? `Named beneficiaries currently captured: ${joinNatural(beneficiaries)}.`
+        : "Beneficiary details should be completed so distribution directions are clear."
     ].join("\n");
   }
 
   const lines = allocations.map((allocation) => {
     const assetLabel = allocation.assetLabel?.trim() || "Unlabelled asset";
     if (!allocation.allocations.length) {
-      return `- ${assetLabel}: allocation unclear (requires confirmation).`;
+      return `- ${assetLabel}: allocation is not yet specified and requires confirmation.`;
     }
     const targets = allocation.allocations
       .map((entry) => {
@@ -164,7 +186,7 @@ function buildSpecificGiftsClause(input: WillInput): string {
     return `- ${assetLabel}: ${targets}.`;
   });
 
-  return ["SECTION 5: SPECIFIC GIFTS / ALLOCATIONS", ...lines].join("\n");
+  return ["SECTION 5: GIFTS AND DISTRIBUTION", ...lines].join("\n");
 }
 
 function buildResiduaryClause(input: WillInput): string {
@@ -172,8 +194,8 @@ function buildResiduaryClause(input: WillInput): string {
   const beneficiaries = (input.beneficiaries ?? []).filter((item) => item.trim());
   const fallback =
     beneficiaries.length > 0
-      ? `I give the residue of my estate to ${beneficiaries.join(", ")} in equal shares, subject to survivorship.`
-      : "I direct my Executor to hold and distribute the residue according to applicable succession law if no clear beneficiary instruction is confirmed.";
+      ? `I direct that the residue of my estate pass to ${joinNatural(beneficiaries)} in equal shares, subject to survivorship.`
+      : "If no clear residuary direction is provided, the residue should be administered by the Executor in accordance with applicable succession law.";
 
   return [
     "SECTION 6: RESIDUARY ESTATE",
@@ -186,8 +208,8 @@ function buildResiduaryClause(input: WillInput): string {
 
 function buildDebtsAndExpensesClause(): string {
   return [
-    "SECTION 7: DEBTS AND EXPENSES",
-    "I direct my Executor to pay my enforceable debts, taxes, and reasonable funeral and administration expenses before distributing the estate."
+    "SECTION 7: DEBTS, TAXES, AND ESTATE EXPENSES",
+    "I direct my Executor to settle enforceable debts, taxes, and reasonable funeral and estate administration expenses before final distribution of the estate."
   ].join("\n");
 }
 
@@ -198,18 +220,20 @@ function buildSpecialWishesClause(input: WillInput): string {
   const specialCombined = [...special, notes].filter(Boolean);
 
   return [
-    "SECTION 8: FUNERAL AND SPECIAL WISHES (NON-BINDING GUIDANCE)",
-    "The following wishes are guidance to my family and Executor and are generally non-binding unless law expressly provides otherwise:",
+    "SECTION 8: PERSONAL WISHES (NON-BINDING GUIDANCE)",
+    "The following statements are guidance for my family and Executor. They are generally non-binding unless applicable law provides otherwise:",
     ...formatBullets([
-      funeral ? `Funeral wishes: ${funeral}` : "Funeral wishes not specified.",
-      specialCombined.length ? `Other wishes: ${specialCombined.join(" | ")}` : "No additional special wishes recorded."
+      funeral ? `Funeral wishes: ${funeral}` : "No funeral wishes are currently recorded.",
+      specialCombined.length
+        ? `Additional wishes and notes: ${specialCombined.join(" | ")}`
+        : "No additional personal wishes are currently recorded."
     ])
   ].join("\n");
 }
 
 function buildAttestationGuidanceClause(): string {
   return [
-    "SECTION 9: EXECUTION AND ATTESTATION GUIDANCE (KENYA-FIRST)",
+    "APPENDIX A: EXECUTION GUIDANCE (KENYA)",
     "Sign this will in the physical presence of at least two eligible witnesses.",
     "Witnesses should not be beneficiaries or spouses of beneficiaries.",
     "All signatures should be completed in the same sitting, with the date written clearly.",
@@ -282,7 +306,8 @@ export function assessDraftConsistency(input: WillInput): DraftConsistencyReport
 
 export function generateDraft(input: WillInput): string {
   const clauses = [
-    "LAST WILL AND TESTAMENT",
+    "DRAFT WILL DOCUMENT",
+    "Last Will and Testament - Draft for Review",
     "",
     buildIdentityClause(input),
     "",
