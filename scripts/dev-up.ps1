@@ -7,14 +7,5 @@ if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
   exit 1
 }
 
-Write-Host "Bringing up database container..."
-docker compose up -d db
-
-Write-Host "Generating Prisma client..."
-pnpm -C apps/api db:generate
-
-Write-Host "Running migrations..."
-pnpm -C apps/api db:migrate
-
-Write-Host "Starting API + Web..."
-docker compose up api web
+Write-Host "Starting container stack (db, migrate, api, web)..."
+docker compose up --build

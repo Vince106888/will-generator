@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:15
@@ -11,34 +9,97 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d esheria_wills"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["pnpm", "-C", "apps/api", "db:migrate"]
+    environment:
+      CI: "true"
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/esheria_wills?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
   api:
-    image: node:20
-    working_dir: /workspace
-    volumes:
-      - .:/workspace
-    command: bash -lc "corepack enable && pnpm install && pnpm -C apps/api dev"
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
     environment:
+      CI: "true"
       DATABASE_URL: postgresql://postgres:postgres@db:5432/esheria_wills?schema=public
-      API_PORT: 4000
-      OUTPUT_DIR: ./storage
+      API_PORT: ${API_PORT:-4000}
+      OUTPUT_DIR: /app/storage
+      WEB_BASE_URL: ${WEB_BASE_URL:-http://localhost:5173}
+      AI_ASSIST_ENABLED: ${AI_ASSIST_ENABLED:-false}
+      AI_ALLOW_LOCAL_STUB: ${AI_ALLOW_LOCAL_STUB:-false}
+      AI_CONFIDENCE_THRESHOLD: ${AI_CONFIDENCE_THRESHOLD:-0.6}
+      AI_PROVIDER: ${AI_PROVIDER:-azure}
+      AZURE_MODEL_CONFIG: ${AZURE_MODEL_CONFIG:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://localhost:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Esheria Wills}
+      EMAIL_REPLY_TO: ${EMAIL_REPLY_TO:-}
     ports:
       - "4000:4000"
+    volumes:
+      - api-storage:/app/storage
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:4000/health/ready').then((r)=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   web:
-    image: node:20
-    working_dir: /workspace
-    volumes:
-      - .:/workspace
-    command: bash -lc "corepack enable && pnpm install && pnpm -C apps/web dev -- --host 0.0.0.0"
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
     environment:
-      VITE_API_BASE_URL: http://localhost:4000
+      CI: "true"
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:4000}
     ports:
       - "5173:5173"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:5173').then((r)=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
 
 volumes:
   db-data:
+  api-storage:
