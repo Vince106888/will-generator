@@ -10,6 +10,7 @@ Root `.env` (API + services):
 - `API_PORT` (default `4000`)
 - `OUTPUT_DIR` (default `./storage`)
 - `WEB_BASE_URL` (default `http://localhost:5173`)
+- Docker compose pins `OUTPUT_DIR=/app/storage` to keep PDF output in the named volume.
 - `AI_ASSIST_ENABLED` (keep `false` for local testing)
 - `AI_ALLOW_LOCAL_STUB` (keep `false` unless explicitly testing local stub paths)
 - `AZURE_MODEL_CONFIG` (required only if AI assist is enabled)
@@ -37,6 +38,7 @@ To exercise the AI extraction UI locally:
    - `apps/web/.env.example` -> `apps/web/.env`
 2. Start stack
    - `pnpm dev:up`
+   - This runs the Docker compose stack with a one-shot `migrate` service (non-interactive).
 3. Open
    - Web: `http://localhost:5173`
    - API: `http://localhost:4000`
@@ -63,6 +65,7 @@ To exercise the AI extraction UI locally:
 ## Migration Notes
 
 - `pnpm -C apps/api db:migrate` runs `prisma migrate deploy` (non-interactive, deterministic).
+- Docker compose already runs migrations via the `migrate` service; only run the command manually for non-Docker workflows.
 - Use `pnpm -C apps/api db:migrate:dev` only when creating new migrations.
 
 ## Sample Scenarios (Run First)
