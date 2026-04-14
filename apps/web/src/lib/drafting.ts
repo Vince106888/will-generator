@@ -368,6 +368,49 @@ export function persistDraftingSession(meta: DraftSessionMeta, snapshot: Draftin
   saveDraftingData(normalizeDraftingData(snapshot));
 }
 
+function mergeDraftingModeState(
+  cached: DraftingData,
+  remoteSnapshot: Partial<DraftingData>
+): Pick<DraftingData, "draftingMode" | "draftingModeConfirmed"> {
+  const safeRemote =
+    remoteSnapshot && typeof remoteSnapshot === "object"
+      ? remoteSnapshot
+      : ({} as Partial<DraftingData>);
+  const safeCached =
+    cached && typeof cached === "object"
+      ? normalizeDraftingData(cached)
+      : defaultDraftingData;
+  const cachedConfirmed = safeCached.draftingModeConfirmed === true;
+  const remoteConfirmed =
+    typeof safeRemote.draftingModeConfirmed === "boolean"
+      ? safeRemote.draftingModeConfirmed
+      : undefined;
+  const remoteMode =
+    safeRemote.draftingMode === "ai" || safeRemote.draftingMode === "structured"
+      ? safeRemote.draftingMode
+      : undefined;
+
+  // Never downgrade a user-confirmed mode from local state based on stale remote snapshots.
+  if (cachedConfirmed) {
+    return {
+      draftingMode: safeCached.draftingMode,
+      draftingModeConfirmed: true
+    };
+  }
+
+  if (remoteConfirmed === true && remoteMode) {
+    return {
+      draftingMode: remoteMode,
+      draftingModeConfirmed: true
+    };
+  }
+
+  return {
+    draftingMode: remoteMode ?? safeCached.draftingMode,
+    draftingModeConfirmed: false
+  };
+}
+
 export function useDraftingData() {
   const [data, setData] = useState<DraftingData>(() => loadDraftingData());
   const [session, setSession] = useState<DraftSessionMeta | null>(null);
@@ -393,15 +436,12 @@ export function useDraftingData() {
             if (!isMounted) return;
             const cached = loadDraftingData();
             const remoteSnapshot = remote.inputSnapshot as Partial<DraftingData>;
+            const mergedModeState = mergeDraftingModeState(cached, remoteSnapshot);
             const mergedSnapshot: DraftingData = {
               ...cached,
               ...remoteSnapshot,
-              draftingMode:
-                remoteSnapshot.draftingMode ?? cached.draftingMode,
-              draftingModeConfirmed:
-                typeof remoteSnapshot.draftingModeConfirmed === "boolean"
-                  ? remoteSnapshot.draftingModeConfirmed
-                  : cached.draftingModeConfirmed
+              draftingMode: mergedModeState.draftingMode,
+              draftingModeConfirmed: mergedModeState.draftingModeConfirmed
             };
             setSession(storedSession);
             setData(normalizeDraftingData(mergedSnapshot));
