@@ -1,0 +1,9 @@
+logs
+storage
+apps/api/storage
+dist
+coverage
+.tmp
+.codex
+*.pdf
+*.log
