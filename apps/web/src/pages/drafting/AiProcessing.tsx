@@ -5,7 +5,7 @@ import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { ErrorBanner, HelperCallout, WarningBanner } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { normalizeDraftingData, saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 import { api } from "../../lib/api";
 import { describeApiError } from "../../lib/apiErrors";
@@ -37,6 +37,7 @@ type AiExtractResponse = {
         dependants: Array<{
           name: string;
           relationship?: string;
+          age?: string;
           notes?: string;
           confidence?: number;
         }>;
@@ -83,6 +84,7 @@ export default function AiProcessing() {
   const { data, update, session } = useDraftingData();
   const [stage, setStage] = useState<ProcessingStage>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const inFlight = useRef(false);
 
   const notes = useMemo(() => (data.aiDraftSession.freeTextNotes ?? "").trim(), [data.aiDraftSession.freeTextNotes]);
@@ -119,13 +121,13 @@ export default function AiProcessing() {
       inFlight.current = true;
       setError(null);
       setStage("summarizing");
-      update({
-        aiDraftSession: {
-          ...data.aiDraftSession,
-          processingState: "processing",
-          lastError: ""
-        }
-      });
+      setElapsedSeconds(0);
+      const queuedSession: DraftingData["aiDraftSession"] = {
+        ...data.aiDraftSession,
+        processingState: "processing",
+        lastError: ""
+      };
+      update({ aiDraftSession: queuedSession });
 
       try {
         const summarize = await api.post(
@@ -163,22 +165,26 @@ export default function AiProcessing() {
             recommendedNextQuestions: []
           };
 
-        update({
-          aiDraftSession: {
-            ...data.aiDraftSession,
-            freeTextNotes: notes,
-            summary: summarize.data.summary ?? "",
-            updatedAt: new Date().toISOString(),
-            confidence: String(extract.data.confidence ?? ""),
-            interactionId: extract.data.interactionId,
-            extractionCandidates: structuredOutput,
-            abstained: extract.data.abstained || !rawStructuredOutput,
-            uncertainty: extract.data.uncertainty ?? "",
-            processingState: "complete",
-            lastProcessedNotes: notes,
-            lastError: ""
-          }
+        const nextAiDraftSession: DraftingData["aiDraftSession"] = {
+          ...data.aiDraftSession,
+          freeTextNotes: notes,
+          summary: summarize.data.summary ?? "",
+          updatedAt: new Date().toISOString(),
+          confidence: String(extract.data.confidence ?? ""),
+          interactionId: extract.data.interactionId,
+          extractionCandidates: structuredOutput,
+          abstained: extract.data.abstained || !rawStructuredOutput,
+          uncertainty: extract.data.uncertainty ?? "",
+          processingState: "complete",
+          lastProcessedNotes: notes,
+          lastError: ""
+        };
+        const nextSnapshot = normalizeDraftingData({
+          ...data,
+          aiDraftSession: nextAiDraftSession
         });
+        saveDraftingData(nextSnapshot);
+        update(nextSnapshot);
 
         setStage("complete");
         navigate("/drafting/ai/summary");
@@ -187,13 +193,17 @@ export default function AiProcessing() {
         console.error("[ai] processing failed", info, err);
         setStage("error");
         setError(info.message);
-        update({
-          aiDraftSession: {
-            ...data.aiDraftSession,
-            processingState: "error",
-            lastError: info.message
-          }
+        const nextAiDraftSession: DraftingData["aiDraftSession"] = {
+          ...data.aiDraftSession,
+          processingState: "error",
+          lastError: info.message
+        };
+        const nextSnapshot = normalizeDraftingData({
+          ...data,
+          aiDraftSession: nextAiDraftSession
         });
+        saveDraftingData(nextSnapshot);
+        update(nextSnapshot);
       } finally {
         inFlight.current = false;
       }
@@ -211,13 +221,21 @@ export default function AiProcessing() {
     }
   }, [data.aiDraftSession.processingState]);
 
+  useEffect(() => {
+    if (stage === "idle" || stage === "complete" || stage === "error") return;
+    const interval = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [stage]);
+
   return (
     <WorkspaceShell nav={{ ctaLabel: "Save", ctaMode: "ai", ctaPath: "/drafting/ai/summary" }}>
       <Container size="wide" className="py-8">
         <div className="space-y-6">
           <div className="space-y-2">
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
-              AI drafting — Step 3 of 6: Processing status
+              AI drafting - Step 3 of 6: Processing status
             </p>
             <h1 className="font-display text-[34px] font-semibold text-ink">Processing status</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
@@ -245,12 +263,34 @@ export default function AiProcessing() {
               <Card size="lg" className="space-y-3">
                 <p className="font-display text-xl font-semibold text-ink">Progress</p>
                 <div className="space-y-2 text-[13px] text-muted">
-                  <p>1. Summarizing your notes {stage === "summarizing" ? "…" : stage === "idle" ? "" : "✓"}</p>
+                  <p>1. Understanding your notes {stage === "summarizing" ? "..." : stage === "idle" ? "" : "done"}</p>
                   <p>
-                    2. Extracting assets, beneficiaries, executors{" "}
-                    {stage === "extracting" ? "…" : stage === "summarizing" || stage === "idle" ? "" : "✓"}
+                    2. Identifying people, assets, and wishes{" "}
+                    {stage === "extracting" ? "..." : stage === "summarizing" || stage === "idle" ? "" : "done"}
                   </p>
-                  <p>3. Checking confidence and gaps {stage === "finalizing" ? "…" : stage === "complete" ? "✓" : ""}</p>
+                  <p>
+                    3. Checking for missing details{" "}
+                    {stage === "finalizing" ? "..." : stage === "complete" ? "done" : ""}
+                  </p>
+                  <p>4. Preparing extraction summary {stage === "complete" ? "done" : stage === "idle" ? "" : "..."}</p>
+                </div>
+                {stage !== "idle" && stage !== "error" ? (
+                  <p className="text-[12px] text-muted">Elapsed: {elapsedSeconds}s</p>
+                ) : null}
+              </Card>
+
+              <Card size="lg" className="space-y-3">
+                <p className="font-display text-xl font-semibold text-ink">Live progress</p>
+                <div className="space-y-2 text-[13px] text-muted">
+                  {notes ? (
+                    <p>Notes received ({notes.length} characters)</p>
+                  ) : (
+                    <p>Waiting for notes to begin analysis.</p>
+                  )}
+                  {stage === "summarizing" ? <p>Summarizing key requests and relationships.</p> : null}
+                  {stage === "extracting" ? <p>Extracting candidates for assets, beneficiaries, executors, guardians.</p> : null}
+                  {stage === "finalizing" ? <p>Checking ambiguity and preparing the review summary.</p> : null}
+                  {stage === "complete" ? <p>Ready. Moving to the extraction summary.</p> : null}
                 </div>
               </Card>
 
@@ -270,13 +310,17 @@ export default function AiProcessing() {
                   variant="ghost"
                   size="sm"
                   onClick={() => {
-                    update({
-                      aiDraftSession: {
-                        ...data.aiDraftSession,
-                        processingState: "queued",
-                        lastError: ""
-                      }
+                    const nextAiDraftSession: DraftingData["aiDraftSession"] = {
+                      ...data.aiDraftSession,
+                      processingState: "queued",
+                      lastError: ""
+                    };
+                    const nextSnapshot = normalizeDraftingData({
+                      ...data,
+                      aiDraftSession: nextAiDraftSession
                     });
+                    saveDraftingData(nextSnapshot);
+                    update(nextSnapshot);
                     setStage("idle");
                     setError(null);
                   }}

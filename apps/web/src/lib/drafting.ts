@@ -67,11 +67,12 @@ export type DraftingData = {
             confidence?: number;
           }>;
           dependants: Array<{
-            name: string;
-            relationship?: string;
-            notes?: string;
-            confidence?: number;
-          }>;
+          name: string;
+          relationship?: string;
+          age?: string;
+          notes?: string;
+          confidence?: number;
+        }>;
         };
         executors: Array<{ name: string; relationship?: string; notes?: string; confidence?: number }>;
         guardians: Array<{ name: string; relationship?: string; notes?: string; confidence?: number }>;

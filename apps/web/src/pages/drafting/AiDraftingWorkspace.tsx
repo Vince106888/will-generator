@@ -7,7 +7,7 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
 import { HelperCallout, WarningBanner } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { normalizeDraftingData, saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 import { api } from "../../lib/api";
 import { describeApiError } from "../../lib/apiErrors";
@@ -73,39 +73,43 @@ export default function AiDraftingWorkspace() {
       const freeTextNormalized = freeText.trim();
       const lastProcessed = data.aiDraftSession.lastProcessedNotes ?? "";
       const shouldReset = freeTextNormalized !== lastProcessed;
-      update({
-        aiDraftSession: {
-          ...data.aiDraftSession,
-          freeTextNotes: freeTextNormalized,
-          processingState: "queued",
-          lastError: "",
-          summary: shouldReset ? "" : data.aiDraftSession.summary,
-          confidence: shouldReset ? "" : data.aiDraftSession.confidence,
-          interactionId: shouldReset ? "" : data.aiDraftSession.interactionId,
-          abstained: shouldReset ? false : data.aiDraftSession.abstained,
-          uncertainty: shouldReset ? "" : data.aiDraftSession.uncertainty,
-          extractionCandidates: shouldReset
-            ? {
-                summary: "",
-                extracted: {
-                  personalDetails: {},
-                  familyStructure: { children: [], dependants: [] },
-                  executors: [],
-                  guardians: [],
-                  assets: [],
-                  beneficiaries: [],
-                  residue: { beneficiaries: [] },
-                  specialWishes: []
-                },
-                missingInformation: [],
-                ambiguityWarnings: [],
-                complexitySignals: [],
-                confidence: 0,
-                recommendedNextQuestions: []
-              }
-            : data.aiDraftSession.extractionCandidates
-        }
+      const nextAiDraftSession: DraftingData["aiDraftSession"] = {
+        ...data.aiDraftSession,
+        freeTextNotes: freeTextNormalized,
+        processingState: "queued",
+        lastError: "",
+        summary: shouldReset ? "" : data.aiDraftSession.summary,
+        confidence: shouldReset ? "" : data.aiDraftSession.confidence,
+        interactionId: shouldReset ? "" : data.aiDraftSession.interactionId,
+        abstained: shouldReset ? false : data.aiDraftSession.abstained,
+        uncertainty: shouldReset ? "" : data.aiDraftSession.uncertainty,
+        extractionCandidates: shouldReset
+          ? {
+              summary: "",
+              extracted: {
+                personalDetails: {},
+                familyStructure: { children: [], dependants: [] },
+                executors: [],
+                guardians: [],
+                assets: [],
+                beneficiaries: [],
+                residue: { beneficiaries: [] },
+                specialWishes: []
+              },
+              missingInformation: [],
+              ambiguityWarnings: [],
+              complexitySignals: [],
+              confidence: 0,
+              recommendedNextQuestions: []
+            }
+          : data.aiDraftSession.extractionCandidates
+      };
+      const nextSnapshot = normalizeDraftingData({
+        ...data,
+        aiDraftSession: nextAiDraftSession
       });
+      saveDraftingData(nextSnapshot);
+      update(nextSnapshot);
       navigate("/drafting/ai/processing");
     } catch (err) {
       const info = describeApiError(err, "AI analysis");
@@ -167,7 +171,7 @@ export default function AiDraftingWorkspace() {
             </p>
             <AiStepNav currentPath="/drafting/ai/input" />
             <h1 className="font-display text-3xl text-ink sm:text-4xl">
-              Tell us who should inherit what and who should carry out your wishes
+              Start your AI analysis with a clear note about your wishes
             </h1>
             <p className="max-w-[760px] text-[16px] leading-7 text-muted">
               Write naturally. The assistant turns your notes into structured candidates for your review. It cannot finalize the will or replace your confirmation.
@@ -218,13 +222,13 @@ export default function AiDraftingWorkspace() {
                   Be specific about beneficiaries, executors, guardians, and any special wishes. The assistant will show its confidence and abstain when unsure.
                 </p>
                 <p className="text-[12px] text-muted">
-                  After you continue, we will process your notes on the next step and show you the extracted candidates.
+                  When you start analysis, we immediately lock the notes and prepare the extraction summary for review.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3">
                 <Button variant="primary" size="sm" onClick={handleExtract} disabled={!session}>
-                  Continue to analysis
+                  Start AI analysis
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/assets")}>
                   Switch to manual structured flow

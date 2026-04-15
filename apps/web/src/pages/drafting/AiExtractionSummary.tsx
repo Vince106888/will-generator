@@ -16,6 +16,8 @@ export default function AiExtractionSummary() {
   const extracted = candidates?.extracted;
   const confidence = candidates?.confidence;
   const hasCandidates = Boolean(candidates?.summary || extracted);
+  const hasGaps =
+    (candidates?.missingInformation?.length ?? 0) > 0 || (candidates?.ambiguityWarnings?.length ?? 0) > 0;
 
   const personalDetailsLines = useMemo(() => {
     if (!extracted?.personalDetails) return [];
@@ -67,7 +69,7 @@ export default function AiExtractionSummary() {
       relationship: beneficiary.relationship ?? "",
       phone: "",
       idType: "",
-      share: ""
+      share: beneficiary.share ?? ""
     }));
     const mappedExecutors = (extracted?.executors ?? []).slice(0, 2).map((executor) => ({
       name: executor.name,
@@ -165,6 +167,12 @@ export default function AiExtractionSummary() {
                 data.aiDraftSession.uncertainty ||
                 "AI could not safely produce reliable extraction suggestions. Continue with manual structured drafting."
               }
+            />
+          ) : null}
+          {hasGaps && !abstained ? (
+            <WarningBanner
+              title="Extraction incomplete"
+              body="Some details are missing or ambiguous. Review the gaps below and confirm or edit before applying."
             />
           ) : null}
           {!hasCandidates ? (
