@@ -1,21 +1,65 @@
+import { useEffect, useMemo } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { WarningBanner } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { loadDraftingData, useDraftingData } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 import { api } from "../../lib/api";
 
 export default function AiExtractionSummary() {
-  const { data, update, session } = useDraftingData();
+  const { data, update, session, setData } = useDraftingData();
   const candidates = data.aiDraftSession.extractionCandidates;
   const abstained = Boolean(data.aiDraftSession.abstained);
+  const lastError = data.aiDraftSession.lastError;
   const extracted = candidates?.extracted;
   const confidence = candidates?.confidence;
+  const hasCandidates = Boolean(candidates?.summary || extracted);
+  const hasGaps =
+    (candidates?.missingInformation?.length ?? 0) > 0 || (candidates?.ambiguityWarnings?.length ?? 0) > 0;
+
+  const personalDetailsLines = useMemo(() => {
+    if (!extracted?.personalDetails) return [];
+    const lines: string[] = [];
+    if (extracted.personalDetails.fullName) lines.push(`Full name: ${extracted.personalDetails.fullName}`);
+    if (extracted.personalDetails.maritalStatus) {
+      lines.push(`Marital status: ${extracted.personalDetails.maritalStatus}`);
+    }
+    if (extracted.personalDetails.spouseName) lines.push(`Spouse: ${extracted.personalDetails.spouseName}`);
+    if (extracted.personalDetails.domicile) lines.push(`Domicile: ${extracted.personalDetails.domicile}`);
+    if (extracted.personalDetails.notes) lines.push(`Notes: ${extracted.personalDetails.notes}`);
+    return lines;
+  }, [extracted?.personalDetails]);
+
+  const familyLines = useMemo(() => {
+    if (!extracted?.familyStructure) return [];
+    const lines: string[] = [];
+    if (typeof extracted.familyStructure.hasMinors === "boolean") {
+      lines.push(`Has minors: ${extracted.familyStructure.hasMinors ? "Yes" : "No"}`);
+    }
+    const children = extracted.familyStructure.children ?? [];
+    const dependants = extracted.familyStructure.dependants ?? [];
+    if (children.length) {
+      lines.push(`Children: ${children.map((child) => child.name).filter(Boolean).join(", ")}`);
+    }
+    if (dependants.length) {
+      lines.push(`Dependants: ${dependants.map((dep) => dep.name).filter(Boolean).join(", ")}`);
+    }
+    return lines;
+  }, [extracted?.familyStructure]);
+
+  useEffect(() => {
+    if (candidates?.summary) return;
+    const stored = loadDraftingData();
+    if (stored.aiDraftSession?.extractionCandidates?.summary) {
+      setData(stored);
+    }
+  }, [candidates?.summary, setData]);
 
   const applyCandidates = async () => {
+    if (!extracted) return;
     const mappedAssets = (extracted?.assets ?? []).map((asset) => ({
       label: asset.label,
       location: asset.details ?? "",
@@ -26,7 +70,7 @@ export default function AiExtractionSummary() {
       relationship: beneficiary.relationship ?? "",
       phone: "",
       idType: "",
-      share: ""
+      share: beneficiary.share ?? ""
     }));
     const mappedExecutors = (extracted?.executors ?? []).slice(0, 2).map((executor) => ({
       name: executor.name,
@@ -48,12 +92,36 @@ export default function AiExtractionSummary() {
       mappedGuardians[0] ?? { name: "", relationship: "", phone: "", location: "", notes: "" },
       mappedGuardians[1] ?? { name: "", relationship: "", phone: "", location: "", notes: "" }
     ];
+    const mappedDependants = [
+      ...(extracted.familyStructure.children ?? []),
+      ...(extracted.familyStructure.dependants ?? [])
+    ]
+      .map((person) => ({
+        name: person.name ?? "",
+        relationship: person.relationship ?? "",
+        age: person.age ?? "",
+        location: ""
+      }))
+      .filter((person) => person.name.trim());
+    const nextDependants =
+      mappedDependants.length > 0
+        ? mappedDependants
+        : data.dependants.length
+          ? data.dependants
+          : [{ name: "", relationship: "", age: "", location: "" }];
 
     update({
       assets: mappedAssets.length ? mappedAssets : data.assets,
       beneficiaries: mappedBeneficiaries.length ? mappedBeneficiaries : data.beneficiaries,
       executors: normalizedExecutors,
       guardians: normalizedGuardians,
+      dependants: nextDependants,
+      hasMinors:
+        typeof extracted.familyStructure.hasMinors === "boolean"
+          ? extracted.familyStructure.hasMinors
+          : data.hasMinors,
+      maritalStatus: extracted.personalDetails.maritalStatus ?? data.maritalStatus,
+      spouseName: extracted.personalDetails.spouseName ?? data.spouseName,
       specialWishes:
         extracted?.specialWishes?.map((item) => item.text).join("\n") || data.specialWishes,
       residuaryWishes: extracted?.residue?.notes ?? data.residuaryWishes,
@@ -93,6 +161,9 @@ export default function AiExtractionSummary() {
             <AiStepNav currentPath="/drafting/ai/summary" />
           </div>
 
+          {lastError ? (
+            <WarningBanner title="AI processing failed" body={lastError} />
+          ) : null}
           {abstained ? (
             <WarningBanner
               title="AI abstained"
@@ -100,6 +171,18 @@ export default function AiExtractionSummary() {
                 data.aiDraftSession.uncertainty ||
                 "AI could not safely produce reliable extraction suggestions. Continue with manual structured drafting."
               }
+            />
+          ) : null}
+          {hasGaps && !abstained ? (
+            <WarningBanner
+              title="Extraction incomplete"
+              body="Some details are missing or ambiguous. Review the gaps below and confirm or edit before applying."
+            />
+          ) : null}
+          {!hasCandidates ? (
+            <WarningBanner
+              title="No extraction available"
+              body="We do not have extraction candidates yet. Return to the AI notes step and run analysis."
             />
           ) : null}
 
@@ -114,6 +197,43 @@ export default function AiExtractionSummary() {
               <p className="text-[12px] text-muted">
                 Confidence: {typeof confidence === "number" ? `${Math.round(confidence * 100)}%` : "n/a"}
               </p>
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Confidence & uncertainty</p>
+              {data.aiDraftSession.uncertainty ? (
+                <p className="text-[13px] text-ink">{data.aiDraftSession.uncertainty}</p>
+              ) : (
+                <p className="text-[13px] text-muted">
+                  We display gaps and ambiguity below. Confirm every candidate before it applies to your structured data.
+                </p>
+              )}
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Extracted personal details</p>
+              {personalDetailsLines.length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {personalDetailsLines.map((item) => (
+                    <p key={item}>&bull; {item}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No personal details extracted.</p>
+              )}
+            </Card>
+
+            <Card size="lg" className="space-y-3">
+              <p className="font-display text-xl font-semibold text-ink">Family structure</p>
+              {familyLines.length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {familyLines.map((item) => (
+                    <p key={item}>&bull; {item}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No family structure extracted.</p>
+              )}
             </Card>
 
             <Card size="lg" className="space-y-3">
@@ -226,6 +346,15 @@ export default function AiExtractionSummary() {
               ) : (
                 <p className="text-[13px] text-muted">No remainder clause notes suggested.</p>
               )}
+              {(extracted?.residue?.beneficiaries ?? []).length ? (
+                <div className="space-y-2 text-[13px] text-ink">
+                  {(extracted?.residue?.beneficiaries ?? []).map((beneficiary, index) => (
+                    <p key={`${beneficiary.name}-${index}`}>
+                      &bull; {beneficiary.name} {beneficiary.share ? `(${beneficiary.share})` : ""}
+                    </p>
+                  ))}
+                </div>
+              ) : null}
             </Card>
 
             <Card size="lg" className="space-y-3">
@@ -243,7 +372,7 @@ export default function AiExtractionSummary() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button variant="primary" size="sm" onClick={applyCandidates} disabled={abstained}>
+            <Button variant="primary" size="sm" onClick={applyCandidates} disabled={abstained || !extracted}>
               Confirm and apply candidates
             </Button>
             <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/assets")}>

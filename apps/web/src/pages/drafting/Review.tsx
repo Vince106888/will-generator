@@ -5,7 +5,6 @@ import { AiStepNav } from "../../components/drafting/AiStepNav";
 import { StructuredStepNav } from "../../components/drafting/StructuredStepNav";
 import { Button } from "../../components/ui/Button";
 import {
-  DocumentPreview,
   HelperCallout,
   ReviewChecklist,
   SectionCard,
@@ -17,10 +16,47 @@ import { useDraftingData } from "../../lib/drafting";
 import { api } from "../../lib/api";
 import { STORAGE_KEYS } from "../../lib/storage";
 import { navigate } from "../../lib/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { trackEvent } from "../../lib/analytics";
 import { describeApiError } from "../../lib/apiErrors";
+
+type DraftSection = {
+  heading: string;
+  paragraphs: string[];
+};
+
+function parseDraftSections(draft: string) {
+  const lines = draft.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const sectionHeading = /^(SECTION\s+\d+:|APPENDIX\s+[A-Z]:)/;
+
+  const title = lines[0] ?? "Draft Will Document";
+  const subtitle = lines[1] ?? "Last Will and Testament - Draft for Review";
+  const bodyLines = lines.slice(2);
+
+  const sections: DraftSection[] = [];
+  let current: DraftSection | null = null;
+
+  for (const line of bodyLines) {
+    if (sectionHeading.test(line)) {
+      if (current) sections.push(current);
+      current = { heading: line, paragraphs: [] };
+      continue;
+    }
+
+    if (!current) {
+      current = { heading: "PREAMBLE", paragraphs: [] };
+    }
+    current.paragraphs.push(line);
+  }
+
+  if (current) sections.push(current);
+
+  const execution = sections.find((section) => section.heading.startsWith("APPENDIX"));
+  const mainSections = sections.filter((section) => !section.heading.startsWith("APPENDIX"));
+
+  return { title, subtitle, mainSections, execution };
+}
 
 export default function Review() {
   const { data, session, status } = useDraftingData();
@@ -29,6 +65,7 @@ export default function Review() {
   const [resumeStatus, setResumeStatus] = useState<string | null>(null);
   const [resumeLink, setResumeLink] = useState<string | null>(null);
   const [savingResume, setSavingResume] = useState(false);
+  const [previewDraft, setPreviewDraft] = useState("");
   const flowLabel = data.draftingMode === "ai" ? "AI drafting" : "Guided drafting";
   const assetLabels = data.assets
     .map((asset) => asset.label?.trim() || asset.location?.trim() || asset.notes?.trim() || "")
@@ -84,6 +121,38 @@ export default function Review() {
     !hasAllocations && hasAssets ? "Assign assets to beneficiaries where possible" : null,
     !hasRemainderClause ? "Set a remainder clause to cover anything not listed" : null
   ].filter(Boolean) as string[];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem(STORAGE_KEYS.willResult);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as { draft?: string };
+        if (parsed.draft?.trim()) {
+          setPreviewDraft(parsed.draft.trim());
+        }
+      } catch {
+        // Ignore invalid storage payload.
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!session?.sessionId) return;
+    api
+      .get(`/api/v1/wills/session/${session.sessionId}`)
+      .then((response) => {
+        const nextDraft = String(response.data?.draft ?? "").trim();
+        if (nextDraft) {
+          setPreviewDraft(nextDraft);
+        }
+      })
+      .catch(() => {
+        // Keep local preview fallback.
+      });
+  }, [session?.sessionId]);
+
+  const parsedPreview = useMemo(() => parseDraftSections(previewDraft), [previewDraft]);
 
   const handleGenerateDraft = async () => {
     try {
@@ -195,7 +264,7 @@ export default function Review() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
               {flowLabel} - Step 6 of 6: Review
             </p>
-            <h1 className="font-display text-[34px] font-semibold text-ink">Review</h1>
+            <h1 className="font-display text-[34px] font-semibold text-ink">Review draft will document</h1>
             <p className="text-[16px] leading-[1.6] text-muted">
               Review the summary and confirm everything is correct before you proceed.
             </p>
@@ -297,7 +366,7 @@ export default function Review() {
                   onClick={handleGenerateDraft}
                   disabled={status.loading || blockingIssues.length > 0}
                 >
-                  Generate draft
+                  Generate draft will document
                 </Button>
                 <Button
                   variant="secondary"
@@ -355,7 +424,53 @@ export default function Review() {
                   { label: "Remainder clause added", tone: hasRemainderClause ? "success" : "warning" }
                 ]}
               />
-              <DocumentPreview title="Draft preview" placeholder="Preview will draft" />
+              <SectionCard
+                title="Draft preview"
+                subtitle="Structured preview of the latest generated draft, with execution guidance separated."
+              >
+                {previewDraft ? (
+                  <div className="max-h-[520px] space-y-5 overflow-auto rounded-lg border border-border bg-secondary/30 p-5">
+                    <div className="space-y-1 border-b border-border pb-4">
+                      <p className="font-display text-[22px] font-semibold text-ink">{parsedPreview.title}</p>
+                      <p className="text-[12px] uppercase tracking-[0.12em] text-muted">{parsedPreview.subtitle}</p>
+                    </div>
+
+                    <div className="space-y-5">
+                      {parsedPreview.mainSections.map((section) => (
+                        <section key={section.heading} className="space-y-2">
+                          <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-ink/80">
+                            {section.heading}
+                          </h3>
+                          <div className="space-y-2 text-[13px] leading-[1.75] text-ink/90">
+                            {section.paragraphs.map((paragraph, idx) => (
+                              <p key={`${section.heading}-${idx}`}>{paragraph}</p>
+                            ))}
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+
+                    {parsedPreview.execution ? (
+                      <section className="space-y-2 rounded-lg border border-border bg-card p-4">
+                        <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-ink/80">
+                          {parsedPreview.execution.heading}
+                        </h3>
+                        <div className="space-y-2 text-[13px] leading-[1.75] text-ink/90">
+                          {parsedPreview.execution.paragraphs.map((paragraph, idx) => (
+                            <p key={`execution-${idx}`}>{paragraph}</p>
+                          ))}
+                        </div>
+                      </section>
+                    ) : null}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-border bg-secondary/40 p-5">
+                    <p className="text-[12px] text-muted">
+                      No generated draft is available yet. Complete the checks and generate a draft to preview it here.
+                    </p>
+                  </div>
+                )}
+              </SectionCard>
               <SectionCard
                 title="After you sign"
                 subtitle="Keep the will accessible and tell the right people."

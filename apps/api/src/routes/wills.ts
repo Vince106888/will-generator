@@ -81,7 +81,7 @@ willsRouter.get("/session/:id/pdf", async (req, res, next) => {
       return res.status(404).json({ error: "No generated draft for this session" });
     }
 
-    const downloadName = `will-${parsed.data.id}-v${latest.version}.pdf`;
+    const downloadName = `draft-will-document-${parsed.data.id}-v${latest.version}.pdf`;
     const filePath = await ensureDraftVersionPdf(
       latest.generatedDraft,
       parsed.data.id,
@@ -191,7 +191,7 @@ willsRouter.get("/:id/pdf", async (req, res, next) => {
       return res.status(404).json({ error: "Will not found" });
     }
 
-    const downloadName = `will-${will.id}.pdf`;
+    const downloadName = `draft-will-document-${will.id}.pdf`;
     const filePath = await ensureWillPdf(will.draft, will.id);
 
     return res.download(filePath, downloadName, (err) => {

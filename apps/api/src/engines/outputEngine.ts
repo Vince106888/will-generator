@@ -19,9 +19,112 @@ function withPdfExtension(fileName: string) {
   return fileName.toLowerCase().endsWith(".pdf") ? fileName : `${fileName}.pdf`;
 }
 
+function isSectionHeading(line: string) {
+  return /^SECTION\s+\d+:/.test(line) || /^APPENDIX\s+[A-Z]:/.test(line);
+}
+
+function isDocumentTitle(line: string) {
+  return line === "DRAFT WILL DOCUMENT" || line.toLowerCase().includes("draft for review");
+}
+
+function isSignatureLine(line: string) {
+  return /^TESTATOR SIGNATURE:|^WITNESS\s+\d+\s+NAME\/SIGNATURE:/.test(line);
+}
+
+function drawHeader(doc: PDFKit.PDFDocument) {
+  const top = doc.page.margins.top - 22;
+  doc
+    .font("Helvetica-Bold")
+    .fontSize(9)
+    .fillColor("#111827")
+    .text("Draft Will Document", doc.page.margins.left, top, {
+      width: doc.page.width - doc.page.margins.left - doc.page.margins.right,
+      align: "left"
+    });
+
+  doc
+    .font("Helvetica")
+    .fontSize(8)
+    .fillColor("#6B7280")
+    .text("Prepared for review before execution", doc.page.margins.left, top, {
+      width: doc.page.width - doc.page.margins.left - doc.page.margins.right,
+      align: "right"
+    });
+}
+
+function renderDraftBody(doc: PDFKit.PDFDocument, draft: string) {
+  const lines = draft
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter((line, index, all) => !(line.length === 0 && all[index - 1]?.length === 0));
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (!line) {
+      doc.moveDown(0.8);
+      continue;
+    }
+
+    if (isDocumentTitle(line)) {
+      if (line === "DRAFT WILL DOCUMENT") {
+        doc.moveDown(0.3);
+        doc.font("Helvetica-Bold").fontSize(20).fillColor("#0F172A").text(line, {
+          align: "left"
+        });
+      } else {
+        doc.moveDown(0.2);
+        doc.font("Helvetica").fontSize(11).fillColor("#475569").text(line, {
+          align: "left"
+        });
+        doc
+          .moveDown(0.6)
+          .lineWidth(1)
+          .strokeColor("#E2E8F0")
+          .moveTo(doc.page.margins.left, doc.y)
+          .lineTo(doc.page.width - doc.page.margins.right, doc.y)
+          .stroke();
+      }
+      doc.moveDown(0.6);
+      continue;
+    }
+
+    if (isSectionHeading(line)) {
+      doc.moveDown(0.9);
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0F172A").text(line, {
+        align: "left"
+      });
+      doc.moveDown(0.35);
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      doc.font("Helvetica").fontSize(10.8).fillColor("#1F2937").text(`• ${line.slice(2)}`, {
+        align: "left",
+        indent: 12,
+        lineGap: 2
+      });
+      continue;
+    }
+
+    if (isSignatureLine(line)) {
+      doc.moveDown(0.3);
+      doc.font("Helvetica-Bold").fontSize(10.5).fillColor("#111827").text(line, {
+        align: "left"
+      });
+      continue;
+    }
+
+    doc.font("Helvetica").fontSize(10.8).fillColor("#1F2937").text(line, {
+      align: "left",
+      lineGap: 3
+    });
+  }
+}
+
 export async function generatePdfFromDraft(
   draft: string,
-  fileName = `will-draft-${Date.now()}.pdf`,
+  fileName = `draft-will-document-${Date.now()}.pdf`,
   outputDir = getOutputDir()
 ) {
   await fs.promises.mkdir(outputDir, { recursive: true });
@@ -30,38 +133,25 @@ export async function generatePdfFromDraft(
 
   return new Promise<string>((resolve, reject) => {
     const doc = new PDFDocument({
-      margin: 54,
+      margin: 64,
       size: "A4",
       info: {
-        Title: "Will Draft",
-        Author: "Esheria Wills"
+        Title: "Draft Will Document",
+        Author: "Will Drafting Platform",
+        Subject: "Last Will and Testament - Draft for Review"
       }
     });
     const stream = fs.createWriteStream(filePath);
 
     doc.pipe(stream);
 
-    doc.font("Helvetica-Bold").fontSize(18).fillColor("#0E1820").text("Esheria Wills", {
-      align: "left"
+    drawHeader(doc);
+    doc.on("pageAdded", () => {
+      drawHeader(doc);
+      doc.y = doc.page.margins.top;
     });
-    doc
-      .font("Helvetica")
-      .fontSize(10)
-      .fillColor("#4B5563")
-      .text("Last Will and Testament Draft", { align: "left" });
-    doc
-      .moveDown(0.6)
-      .lineWidth(1)
-      .strokeColor("#E5E7EB")
-      .moveTo(doc.page.margins.left, doc.y)
-      .lineTo(doc.page.width - doc.page.margins.right, doc.y)
-      .stroke();
 
-    doc.moveDown(1.2);
-    doc.font("Helvetica").fontSize(11).fillColor("#111827").text(draft, {
-      align: "left",
-      lineGap: 4
-    });
+    renderDraftBody(doc, draft);
     doc.end();
 
     stream.on("finish", () => resolve(filePath));

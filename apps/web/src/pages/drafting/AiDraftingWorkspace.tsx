@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { AiStepNav } from "../../components/drafting/AiStepNav";
@@ -7,83 +7,15 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
 import { HelperCallout, WarningBanner } from "../../components/ui/PencilPanels";
-import { useDraftingData } from "../../lib/drafting";
+import { normalizeDraftingData, saveDraftingData, useDraftingData, type DraftingData } from "../../lib/drafting";
 import { navigate } from "../../lib/navigation";
 import { api } from "../../lib/api";
 import { describeApiError } from "../../lib/apiErrors";
-
-type AiExtractResponse = {
-  interactionId: string;
-  confidence: number;
-  abstained: boolean;
-  uncertainty?: string;
-  structuredOutput: {
-    summary: string;
-    extracted: {
-      personalDetails: {
-        fullName?: string;
-        maritalStatus?: string;
-        spouseName?: string;
-        domicile?: string;
-        notes?: string;
-      };
-      familyStructure: {
-        hasMinors?: boolean;
-        children: Array<{
-          name: string;
-          relationship?: string;
-          age?: string;
-          notes?: string;
-          confidence?: number;
-        }>;
-        dependants: Array<{
-          name: string;
-          relationship?: string;
-          notes?: string;
-          confidence?: number;
-        }>;
-      };
-      executors: Array<{ name: string; relationship?: string; notes?: string; confidence?: number }>;
-      guardians: Array<{ name: string; relationship?: string; notes?: string; confidence?: number }>;
-      assets: Array<{
-        label: string;
-        details?: string;
-        category?: string;
-        isForeign?: boolean;
-        confidence?: number;
-      }>;
-      beneficiaries: Array<{
-        name: string;
-        relationship?: string;
-        share?: string;
-        notes?: string;
-        confidence?: number;
-      }>;
-      residue: {
-        notes?: string;
-        beneficiaries: Array<{
-          name: string;
-          relationship?: string;
-          share?: string;
-          notes?: string;
-          confidence?: number;
-        }>;
-      };
-      specialWishes: Array<{ text: string; confidence?: number }>;
-    };
-    missingInformation: string[];
-    ambiguityWarnings: string[];
-    complexitySignals: string[];
-    confidence: number;
-    recommendedNextQuestions: string[];
-  } | null;
-};
 
 export default function AiDraftingWorkspace() {
   const { data, update, session, status } = useDraftingData();
   const [freeText, setFreeText] = useState(data.aiDraftSession.freeTextNotes ?? "");
   const [topic, setTopic] = useState("");
-  const [loadingExtract, setLoadingExtract] = useState(false);
   const [loadingExplain, setLoadingExplain] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const examplePrompts = [
@@ -113,6 +45,10 @@ export default function AiDraftingWorkspace() {
     "I have foreign assets in Uganda and need an advocate review."
   ];
 
+  useEffect(() => {
+    setFreeText(data.aiDraftSession.freeTextNotes ?? "");
+  }, [data.aiDraftSession.freeTextNotes]);
+
   const candidateCount = useMemo(() => {
     const c = data.aiDraftSession.extractionCandidates;
     if (!c) return 0;
@@ -137,30 +73,22 @@ export default function AiDraftingWorkspace() {
       return;
     }
 
-    setLoadingExtract(true);
     try {
-      const summarize = await api.post(
-        "/api/v1/ai/summarize",
-        { draftSessionId: session.sessionId, freeText },
-        { headers: { "x-draft-token": session.resumeToken } }
-      );
-
-      const extract = await api.post<AiExtractResponse>(
-        "/api/v1/ai/extract",
-        { draftSessionId: session.sessionId, freeText, inputSnapshot: data },
-        { headers: { "x-draft-token": session.resumeToken } }
-      );
-
-      update({
-        aiDraftSession: {
-          ...data.aiDraftSession,
-          freeTextNotes: freeText,
-          summary: summarize.data.summary ?? "",
-          updatedAt: new Date().toISOString(),
-          confidence: String(extract.data.confidence),
-          interactionId: extract.data.interactionId,
-          extractionCandidates:
-            extract.data.structuredOutput ?? {
+      const freeTextNormalized = freeText.trim();
+      const lastProcessed = data.aiDraftSession.lastProcessedNotes ?? "";
+      const shouldReset = freeTextNormalized !== lastProcessed;
+      const nextAiDraftSession: DraftingData["aiDraftSession"] = {
+        ...data.aiDraftSession,
+        freeTextNotes: freeTextNormalized,
+        processingState: "queued",
+        lastError: "",
+        summary: shouldReset ? "" : data.aiDraftSession.summary,
+        confidence: shouldReset ? "" : data.aiDraftSession.confidence,
+        interactionId: shouldReset ? "" : data.aiDraftSession.interactionId,
+        abstained: shouldReset ? false : data.aiDraftSession.abstained,
+        uncertainty: shouldReset ? "" : data.aiDraftSession.uncertainty,
+        extractionCandidates: shouldReset
+          ? {
               summary: "",
               extracted: {
                 personalDetails: {},
@@ -177,19 +105,20 @@ export default function AiDraftingWorkspace() {
               complexitySignals: [],
               confidence: 0,
               recommendedNextQuestions: []
-            },
-          abstained: extract.data.abstained,
-          uncertainty: extract.data.uncertainty ?? ""
-        }
+            }
+          : data.aiDraftSession.extractionCandidates
+      };
+      const nextSnapshot = normalizeDraftingData({
+        ...data,
+        aiDraftSession: nextAiDraftSession
       });
-
-      navigate("/drafting/ai/summary");
+      saveDraftingData(nextSnapshot);
+      update(nextSnapshot);
+      navigate("/drafting/ai/processing");
     } catch (err) {
       const info = describeApiError(err, "AI analysis");
       console.error("[ai] extract failed", info, err);
       setError(`${info.message} You can continue with manual structured entry.`);
-    } finally {
-      setLoadingExtract(false);
     }
   };
 
@@ -246,7 +175,7 @@ export default function AiDraftingWorkspace() {
             </p>
             <AiStepNav currentPath="/drafting/ai/input" />
             <h1 className="font-display text-3xl text-ink sm:text-4xl">
-              Tell us who should inherit what and who should carry out your wishes
+              Start your AI analysis with a clear note about your wishes
             </h1>
             <p className="max-w-[760px] text-[16px] leading-7 text-muted">
               Write naturally. The assistant turns your notes into structured candidates for your review. It cannot finalize the will or replace your confirmation.
@@ -254,6 +183,9 @@ export default function AiDraftingWorkspace() {
           </div>
 
           {status.error ? <WarningBanner title="Sync issue" body={status.error} /> : null}
+          {data.aiDraftSession.processingState === "error" && data.aiDraftSession.lastError ? (
+            <WarningBanner title="Last AI attempt failed" body={data.aiDraftSession.lastError} />
+          ) : null}
           {error ? <WarningBanner title="AI assist" body={error} /> : null}
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -287,17 +219,29 @@ export default function AiDraftingWorkspace() {
                 <Textarea
                   className="min-h-[240px]"
                   value={freeText}
-                  onChange={(event) => setFreeText(event.target.value)}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    setFreeText(nextValue);
+                    update({
+                      aiDraftSession: {
+                        ...data.aiDraftSession,
+                        freeTextNotes: nextValue
+                      }
+                    });
+                  }}
                   placeholder="Describe your family, assets, and wishes. Example: My spouse should keep our home, my two children should share the rest equally, and my sister should be executor."
                 />
                 <p className="text-[12px] text-muted">
                   Be specific about beneficiaries, executors, guardians, and any special wishes. The assistant will show its confidence and abstain when unsure.
                 </p>
+                <p className="text-[12px] text-muted">
+                  When you start analysis, we immediately lock the notes and prepare the extraction summary for review.
+                </p>
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button variant="primary" size="sm" onClick={handleExtract} disabled={loadingExtract || !session}>
-                  {loadingExtract ? "Analyzing..." : "Analyze and suggest structure"}
+                <Button variant="primary" size="sm" onClick={handleExtract} disabled={!session}>
+                  Start AI analysis
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => navigate("/drafting/structured/assets")}>
                   Switch to manual structured flow

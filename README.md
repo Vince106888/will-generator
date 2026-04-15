@@ -186,23 +186,13 @@ pnpm dev:check
 
 ### Docker (Optional)
 
-Use Docker to run Postgres and optionally the full stack:
+Use Docker to run Postgres and the full stack with a deterministic bootstrap:
 
 ```bash
-docker compose up -d db
+docker compose up --build
 ```
 
-Run migrations after the database is up:
-
-```bash
-pnpm -C apps/api db:migrate
-```
-
-Then start the full stack:
-
-```bash
-docker compose up api web
-```
+The compose stack includes a one-shot `migrate` service that runs `prisma migrate deploy` after the database is healthy, and the API waits for that completion before starting.
 
 ### Environment Variables
 
@@ -213,9 +203,11 @@ Copy and update env files as needed:
 
 Required variables (API):
 - `DATABASE_URL`
+  - Local default (Docker or local Postgres): `postgresql://postgres:postgres@localhost:5432/esheria_wills`
 - `API_PORT` (optional, defaults to 4000)
 - `OUTPUT_DIR` (optional, defaults to `./storage`)
-- `WEB_BASE_URL` (optional, defaults to `http://localhost:5173`)
+  - `WEB_BASE_URL` (optional, defaults to `http://localhost:5173`)
+  - Docker compose pins `OUTPUT_DIR=/app/storage` to keep PDF output in the named volume.
 
 Email variables (resume links):
 - `SMTP_HOST`

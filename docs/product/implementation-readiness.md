@@ -38,7 +38,8 @@ This repo uses `pnpm`. On Windows, you may need Corepack enabled:
 3. Generate Prisma client
    - `pnpm -C apps/api db:generate`
 4. Run migrations (requires DATABASE_URL)
-   - `pnpm -C apps/api db:migrate`
+   - `pnpm -C apps/api db:migrate` (non-interactive deploy)
+   - Use `pnpm -C apps/api db:migrate:dev` only when creating migrations
 5. Run checks
    - `pnpm lint`
    - `pnpm test`

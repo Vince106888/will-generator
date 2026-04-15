@@ -1,20 +1,32 @@
-import { PROMPT_REGISTRY } from "../promptRegistry";
+﻿import { PROMPT_REGISTRY } from "../promptRegistry";
 import { AiProvider, AiProviderResult } from "../types";
 import { AiProviderUnavailableError } from "../providerErrors";
 
-type OllamaProviderConfig = {
-  baseUrl: string;
-  model: string;
+export type AzureModelConfig = {
+  endpoint?: string;
+  deployment?: string;
+  apiVersion?: string;
+  apiKey: string;
+  model?: string;
+  chatCompletionsUrl?: string;
+  timeoutMs?: number;
+  temperature?: number;
+  maxTokens?: number;
+  responseFormat?: "json_object";
 };
 
-type OllamaChatResponse = {
-  message?: {
-    content?: string;
+type AzureChatResponse = {
+  choices?: Array<{
+    message?: {
+      content?: string;
+    };
+  }>;
+  error?: {
+    message?: string;
   };
-  error?: string;
 };
 
-const REQUEST_TIMEOUT_MS = 20000;
+const DEFAULT_TIMEOUT_MS = 20000;
 
 const EXTRACTION_SYSTEM_PROMPT = [
   "You are a bounded AI extraction assistant for will drafting.",
@@ -59,8 +71,26 @@ const SUMMARIZE_SYSTEM_PROMPT = [
   "Return ONLY JSON with keys: summary, advocateHandoffSummary, confidence (0-1)."
 ].join("\n");
 
-function normalizeBaseUrl(baseUrl: string) {
-  return baseUrl.replace(/\/+$/, "");
+function normalizeEndpoint(baseUrl: string) {
+  const trimmed = baseUrl.replace(/\/+$/, "");
+  if (trimmed.endsWith("/openai/v1")) {
+    return trimmed.slice(0, -"/openai/v1".length);
+  }
+  if (trimmed.endsWith("/openai")) {
+    return trimmed.slice(0, -"/openai".length);
+  }
+  return trimmed;
+}
+
+function buildChatCompletionsUrl(config: AzureModelConfig) {
+  if (config.chatCompletionsUrl) return config.chatCompletionsUrl;
+  if (!config.endpoint || !config.deployment || !config.apiVersion) {
+    throw new AiProviderUnavailableError("Azure config missing endpoint, deployment, or apiVersion.");
+  }
+  const base = normalizeEndpoint(config.endpoint);
+  return `${base}/openai/deployments/${encodeURIComponent(config.deployment)}/chat/completions?api-version=${encodeURIComponent(
+    config.apiVersion
+  )}`;
 }
 
 function safeJsonParse(content: string) {
@@ -71,29 +101,50 @@ function safeJsonParse(content: string) {
   }
 }
 
-async function callOllama(config: OllamaProviderConfig, payload: object): Promise<string> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+function extractAzureError(text: string) {
+  if (!text) return null;
   try {
-    const response = await fetch(`${normalizeBaseUrl(config.baseUrl)}/api/chat`, {
+    const parsed = JSON.parse(text) as { error?: { message?: string } };
+    return parsed.error?.message ?? null;
+  } catch {
+    return text.slice(0, 200);
+  }
+}
+
+async function callAzure(config: AzureModelConfig, payload: object): Promise<string> {
+  const controller = new AbortController();
+  const timeoutMs = Number.isFinite(config.timeoutMs) ? Number(config.timeoutMs) : DEFAULT_TIMEOUT_MS;
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(buildChatCompletionsUrl(config), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "api-key": config.apiKey
+      },
       body: JSON.stringify(payload),
       signal: controller.signal
     });
 
     if (!response.ok) {
-      throw new AiProviderUnavailableError(`Ollama responded with status ${response.status}`);
+      const text = await response.text();
+      const detail = extractAzureError(text);
+      if (response.status === 401 || response.status === 403) {
+        throw new AiProviderUnavailableError("Azure auth failed. Check API key and permissions.");
+      }
+      throw new AiProviderUnavailableError(
+        `Azure responded with status ${response.status}${detail ? `: ${detail}` : ""}`
+      );
     }
 
-    const body = (await response.json()) as OllamaChatResponse;
-    if (body.error) {
-      throw new AiProviderUnavailableError(`Ollama error: ${body.error}`);
+    const body = (await response.json()) as AzureChatResponse;
+    if (body.error?.message) {
+      throw new AiProviderUnavailableError(`Azure error: ${body.error.message}`);
     }
 
-    const content = body.message?.content?.trim();
+    const content = body.choices?.[0]?.message?.content?.trim();
     if (!content) {
-      throw new AiProviderUnavailableError("Ollama returned an empty response");
+      throw new AiProviderUnavailableError("Azure returned an empty response");
     }
 
     return content;
@@ -102,22 +153,22 @@ async function callOllama(config: OllamaProviderConfig, payload: object): Promis
       throw error;
     }
     if (error instanceof Error && error.name === "AbortError") {
-      throw new AiProviderUnavailableError("Ollama request timed out");
+      throw new AiProviderUnavailableError("Azure request timed out");
     }
-    throw new AiProviderUnavailableError("Ollama request failed");
+    throw new AiProviderUnavailableError("Azure request failed");
   } finally {
     clearTimeout(timeout);
   }
 }
 
-export class OllamaAiProvider implements AiProvider {
-  private readonly providerIdentifier = "ollama-local";
+export class AzureOpenAiProvider implements AiProvider {
+  private readonly providerIdentifier = "azure-openai";
   private readonly modelIdentifier: string;
-  private readonly baseUrl: string;
+  private readonly config: AzureModelConfig;
 
-  constructor(config: OllamaProviderConfig) {
-    this.modelIdentifier = config.model;
-    this.baseUrl = config.baseUrl;
+  constructor(config: AzureModelConfig) {
+    this.config = config;
+    this.modelIdentifier = config.model ?? config.deployment ?? "azure-openai";
   }
 
   private buildResult<TOutput>(params: {
@@ -142,8 +193,7 @@ export class OllamaAiProvider implements AiProvider {
 
   async extract(input: { freeText: string; context?: Record<string, unknown> }): Promise<AiProviderResult<unknown>> {
     const contextRaw = input.context ? JSON.stringify(input.context) : "none";
-    const contextSnippet =
-      contextRaw.length > 2000 ? `${contextRaw.slice(0, 2000)}...` : contextRaw;
+    const contextSnippet = contextRaw.length > 2000 ? `${contextRaw.slice(0, 2000)}...` : contextRaw;
     const userPrompt = [
       "User notes:",
       input.freeText,
@@ -152,18 +202,24 @@ export class OllamaAiProvider implements AiProvider {
       contextSnippet
     ].join("\n");
 
-    const content = await callOllama(
-      { baseUrl: this.baseUrl, model: this.modelIdentifier },
-      {
-        model: this.modelIdentifier,
-        messages: [
-          { role: "system", content: EXTRACTION_SYSTEM_PROMPT },
-          { role: "user", content: userPrompt }
-        ],
-        format: "json",
-        options: { temperature: 0.2 }
-      }
-    );
+    const payload: Record<string, unknown> = {
+      messages: [
+        { role: "system", content: EXTRACTION_SYSTEM_PROMPT },
+        { role: "user", content: userPrompt }
+      ]
+    };
+
+    if (Number.isFinite(this.config.maxTokens)) {
+      payload.max_tokens = this.config.maxTokens;
+    }
+    if (Number.isFinite(this.config.temperature)) {
+      payload.temperature = this.config.temperature;
+    }
+    if (this.config.responseFormat === "json_object") {
+      payload.response_format = { type: "json_object" };
+    }
+
+    const content = await callAzure(this.config, payload);
 
     const parsed = safeJsonParse(content);
     if (!parsed.ok) {
@@ -184,6 +240,7 @@ export class OllamaAiProvider implements AiProvider {
       typeof (output as { confidence?: number }).confidence === "number"
         ? (output as { confidence: number }).confidence
         : 0.6;
+
     return this.buildResult({
       output,
       confidence,
@@ -198,19 +255,24 @@ export class OllamaAiProvider implements AiProvider {
       input.context ? `Context: ${input.context}` : "Context: none"
     ].join("\n");
 
-    const content = await callOllama(
-      { baseUrl: this.baseUrl, model: this.modelIdentifier },
-      {
-        model: this.modelIdentifier,
-        messages: [
-          { role: "system", content: EXPLAIN_SYSTEM_PROMPT },
-          { role: "user", content: userPrompt }
-        ],
-        format: "json",
-        options: { temperature: 0.2 }
-      }
-    );
+    const payload: Record<string, unknown> = {
+      messages: [
+        { role: "system", content: EXPLAIN_SYSTEM_PROMPT },
+        { role: "user", content: userPrompt }
+      ]
+    };
 
+    if (Number.isFinite(this.config.maxTokens)) {
+      payload.max_tokens = this.config.maxTokens;
+    }
+    if (Number.isFinite(this.config.temperature)) {
+      payload.temperature = this.config.temperature;
+    }
+    if (this.config.responseFormat === "json_object") {
+      payload.response_format = { type: "json_object" };
+    }
+
+    const content = await callAzure(this.config, payload);
     const parsed = safeJsonParse(content);
     if (!parsed.ok) {
       return this.buildResult({
@@ -230,6 +292,7 @@ export class OllamaAiProvider implements AiProvider {
       typeof (output as { confidence?: number }).confidence === "number"
         ? (output as { confidence: number }).confidence
         : 0.6;
+
     return this.buildResult({
       output,
       confidence,
@@ -239,19 +302,24 @@ export class OllamaAiProvider implements AiProvider {
   }
 
   async summarize(input: { freeText: string }): Promise<AiProviderResult<unknown>> {
-    const content = await callOllama(
-      { baseUrl: this.baseUrl, model: this.modelIdentifier },
-      {
-        model: this.modelIdentifier,
-        messages: [
-          { role: "system", content: SUMMARIZE_SYSTEM_PROMPT },
-          { role: "user", content: input.freeText }
-        ],
-        format: "json",
-        options: { temperature: 0.2 }
-      }
-    );
+    const payload: Record<string, unknown> = {
+      messages: [
+        { role: "system", content: SUMMARIZE_SYSTEM_PROMPT },
+        { role: "user", content: input.freeText }
+      ]
+    };
 
+    if (Number.isFinite(this.config.maxTokens)) {
+      payload.max_tokens = this.config.maxTokens;
+    }
+    if (Number.isFinite(this.config.temperature)) {
+      payload.temperature = this.config.temperature;
+    }
+    if (this.config.responseFormat === "json_object") {
+      payload.response_format = { type: "json_object" };
+    }
+
+    const content = await callAzure(this.config, payload);
     const parsed = safeJsonParse(content);
     if (!parsed.ok) {
       return this.buildResult({
@@ -271,6 +339,7 @@ export class OllamaAiProvider implements AiProvider {
       typeof (output as { confidence?: number }).confidence === "number"
         ? (output as { confidence: number }).confidence
         : 0.6;
+
     return this.buildResult({
       output,
       confidence,
