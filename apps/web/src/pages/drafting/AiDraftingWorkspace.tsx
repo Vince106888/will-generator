@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { Container } from "../../components/layout/Container";
 import { AiStepNav } from "../../components/drafting/AiStepNav";
@@ -44,6 +44,10 @@ export default function AiDraftingWorkspace() {
     "Split my savings account 60/40 between my spouse and my mother.",
     "I have foreign assets in Uganda and need an advocate review."
   ];
+
+  useEffect(() => {
+    setFreeText(data.aiDraftSession.freeTextNotes ?? "");
+  }, [data.aiDraftSession.freeTextNotes]);
 
   const candidateCount = useMemo(() => {
     const c = data.aiDraftSession.extractionCandidates;
@@ -215,7 +219,16 @@ export default function AiDraftingWorkspace() {
                 <Textarea
                   className="min-h-[240px]"
                   value={freeText}
-                  onChange={(event) => setFreeText(event.target.value)}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    setFreeText(nextValue);
+                    update({
+                      aiDraftSession: {
+                        ...data.aiDraftSession,
+                        freeTextNotes: nextValue
+                      }
+                    });
+                  }}
                   placeholder="Describe your family, assets, and wishes. Example: My spouse should keep our home, my two children should share the rest equally, and my sister should be executor."
                 />
                 <p className="text-[12px] text-muted">

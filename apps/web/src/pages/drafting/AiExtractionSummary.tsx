@@ -13,6 +13,7 @@ export default function AiExtractionSummary() {
   const { data, update, session, setData } = useDraftingData();
   const candidates = data.aiDraftSession.extractionCandidates;
   const abstained = Boolean(data.aiDraftSession.abstained);
+  const lastError = data.aiDraftSession.lastError;
   const extracted = candidates?.extracted;
   const confidence = candidates?.confidence;
   const hasCandidates = Boolean(candidates?.summary || extracted);
@@ -160,6 +161,9 @@ export default function AiExtractionSummary() {
             <AiStepNav currentPath="/drafting/ai/summary" />
           </div>
 
+          {lastError ? (
+            <WarningBanner title="AI processing failed" body={lastError} />
+          ) : null}
           {abstained ? (
             <WarningBanner
               title="AI abstained"
