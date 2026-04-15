@@ -28,8 +28,9 @@ To exercise the AI extraction UI locally:
 
 - Set `AI_ASSIST_ENABLED=true`
 - Use one of:
-  - `AI_PROVIDER=local_stub` + `AI_ALLOW_LOCAL_STUB=true` for deterministic local output, or
+  - `AI_PROVIDER=local_stub` + `AI_ALLOW_LOCAL_STUB=true` for deterministic local output (dev-only), or
   - `AI_PROVIDER=azure` with a valid `AZURE_MODEL_CONFIG`
+Note: Hosted environments must use `AI_PROVIDER=azure` and keep `AI_ALLOW_LOCAL_STUB=false`.
 
 ## Docker Path (Fastest)
 

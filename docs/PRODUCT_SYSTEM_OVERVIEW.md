@@ -52,6 +52,6 @@ AI is used only for extraction and summarization. Deterministic legal logic (val
 - The system must clearly separate AI summaries from legal determinations.
 
 ## Current Reality Notes
-- AI and structured flows are mostly UI-only at present; no AI model integration is implemented.
+- AI extraction and summarization are wired through the hosted provider configured by `AZURE_MODEL_CONFIG`. Deterministic draft generation remains the source of truth.
 - Backend validity and complexity logic exists but is minimal and non-exhaustive.
 - Save and retrieve is only via generate and get-by-id; no authenticated user persistence.

@@ -9,8 +9,8 @@ Design Source: `design/pencil-implementation.pen` (see `docs/design/design-sourc
 | ACTIVE 01 Landing | `DhkvM` | `/` | `apps/web/src/pages/marketing/Landing.tsx` | Implemented
 | ACTIVE 02 Entry Decision | `V6ysS` | `/entry-choice` | `apps/web/src/pages/marketing/EntryChoice.tsx` | Implemented
 | ACTIVE 03 Existing Will Gate | `Fd207` | `/existing-will` | `apps/web/src/pages/marketing/ExistingWillGate.tsx` | Implemented
-| ACTIVE 04 AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | UI-only
-| REFINE 05 AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | UI-only
+| ACTIVE 04 AI Drafting Workspace | `iVFMi` | `/drafting/ai-workspace` | `apps/web/src/pages/drafting/AiDraftingWorkspace.tsx` | AI extraction wired
+| REFINE 05 AI Extraction Summary | `9MjGI` | `/drafting/ai-summary` | `apps/web/src/pages/drafting/AiExtractionSummary.tsx` | AI extraction wired
 | ACTIVE 06 Structured Flow Shell | `fF89o` | `/drafting/structured-flow` | `apps/web/src/pages/drafting/StructuredFlowShell.tsx` | UI-only
 | ACTIVE 07 Assets + Beneficiaries Mapping | `nFFsn` | `/drafting/mapping` | `apps/web/src/pages/drafting/AssetsBeneficiariesMapping.tsx` | UI-only
 | ACTIVE 08 Executors | `yb4Yk` | `/drafting/structured-executors` | `apps/web/src/pages/drafting/StructuredExecutors.tsx` | UI-only
@@ -47,14 +47,13 @@ Design Source: `design/pencil-implementation.pen` (see `docs/design/design-sourc
 - Mobile: M1-M7
 
 ### Actual (from repo)
-- AI Flow: only AI Drafting Workspace + AI Extraction Summary
+- AI Flow: AI Personal Details -> AI Drafting Workspace -> AI Processing -> AI Extraction Summary -> AI Corrections -> Review
 - Structured Flow: Structured Flow Shell + Assets Mapping + Executors + Guardianship
 - Result / Post-Result: Review/Result combined, Export, Signing, Advocate Review
 - Support: FAQ, Privacy + Trust, Error/Recovery
 - Mobile: responsive only; missing Mobile Review frame in design
 
 ## Mismatches and Gaps
-- Missing AI steps (personal details, processing, corrections, review step beyond summary).
 - Missing structured steps (personal details, family/household, beneficiaries, special wishes).
 - No explicit structured review step prior to Review + Result.
 - Legacy stepper pages exist but are not part of the active design system.
