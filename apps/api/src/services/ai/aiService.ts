@@ -4,7 +4,6 @@ import { prisma } from "../../db";
 import { DraftSessionService } from "../draftSessionService";
 import { AzureModelConfig, AzureOpenAiProvider } from "./providers/azureProvider";
 import { LocalStubAiProvider } from "./providers/localStubProvider";
-import { OllamaAiProvider } from "./providers/ollamaProvider";
 import { AiProviderUnavailableError } from "./providerErrors";
 import { extractionCandidateSchema, explainResponseSchema, summarizeResponseSchema } from "./schemas";
 import { AiProvider } from "./types";
@@ -17,9 +16,7 @@ function readAiConfig() {
     allowStub: process.env.AI_ALLOW_LOCAL_STUB === "true",
     confidenceThreshold: Number(process.env.AI_CONFIDENCE_THRESHOLD ?? DEFAULT_CONFIDENCE_THRESHOLD),
     provider: (process.env.AI_PROVIDER ?? "").trim().toLowerCase(),
-    azureModelConfigRaw: process.env.AZURE_MODEL_CONFIG,
-    ollamaBaseUrl: process.env.OLLAMA_BASE_URL ?? "http://localhost:11434",
-    ollamaModel: process.env.OLLAMA_MODEL ?? "qwen3:8b"
+    azureModelConfigRaw: process.env.AZURE_MODEL_CONFIG
   };
 }
 
@@ -125,16 +122,10 @@ function resolveAiProvider(config: ReturnType<typeof readAiConfig>): {
     return { provider: new AzureOpenAiProvider(parsed.config) };
   }
 
-  if (config.provider === "ollama") {
-    if (!config.ollamaBaseUrl || !config.ollamaModel) {
-      return { unavailableReason: "Ollama base URL or model is not configured." };
-    }
-    return {
-      provider: new OllamaAiProvider({ baseUrl: config.ollamaBaseUrl, model: config.ollamaModel })
-    };
-  }
-
   if (config.provider === "local_stub") {
+    if (process.env.NODE_ENV === "production") {
+      return { unavailableReason: "Local stub provider is disabled in production." };
+    }
     if (!config.allowStub) {
       return { unavailableReason: "Local stub provider is disabled by configuration." };
     }
