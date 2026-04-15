@@ -44,6 +44,9 @@ export type DraftingData = {
     confidence: string;
     interactionId?: string;
     freeTextNotes?: string;
+    processingState?: "idle" | "queued" | "processing" | "complete" | "error";
+    lastProcessedNotes?: string;
+    lastError?: string;
     extractionCandidates?: {
       summary: string;
       extracted: {
@@ -179,6 +182,9 @@ export const defaultDraftingData: DraftingData = {
     confidence: "medium",
     interactionId: "",
     freeTextNotes: "",
+    processingState: "idle",
+    lastProcessedNotes: "",
+    lastError: "",
     extractionCandidates: {
       summary: "",
       extracted: {
