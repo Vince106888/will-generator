@@ -449,6 +449,15 @@ export function useDraftingData() {
               draftingMode: mergedModeState.draftingMode,
               draftingModeConfirmed: mergedModeState.draftingModeConfirmed
             };
+            if (
+              cached.aiDraftSession?.freeTextNotes?.trim() &&
+              !remoteSnapshot.aiDraftSession?.freeTextNotes?.trim()
+            ) {
+              mergedSnapshot.aiDraftSession = {
+                ...mergedSnapshot.aiDraftSession,
+                freeTextNotes: cached.aiDraftSession.freeTextNotes
+              };
+            }
             setSession(storedSession);
             setData(normalizeDraftingData(mergedSnapshot));
             setStatus({ loading: false, lastSyncedAt: remote.updatedAt });
