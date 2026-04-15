@@ -12,6 +12,11 @@
 - API: Node service (Render, Railway, Fly.io, or containerized VM).
 - Database: Managed PostgreSQL.
 
+## Alternate Deployment Shape (Single Service)
+
+- API serves the built web assets when `apps/web/dist` is present.
+- Use this only when deploying both packages together (monorepo build).
+
 ## Required Environment Variables
 
 - `DATABASE_URL` (API)

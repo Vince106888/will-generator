@@ -2,6 +2,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 import pinoHttp from "pino-http";
 import { willsRouter } from "./routes/wills";
 import { draftSessionsRouter } from "./routes/draftSessions";
@@ -18,6 +20,10 @@ app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/", (_req, res) => {
+  if (shouldServeWeb && hasWebDist) {
+    res.sendFile(path.join(webDistDir, "index.html"));
+    return;
+  }
   res.json({ status: "ok", service: "esheria-wills-api" });
 });
 
@@ -26,6 +32,24 @@ app.use("/api/v1/draft-sessions", draftSessionsRouter);
 app.use("/api/v1/ai", aiRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use("/health", healthRouter);
+
+const webDistDir = process.env.WEB_DIST_DIR
+  ? path.resolve(process.env.WEB_DIST_DIR)
+  : path.resolve(process.cwd(), "..", "web", "dist");
+const hasWebDist = fs.existsSync(webDistDir);
+const shouldServeWeb =
+  process.env.SERVE_WEB === "true" ||
+  (process.env.NODE_ENV === "production" && hasWebDist);
+
+if (shouldServeWeb && hasWebDist) {
+  app.use(express.static(webDistDir));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/") || req.path === "/health") {
+      return next();
+    }
+    res.sendFile(path.join(webDistDir, "index.html"));
+  });
+}
 
 app.use((
   err: unknown,
