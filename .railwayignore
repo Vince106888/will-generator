@@ -5,13 +5,5 @@ dist
 coverage
 .tmp
 .codex
-node_modules
-.pnpm-store
-.git
-test-results
-tests
-design
-docs
-scripts
 *.pdf
 *.log
