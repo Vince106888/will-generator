@@ -18,8 +18,7 @@ RUN pnpm install --frozen-lockfile --filter api...
 COPY apps/api apps/api
 
 RUN pnpm -C apps/api db:generate \
-  && pnpm -C apps/api build \
-  && pnpm prune --prod
+  && pnpm -C apps/api build
 
 FROM node:20-bookworm-slim AS runner
 
@@ -33,9 +32,10 @@ RUN apt-get update -y \
   && corepack enable
 
 COPY package.json pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY apps/api/package.json apps/api/package.json
 COPY prisma prisma
-COPY --from=builder /app/node_modules /app/node_modules
+RUN pnpm install --frozen-lockfile --filter api... --prod
 COPY --from=builder /app/apps/api/dist /app/apps/api/dist
 
 EXPOSE 4000
