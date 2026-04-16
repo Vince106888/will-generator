@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim
+FROM node:20-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -13,6 +13,13 @@ RUN pnpm install --frozen-lockfile --filter web...
 
 COPY apps/web apps/web
 
-EXPOSE 5173
+RUN pnpm -C apps/web build
 
-CMD ["pnpm", "-C", "apps/web", "dev:docker"]
+FROM nginx:1.27-alpine AS runner
+
+COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

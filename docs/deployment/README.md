@@ -21,12 +21,15 @@
 
 - `DATABASE_URL` (API)
 - `API_PORT` (API)
+- `PORT` (API, Railway-injected; API uses this when present)
 - `OUTPUT_DIR` (API)
 - `VITE_API_BASE_URL` (Web)
  - `AI_ASSIST_ENABLED` (API)
  - `AI_PROVIDER` (API, must be `azure`)
  - `AZURE_MODEL_CONFIG` (API, required when AI assist is enabled)
  - `AI_ALLOW_LOCAL_STUB` (API, keep `false` in hosted environments)
+ - `SERVE_WEB` (API, set `true` to serve web build from API)
+ - `WEB_DIST_DIR` (API, optional override for web build path)
 
 ## Next Steps
 
@@ -38,9 +41,10 @@
 
 - Build commands
   - API: `pnpm -C apps/api build`
+  - API (serve web from API): `pnpm -C apps/api build && pnpm -C apps/web build`
   - Web: `pnpm -C apps/web build`
 - Start commands
-  - API: `pnpm -C apps/api start`
+  - API: `pnpm -C apps/api start` (serves web if `SERVE_WEB=true`)
   - Web: `pnpm -C apps/web preview --host`
 - Migrations (release phase)
   - `pnpm -C apps/api db:migrate`
