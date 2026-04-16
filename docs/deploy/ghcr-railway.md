@@ -12,6 +12,11 @@
 Workflow: `.github/workflows/ghcr-images.yml`
 - Builds on pushes to `main` and on manual dispatch.
 - Pushes both images to GHCR with `latest` and `sha-<commit>` tags.
+- Permissions: `packages:write` (already set in the workflow).
+
+## GitHub secrets / vars
+No custom secrets are required for GHCR pushes.
+- Uses built-in `GITHUB_TOKEN` with `packages:write`.
 
 ## Railway setup (per service)
 1. Create a Railway service from a container image.
@@ -27,12 +32,22 @@ Workflow: `.github/workflows/ghcr-images.yml`
 Run this once per deploy on the API service:
 `pnpm -C apps/api db:migrate`
 
-Recommended deploy order:
-1. API: run migration command against the target database.
-2. API: deploy container (or set start command to `pnpm -C apps/api start:prod`).
-3. Web: deploy container.
+## Railway deploy order (exact)
+1. Create Railway Postgres.
+2. Set `DATABASE_URL` on the API service.
+3. Configure API service from GHCR image:
+   - `ghcr.io/<owner>/<repo>/api:latest` or `ghcr.io/<owner>/<repo>/api:sha-<commit>`
+4. Set API env vars (see below).
+5. Run migration command: `pnpm -C apps/api db:migrate`
+6. Configure web service from GHCR image:
+   - `ghcr.io/<owner>/<repo>/web:latest` or `ghcr.io/<owner>/<repo>/web:sha-<commit>`
+7. Set web env vars (see below).
+8. Verify health: API `/health`, web loads and can call API.
 
 ## Required secrets / env vars
+GitHub Actions (GHCR push):
+- None (uses `GITHUB_TOKEN`).
+
 GHCR pull (Railway):
 - `GHCR_USERNAME` (GitHub username or org)
 - `GHCR_TOKEN` (GitHub PAT with `read:packages`)
@@ -46,3 +61,6 @@ API service:
 
 Web service:
 - `VITE_API_BASE_URL` (public API base URL; if unset the app uses its own origin in production)
+
+## Env alignment note
+Use `.env.example` as the canonical list for API env vars; this doc only highlights required production keys.
